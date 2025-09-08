@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Search, Filter } from "lucide-react";
 const mockDeals = [{
   id: "12345",
@@ -203,9 +204,27 @@ export default function Deals() {
                             </Badge>
                           </td>
                           <td className="py-3 px-4">
-                            {(deal.status === "active" || deal.status === "cancelled" || deal.status === "dispute") && <Button size="sm" variant="outline">
-                                Подтвердить
-                              </Button>}
+                            {(deal.status === "active" || deal.status === "cancelled" || deal.status === "dispute") && (
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button size="sm" variant="outline">
+                                    Подтвердить
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Подтверждение закрытия сделки</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      Вы уверены, что хотите закрыть сделку? Это действие нельзя будет отменить.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Нет</AlertDialogCancel>
+                                    <AlertDialogAction>Да</AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            )}
                           </td>
                          </tr>;
                   })}
