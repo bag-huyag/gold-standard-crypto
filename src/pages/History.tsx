@@ -96,7 +96,6 @@ export default function History() {
                   <th className="text-left py-3 px-4 font-medium text-muted-foreground">Статус</th>
                   <th className="text-left py-3 px-4 font-medium text-muted-foreground">Дата</th>
                   <th className="text-left py-3 px-4 font-medium text-muted-foreground">Детали</th>
-                  <th className="text-left py-3 px-4 font-medium text-muted-foreground">Действия</th>
                 </tr>
               </thead>
               <tbody>
@@ -120,11 +119,6 @@ export default function History() {
                       <td className="py-3 px-4 text-sm text-muted-foreground">{item.date}</td>
                       <td className="py-3 px-4 text-sm text-muted-foreground max-w-xs truncate">
                         {item.details}
-                      </td>
-                      <td className="py-3 px-4">
-                        <Button size="sm" variant="ghost">
-                          <Eye className="h-4 w-4" />
-                        </Button>
                       </td>
                     </tr>
                   );
