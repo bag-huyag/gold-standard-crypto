@@ -170,6 +170,73 @@ export default function PaymentDetails() {
     setDialogOpen(false);
     resetForm();
   };
+
+  const handleSave = () => {
+    if (!formData.bank || !formData.owner || !formData.currency || !formData.paymentMethod) {
+      toast({
+        title: "Ошибка",
+        description: "Заполните все обязательные поля",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const newPaymentDetail = {
+      id: editingId || Date.now().toString(),
+      system: formData.paymentMethod,
+      bank: formData.bank,
+      phone: formData.phone || "+7 (000) 000-00-00",
+      owner: formData.owner,
+      currency: formData.currency,
+      minAmount: parseInt(formData.minAmount) || 0,
+      maxAmount: parseInt(formData.maxAmount) || 1000000,
+      simultaneously: parseInt(formData.simultaneousDeals) || 1,
+      dailyAmount: parseInt(formData.dailyAmount) || 1000000,
+      monthlyAmount: parseInt(formData.monthlyAmount) || 30000000,
+      maxDailyDeals: parseInt(formData.maxDailyDeals) || 10,
+      maxMonthlyDeals: parseInt(formData.maxMonthlyDeals) || 300,
+      delayBetweenDeals: parseInt(formData.delayBetweenDeals) || 5,
+      todayDeals: {
+        current: 0,
+        max: parseInt(formData.maxDailyDeals) || 10,
+        percentage: 0
+      },
+      monthDeals: {
+        current: 0,
+        max: parseInt(formData.maxMonthlyDeals) || 300,
+        percentage: 0
+      },
+      todayAmount: {
+        current: 0,
+        max: parseInt(formData.dailyAmount) || 1000000,
+        percentage: 0
+      },
+      monthAmount: {
+        current: 0,
+        max: parseInt(formData.monthlyAmount) || 30000000,
+        percentage: 0
+      },
+      active: formData.active
+    };
+
+    if (editingId) {
+      setPaymentDetails(prev => prev.map(detail => 
+        detail.id === editingId ? newPaymentDetail : detail
+      ));
+      toast({
+        title: "Реквизит обновлен",
+        description: "Реквизит был успешно обновлен",
+      });
+    } else {
+      setPaymentDetails(prev => [...prev, newPaymentDetail]);
+      toast({
+        title: "Реквизит добавлен",
+        description: "Новый реквизит был успешно добавлен",
+      });
+    }
+
+    handleDialogClose();
+  };
   return <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
@@ -279,7 +346,7 @@ export default function PaymentDetails() {
                 <Button variant="outline" onClick={handleDialogClose}>
                   Отмена
                 </Button>
-                <Button onClick={handleDialogClose}>
+                <Button onClick={handleSave}>
                   {editingId ? "Обновить" : "Сохранить"}
                 </Button>
               </div>
