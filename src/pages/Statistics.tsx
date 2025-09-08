@@ -122,19 +122,19 @@ export default function Statistics() {
       {/* Main Statistics */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <StatCard
-          title="Успешных сделок"
-          value={stats.successful.deals}
-          subtitle="Обработано заявок"
-          icon={TrendingUp}
-          variant="success"
-        />
-        
-        <StatCard
           title="Отменённых сделок"
           value={stats.cancelled.deals}
           subtitle="Отклонено заявок"
           icon={TrendingDown}
           variant="destructive"
+        />
+        
+        <StatCard
+          title="Успешных сделок"
+          value={stats.successful.deals}
+          subtitle="Обработано заявок"
+          icon={TrendingUp}
+          variant="success"
         />
         
         <StatCard
