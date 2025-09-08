@@ -174,7 +174,7 @@ export default function Deals() {
                       return (
                         <tr key={deal.id} className="border-b border-border last:border-0 hover:bg-muted/50">
                           <td className="py-3 px-4 font-mono text-sm">{deal.id}</td>
-                          <td className="py-3 px-4">
+                          <td className="py-3 px-4 min-w-[240px] w-[240px]">
                             <div className="space-y-1">
                               <div>
                                 <span className="text-xs font-medium">{deal.paymentType}</span>
