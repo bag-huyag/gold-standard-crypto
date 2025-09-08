@@ -2,39 +2,51 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
+/* Premium Crypto Platform Design System */
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Brand Colors - Converted to HSL */
+    --brand-dark-green: 152 33% 32%;     /* #3c684d */
+    --brand-green: 135 46% 55%;          /* #4cae73 */
+    --brand-light: 120 20% 98%;          /* #f9fbfa */
+    --brand-neutral: 120 8% 96%;         /* #f4f6f5 */
+    --brand-red: 0 82% 59%;              /* #ef4343 */
+    --brand-yellow: 46 89% 47%;          /* #e7b008 */
+    
+    /* Semantic Color System */
+    --background: 120 20% 98%;
+    --foreground: 152 33% 20%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 152 33% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 152 33% 20%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 152 33% 32%;
+    --primary-foreground: 120 20% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 135 46% 55%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 120 8% 96%;
+    --muted-foreground: 152 20% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 135 46% 55%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 82% 59%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --warning: 46 89% 47%;
+    --warning-foreground: 0 0% 100%;
+
+    --success: 135 46% 55%;
+    --success-foreground: 0 0% 100%;
+
+    --border: 120 12% 90%;
+    --input: 120 12% 90%;
+    --ring: 152 33% 32%;
 
     --radius: 0.5rem;
 
