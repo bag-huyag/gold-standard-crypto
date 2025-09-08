@@ -177,7 +177,7 @@ export default function Deals() {
                           <td className="py-3 px-4">
                             <div className="space-y-1">
                               <div className="flex items-center gap-2">
-                                <Badge variant="outline" className="text-xs">{deal.paymentType}</Badge>
+                                <span className="text-xs font-medium">{deal.paymentType}</span>
                                 <span className="font-medium">{deal.bank}</span>
                               </div>
                               <div className="text-sm text-muted-foreground">{deal.requisite}</div>
