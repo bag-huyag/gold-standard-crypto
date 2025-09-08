@@ -17,66 +17,37 @@ export default function Dashboard() {
         </Badge>
       </div>
 
-      {/* Balance Cards */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium opacity-90">
-              Баланс
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {balance} <span className="text-lg font-normal">USDT</span>
+      {/* Balance Overview */}
+      <Card className="bg-gradient-to-br from-card to-muted/20">
+        <CardHeader>
+          <CardTitle className="text-lg font-semibold">Обзор баланса</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Баланс</p>
+              <p className="text-xl font-bold text-primary">{balance} USDT</p>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-secondary to-secondary/80 text-secondary-foreground">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium opacity-90">
-              Страховой депозит
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {insuranceDeposit} <span className="text-lg font-normal">USDT</span>
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Страховой депозит</p>
+              <p className="text-xl font-bold text-secondary">{insuranceDeposit} USDT</p>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-muted to-muted/60">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Замороженный баланс
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-foreground">
-              {frozenBalance} <span className="text-lg font-normal">USDT</span>
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Замороженный баланс</p>
+              <p className="text-xl font-bold text-muted-foreground">{frozenBalance} USDT</p>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-2 border-dashed border-border">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Статус трафика
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">
-                {trafficEnabled ? "Включен" : "Выключен"}
-              </span>
-              <Switch checked={trafficEnabled} onCheckedChange={setTrafficEnabled} />
+          </div>
+          <div className="flex items-center justify-between pt-2 border-t border-border">
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Статус трафика</p>
+              <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${trafficEnabled ? 'bg-success/10 text-success' : 'bg-destructive/10 text-destructive'}`}>
+                {trafficEnabled ? "Активен" : "Неактивен"}
+              </div>
             </div>
-            <div className={`text-xs px-2 py-1 rounded-full text-center ${trafficEnabled ? 'bg-success/10 text-success' : 'bg-destructive/10 text-destructive'}`}>
-              {trafficEnabled ? "Активен" : "Неактивен"}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            <Switch checked={trafficEnabled} onCheckedChange={setTrafficEnabled} />
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Quick Stats */}
       
