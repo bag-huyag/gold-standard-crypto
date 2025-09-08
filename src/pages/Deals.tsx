@@ -4,85 +4,72 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Search, Filter } from "lucide-react";
-
-const mockDeals = [
-  {
-    id: "12345",
-    paymentType: "СБП",
-    bank: "Т-Банк",
-    requisite: "+7 (999) 123-45-67",
-    ownerName: "Иванов Иван Иванович",
-    amount: "50,000 ₽",
-    traderReward: "150.50 USDT",
-    createdAt: "01.09.2025 14:30:00",
-    completedAt: "01.09.2025 14:45:00",
-    status: "active"
-  },
-  {
-    id: "12346",
-    paymentType: "C2C",
-    bank: "Сбербанк",
-    requisite: "5469 5500 0000 0000",
-    ownerName: "Петров Петр Петрович",
-    amount: "25,000 ₽",
-    traderReward: "75.25 USDT",
-    createdAt: "01.09.2025 13:15:00",
-    completedAt: "01.09.2025 13:30:00",
-    status: "completed"
-  },
-  {
-    id: "12347",
-    paymentType: "СБП",
-    bank: "ВТБ",
-    requisite: "+7 (999) 987-65-43",
-    ownerName: "Сидоров Сидор Сидорович",
-    amount: "100,000 ₽",
-    traderReward: "300.00 USDT",
-    createdAt: "01.09.2025 12:00:00",
-    completedAt: "",
-    status: "cancelled"
-  },
-  {
-    id: "12348",
-    paymentType: "C2C",
-    bank: "Тинькофф Банк",
-    requisite: "5213 2400 0000 0000",
-    ownerName: "Козлов Алексей Николаевич",
-    amount: "75,000 ₽",
-    traderReward: "225.75 USDT",
-    createdAt: "01.09.2025 11:30:00",
-    completedAt: "",
-    status: "dispute"
-  }
-];
-
+const mockDeals = [{
+  id: "12345",
+  paymentMethod: "СБП Т-Банк",
+  amount: "50,000 ₽",
+  traderReward: "150.50 USDT",
+  createdAt: "01.09.2025 14:30:00",
+  completedAt: "01.09.2025 14:45:00",
+  status: "active"
+}, {
+  id: "12346",
+  paymentMethod: "Карта Сбербанк",
+  amount: "25,000 ₽",
+  traderReward: "75.25 USDT",
+  createdAt: "01.09.2025 13:15:00",
+  completedAt: "01.09.2025 13:30:00",
+  status: "completed"
+}, {
+  id: "12347",
+  paymentMethod: "СБП ВТБ",
+  amount: "100,000 ₽",
+  traderReward: "300.00 USDT",
+  createdAt: "01.09.2025 12:00:00",
+  completedAt: "",
+  status: "cancelled"
+}, {
+  id: "12348",
+  paymentMethod: "Тинькофф Банк",
+  amount: "75,000 ₽",
+  traderReward: "225.75 USDT",
+  createdAt: "01.09.2025 11:30:00",
+  completedAt: "",
+  status: "dispute"
+}];
 export default function Deals() {
   const [searchId, setSearchId] = useState("");
   const [minAmount, setMinAmount] = useState("");
   const [maxAmount, setMaxAmount] = useState("");
   const [activeTab, setActiveTab] = useState("active");
-
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      active: { label: "Активна", variant: "default" as const },
-      completed: { label: "Завершена", variant: "secondary" as const },
-      cancelled: { label: "Отменена", variant: "destructive" as const },
-      dispute: { label: "Спор", variant: "outline" as const }
+      active: {
+        label: "Активна",
+        variant: "default" as const
+      },
+      completed: {
+        label: "Завершена",
+        variant: "secondary" as const
+      },
+      cancelled: {
+        label: "Отменена",
+        variant: "destructive" as const
+      },
+      dispute: {
+        label: "Спор",
+        variant: "outline" as const
+      }
     };
-    
     return statusConfig[status as keyof typeof statusConfig] || statusConfig.active;
   };
-
   const filteredDeals = mockDeals.filter(deal => {
     if (activeTab !== "all" && deal.status !== activeTab) return false;
     if (searchId && !deal.id.includes(searchId)) return false;
     return true;
   });
-
-  return (
-    <div className="space-y-6">
+  return <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-foreground">Сделки</h1>
@@ -102,31 +89,16 @@ export default function Deals() {
               <label className="text-sm font-medium">Поиск по ID</label>
               <div className="relative">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Введите ID сделки"
-                  value={searchId}
-                  onChange={(e) => setSearchId(e.target.value)}
-                  className="pl-9"
-                />
+                <Input placeholder="Введите ID сделки" value={searchId} onChange={e => setSearchId(e.target.value)} className="pl-9" />
               </div>
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Мин. сумма (RUB)</label>
-              <Input
-                type="number"
-                placeholder="0"
-                value={minAmount}
-                onChange={(e) => setMinAmount(e.target.value)}
-              />
+              <Input type="number" placeholder="0" value={minAmount} onChange={e => setMinAmount(e.target.value)} />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium">Макс. сумма (RUB)</label>
-              <Input
-                type="number"
-                placeholder="1000000"
-                value={maxAmount}
-                onChange={(e) => setMaxAmount(e.target.value)}
-              />
+              <Input type="number" placeholder="1000000" value={maxAmount} onChange={e => setMaxAmount(e.target.value)} />
             </div>
           </div>
         </CardContent>
@@ -169,23 +141,11 @@ export default function Deals() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredDeals.map((deal) => {
-                      const statusConfig = getStatusBadge(deal.status);
-                      return (
-                        <tr key={deal.id} className="border-b border-border last:border-0 hover:bg-muted/50">
+                    {filteredDeals.map(deal => {
+                    const statusConfig = getStatusBadge(deal.status);
+                    return <tr key={deal.id} className="border-b border-border last:border-0 hover:bg-muted/50">
                           <td className="py-3 px-4 font-mono text-sm">{deal.id}</td>
-                          <td className="py-3 px-4 min-w-[240px] w-[240px]">
-                            <div className="space-y-1">
-                              <div>
-                                <span className="text-xs font-medium">{deal.paymentType}</span>
-                              </div>
-                              <div>
-                                <span className="font-medium">{deal.bank}</span>
-                              </div>
-                              <div className="text-sm text-muted-foreground">{deal.requisite}</div>
-                              <div className="text-sm text-muted-foreground">{deal.ownerName}</div>
-                            </div>
-                          </td>
+                          <td className="py-3 px-4">{deal.paymentMethod}</td>
                           <td className="py-3 px-4 font-semibold">{deal.amount}</td>
                           <td className="py-3 px-4 text-success font-semibold">{deal.traderReward}</td>
                           <td className="py-3 px-4 text-sm text-muted-foreground">{deal.createdAt}</td>
@@ -198,44 +158,22 @@ export default function Deals() {
                             </Badge>
                           </td>
                           <td className="py-3 px-4">
-                            {(deal.status === "active" || deal.status === "cancelled" || deal.status === "dispute") && (
-                              <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                  <Button size="sm" variant="outline">
-                                    Подтвердить
-                                  </Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                  <AlertDialogHeader>
-                                    <AlertDialogTitle>Подтверждение закрытия сделки</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                      Вы уверены что хотите закрыть сделку #{deal.id}? Это действие нельзя будет отменить.
-                                    </AlertDialogDescription>
-                                  </AlertDialogHeader>
-                                  <AlertDialogFooter>
-                                    <AlertDialogCancel>Нет</AlertDialogCancel>
-                                    <AlertDialogAction>Да</AlertDialogAction>
-                                  </AlertDialogFooter>
-                                </AlertDialogContent>
-                              </AlertDialog>
-                            )}
+                            {(deal.status === "active" || deal.status === "cancelled" || deal.status === "dispute") && <Button size="sm" variant="outline">
+                                Подтвердить
+                              </Button>}
                           </td>
-                        </tr>
-                      );
-                    })}
+                        </tr>;
+                  })}
                   </tbody>
                 </table>
               </div>
 
-              {filteredDeals.length === 0 && (
-                <div className="text-center py-12">
-                  <p className="text-muted-foreground">Сделки не найдены</p>
-                </div>
-              )}
+              {filteredDeals.length === 0 && <div className="text-center py-12">
+                  <p className="text-muted-foreground rounded-none">Сделки не найдены</p>
+                </div>}
             </div>
           </Tabs>
         </CardContent>
       </Card>
-    </div>
-  );
+    </div>;
 }
