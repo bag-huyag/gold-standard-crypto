@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Edit, Trash2, Phone, Building } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 const mockPaymentDetails = [
   {
@@ -253,116 +254,114 @@ export default function PaymentDetails() {
         </Dialog>
       </div>
 
-      {/* Payment Details List */}
-      <div className="space-y-4">
-        {mockPaymentDetails.map((detail) => (
-          <Card key={detail.id} className="overflow-hidden">
-            <CardContent className="p-6">
-              <div className="grid gap-6 lg:grid-cols-3">
-                {/* Basic Info */}
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="font-semibold text-lg mb-2">Реквизиты</h3>
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground">Система:</span>
-                        <Badge variant="outline">{detail.system}</Badge>
+      {/* Payment Details Table */}
+      <Card>
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="min-w-[150px]">Система/Банк</TableHead>
+                  <TableHead className="min-w-[150px]">Реквизиты</TableHead>
+                  <TableHead className="min-w-[120px]">Валюта</TableHead>
+                  <TableHead className="min-w-[180px]">Лимиты сделки</TableHead>
+                  <TableHead className="min-w-[120px]">Одновременно</TableHead>
+                  <TableHead className="min-w-[200px]">Сегодня (сделки)</TableHead>
+                  <TableHead className="min-w-[200px]">Месяц (сделки)</TableHead>
+                  <TableHead className="min-w-[200px]">Сегодня (сумма)</TableHead>
+                  <TableHead className="min-w-[200px]">Месяц (сумма)</TableHead>
+                  <TableHead className="min-w-[100px]">Статус</TableHead>
+                  <TableHead className="min-w-[150px]">Действия</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {mockPaymentDetails.map((detail) => (
+                  <TableRow key={detail.id}>
+                    <TableCell>
+                      <div className="space-y-1">
+                        <Badge variant="outline" className="mb-1">{detail.system}</Badge>
+                        <div className="flex items-center gap-1">
+                          <Building className="h-3 w-3 text-muted-foreground" />
+                          <span className="text-sm">{detail.bank}</span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Building className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm">Банк: {detail.bank}</span>
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-1">
+                          <Phone className="h-3 w-3 text-muted-foreground" />
+                          <span className="text-sm font-mono">{detail.phone}</span>
+                        </div>
+                        <div className="text-sm text-muted-foreground">{detail.owner}</div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Phone className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm">{detail.phone}</span>
-                      </div>
-                      <div className="text-sm">
-                        <span className="text-muted-foreground">Владелец: </span>
-                        <span className="font-medium">{detail.owner}</span>
-                      </div>
+                    </TableCell>
+                    <TableCell>
                       <Badge variant="secondary">{detail.currency}</Badge>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h4 className="font-medium mb-2">Лимиты</h4>
-                    <div className="space-y-1 text-sm">
-                      <div>
-                        <span className="text-muted-foreground">Сумма сделки</span>
+                    </TableCell>
+                    <TableCell>
+                      <div className="text-sm space-y-1">
                         <div>От: {detail.minAmount.toLocaleString()} {detail.currency}</div>
                         <div>До: {detail.maxAmount.toLocaleString()} {detail.currency}</div>
                       </div>
-                      <div className="pt-2">
-                        <span className="text-muted-foreground">Одновременно: </span>
-                        <span className="font-medium">{detail.simultaneously}</span>
+                    </TableCell>
+                    <TableCell>
+                      <span className="font-medium">{detail.simultaneously}</span>
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-1">
+                        <div className="text-sm font-medium">{detail.todayDeals.current} / {detail.todayDeals.max}</div>
+                        <ProgressBar {...detail.todayDeals} type="deals" />
                       </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Statistics */}
-                <div className="space-y-4">
-                  <h4 className="font-medium">Статистика</h4>
-                  <div className="space-y-4">
-                    <div>
-                      <div className="text-sm font-medium mb-2">Сегодня (штук): {detail.todayDeals.current} / {detail.todayDeals.max}</div>
-                      <ProgressBar {...detail.todayDeals} type="deals" />
-                    </div>
-                    
-                    <div>
-                      <div className="text-sm font-medium mb-2">Месяц (штук): {detail.monthDeals.current} / {detail.monthDeals.max}</div>
-                      <ProgressBar {...detail.monthDeals} type="deals" />
-                    </div>
-                    
-                    <div>
-                      <div className="text-sm font-medium mb-2">Сегодня (₽): {detail.todayAmount.current} / {detail.todayAmount.max.toLocaleString()}</div>
-                      <ProgressBar {...detail.todayAmount} type="amount" />
-                    </div>
-                    
-                    <div>
-                      <div className="text-sm font-medium mb-2">Месяц (₽): {detail.monthAmount.current.toLocaleString()} / {detail.monthAmount.max.toLocaleString()}</div>
-                      <ProgressBar {...detail.monthAmount} type="amount" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Actions */}
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-medium mb-3">Действия</h4>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm">Статус</span>
-                        <div className="flex items-center gap-2">
-                          <Switch checked={detail.active} />
-                          <span className={`text-xs px-2 py-1 rounded-full ${
-                            detail.active 
-                              ? 'bg-success/10 text-success' 
-                              : 'bg-destructive/10 text-destructive'
-                          }`}>
-                            {detail.active ? "Активен" : "Неактивен"}
-                          </span>
-                        </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-1">
+                        <div className="text-sm font-medium">{detail.monthDeals.current} / {detail.monthDeals.max}</div>
+                        <ProgressBar {...detail.monthDeals} type="deals" />
                       </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Button variant="outline" size="sm" className="w-full">
-                      <Edit className="mr-2 h-4 w-4" />
-                      Редактировать
-                    </Button>
-                    <Button variant="destructive" size="sm" className="w-full">
-                      <Trash2 className="mr-2 h-4 w-4" />
-                      Удалить
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-1">
+                        <div className="text-sm font-medium">{detail.todayAmount.current} / {detail.todayAmount.max.toLocaleString()}</div>
+                        <ProgressBar {...detail.todayAmount} type="amount" />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-1">
+                        <div className="text-sm font-medium">{detail.monthAmount.current.toLocaleString()} / {detail.monthAmount.max.toLocaleString()}</div>
+                        <ProgressBar {...detail.monthAmount} type="amount" />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Switch checked={detail.active} />
+                        <span className={`text-xs px-2 py-1 rounded-full ${
+                          detail.active 
+                            ? 'bg-success/10 text-success' 
+                            : 'bg-destructive/10 text-destructive'
+                        }`}>
+                          {detail.active ? "Активен" : "Неактивен"}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-2">
+                        <Button variant="outline" size="sm" className="w-full">
+                          <Edit className="mr-2 h-4 w-4" />
+                          Редактировать
+                        </Button>
+                        <Button variant="destructive" size="sm" className="w-full">
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Удалить
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
 
       {mockPaymentDetails.length === 0 && (
         <Card>
