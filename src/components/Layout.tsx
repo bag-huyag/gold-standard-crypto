@@ -52,7 +52,7 @@ export function Layout() {
             </div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-1">
+            <nav className="hidden lg:flex items-center space-x-1">
               {navigation.map((item) => {
                 const Icon = item.icon;
                 return (
@@ -101,7 +101,7 @@ export function Layout() {
               <Button 
                 variant="ghost" 
                 size="sm"
-                className="hidden md:flex text-destructive hover:text-destructive hover:bg-destructive/10"
+                className="hidden lg:flex text-destructive hover:text-destructive hover:bg-destructive/10"
               >
                 <LogOut className="mr-2 h-4 w-4" />
                 Выход
@@ -111,7 +111,7 @@ export function Layout() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="md:hidden"
+                className="lg:hidden"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
                 {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -122,7 +122,7 @@ export function Layout() {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-border bg-background">
+          <div className="lg:hidden border-t border-border bg-background">
             <nav className="px-4 py-2 space-y-1">
               {navigation.map((item) => {
                 const Icon = item.icon;
