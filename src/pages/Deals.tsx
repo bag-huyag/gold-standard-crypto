@@ -7,7 +7,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, Filter } from "lucide-react";
 const mockDeals = [{
   id: "12345",
-  paymentMethod: "СБП Т-Банк",
+  paymentMethod: "СБП",
+  bank: "Т-Банк",
+  paymentDetails: "+7 (999) 123-45-67",
+  ownerName: "Иванов Иван Иванович",
   amount: "50,000 ₽",
   traderReward: "150.50 USDT",
   createdAt: "01.09.2025 14:30:00",
@@ -15,7 +18,10 @@ const mockDeals = [{
   status: "active"
 }, {
   id: "12346",
-  paymentMethod: "Карта Сбербанк",
+  paymentMethod: "C2C",
+  bank: "Сбербанк",
+  paymentDetails: "2202 2020 1234 5678",
+  ownerName: "Петров Петр Петрович",
   amount: "25,000 ₽",
   traderReward: "75.25 USDT",
   createdAt: "01.09.2025 13:15:00",
@@ -23,7 +29,10 @@ const mockDeals = [{
   status: "completed"
 }, {
   id: "12347",
-  paymentMethod: "СБП ВТБ",
+  paymentMethod: "СБП",
+  bank: "ВТБ",
+  paymentDetails: "+7 (999) 987-65-43",
+  ownerName: "Сидоров Алексей Михайлович",
   amount: "100,000 ₽",
   traderReward: "300.00 USDT",
   createdAt: "01.09.2025 12:00:00",
@@ -31,7 +40,10 @@ const mockDeals = [{
   status: "cancelled"
 }, {
   id: "12348",
-  paymentMethod: "Тинькофф Банк",
+  paymentMethod: "C2C",
+  bank: "Тинькофф Банк",
+  paymentDetails: "5536 9139 1234 5678",
+  ownerName: "Козлова Анна Сергеевна",
   amount: "75,000 ₽",
   traderReward: "225.75 USDT",
   createdAt: "01.09.2025 11:30:00",
@@ -131,7 +143,7 @@ export default function Deals() {
                   <thead>
                     <tr className="border-b border-border">
                       <th className="text-left py-3 px-4 font-medium text-muted-foreground">ID</th>
-                      <th className="text-left py-3 px-4 font-medium text-muted-foreground">Реквизит</th>
+                      <th className="text-left py-3 px-4 font-medium text-muted-foreground min-w-[320px]">Реквизиты</th>
                       <th className="text-left py-3 px-4 font-medium text-muted-foreground">Сумма сделки</th>
                       <th className="text-left py-3 px-4 font-medium text-muted-foreground">Награда трейдера</th>
                       <th className="text-left py-3 px-4 font-medium text-muted-foreground">Создана в</th>
@@ -143,9 +155,28 @@ export default function Deals() {
                   <tbody>
                     {filteredDeals.map(deal => {
                     const statusConfig = getStatusBadge(deal.status);
-                    return <tr key={deal.id} className="border-b border-border last:border-0 hover:bg-muted/50">
+                     return <tr key={deal.id} className="border-b border-border last:border-0 hover:bg-muted/50">
                           <td className="py-3 px-4 font-mono text-sm">{deal.id}</td>
-                          <td className="py-3 px-4">{deal.paymentMethod}</td>
+                          <td className="py-3 px-4 min-w-[320px]">
+                            <div className="space-y-1">
+                              <div className="flex gap-3">
+                                <span className="text-xs text-muted-foreground min-w-[60px]">Метод:</span>
+                                <span className="text-sm font-medium">{deal.paymentMethod}</span>
+                              </div>
+                              <div className="flex gap-3">
+                                <span className="text-xs text-muted-foreground min-w-[60px]">Банк:</span>
+                                <span className="text-sm">{deal.bank}</span>
+                              </div>
+                              <div className="flex gap-3">
+                                <span className="text-xs text-muted-foreground min-w-[60px]">Реквизит:</span>
+                                <span className="text-sm font-mono">{deal.paymentDetails}</span>
+                              </div>
+                              <div className="flex gap-3">
+                                <span className="text-xs text-muted-foreground min-w-[60px]">ФИО:</span>
+                                <span className="text-sm">{deal.ownerName}</span>
+                              </div>
+                            </div>
+                          </td>
                           <td className="py-3 px-4 font-semibold">{deal.amount}</td>
                           <td className="py-3 px-4 text-success font-semibold">{deal.traderReward}</td>
                           <td className="py-3 px-4 text-sm text-muted-foreground">{deal.createdAt}</td>
@@ -162,7 +193,7 @@ export default function Deals() {
                                 Подтвердить
                               </Button>}
                           </td>
-                        </tr>;
+                         </tr>;
                   })}
                   </tbody>
                 </table>
