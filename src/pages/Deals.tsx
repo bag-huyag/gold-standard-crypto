@@ -12,6 +12,8 @@ const mockDeals = [{
   paymentDetails: "+7 (999) 123-45-67",
   ownerName: "Иванов Иван Иванович",
   amount: "50,000 ₽",
+  amountUSDT: "150.50 USDT",
+  exchangeRate: "332.11",
   traderReward: "150.50 USDT",
   createdAt: "01.09.2025 14:30:00",
   completedAt: "01.09.2025 14:45:00",
@@ -23,6 +25,8 @@ const mockDeals = [{
   paymentDetails: "2202 2020 1234 5678",
   ownerName: "Петров Петр Петрович",
   amount: "25,000 ₽",
+  amountUSDT: "75.25 USDT",
+  exchangeRate: "332.11",
   traderReward: "75.25 USDT",
   createdAt: "01.09.2025 13:15:00",
   completedAt: "01.09.2025 13:30:00",
@@ -34,6 +38,8 @@ const mockDeals = [{
   paymentDetails: "+7 (999) 987-65-43",
   ownerName: "Сидоров Алексей Михайлович",
   amount: "100,000 ₽",
+  amountUSDT: "300.00 USDT",
+  exchangeRate: "333.33",
   traderReward: "300.00 USDT",
   createdAt: "01.09.2025 12:00:00",
   completedAt: "",
@@ -45,6 +51,8 @@ const mockDeals = [{
   paymentDetails: "5536 9139 1234 5678",
   ownerName: "Козлова Анна Сергеевна",
   amount: "75,000 ₽",
+  amountUSDT: "225.75 USDT",
+  exchangeRate: "332.11",
   traderReward: "225.75 USDT",
   createdAt: "01.09.2025 11:30:00",
   completedAt: "",
@@ -177,7 +185,13 @@ export default function Deals() {
                               </div>
                             </div>
                           </td>
-                          <td className="py-3 px-4 font-semibold">{deal.amount}</td>
+                          <td className="py-3 px-4 font-semibold">
+                            <div className="space-y-1">
+                              <div className="text-sm font-semibold">{deal.amount}</div>
+                              <div className="text-sm text-success font-semibold">{deal.amountUSDT}</div>
+                              <div className="text-xs text-muted-foreground">Курс: {deal.exchangeRate} ₽/USDT</div>
+                            </div>
+                          </td>
                           <td className="py-3 px-4 text-success font-semibold">{deal.traderReward}</td>
                           <td className="py-3 px-4 text-sm text-muted-foreground">{deal.createdAt}</td>
                           <td className="py-3 px-4 text-sm text-muted-foreground">
