@@ -10,7 +10,10 @@ import { Search, Filter } from "lucide-react";
 const mockDeals = [
   {
     id: "12345",
-    paymentMethod: "СБП Т-Банк",
+    paymentType: "СБП",
+    bank: "Т-Банк",
+    requisite: "+7 (999) 123-45-67",
+    ownerName: "Иванов Иван Иванович",
     amount: "50,000 ₽",
     traderReward: "150.50 USDT",
     createdAt: "01.09.2025 14:30:00",
@@ -19,7 +22,10 @@ const mockDeals = [
   },
   {
     id: "12346",
-    paymentMethod: "Карта Сбербанк",
+    paymentType: "C2C",
+    bank: "Сбербанк",
+    requisite: "5469 5500 0000 0000",
+    ownerName: "Петров Петр Петрович",
     amount: "25,000 ₽",
     traderReward: "75.25 USDT",
     createdAt: "01.09.2025 13:15:00",
@@ -28,7 +34,10 @@ const mockDeals = [
   },
   {
     id: "12347",
-    paymentMethod: "СБП ВТБ",
+    paymentType: "СБП",
+    bank: "ВТБ",
+    requisite: "+7 (999) 987-65-43",
+    ownerName: "Сидоров Сидор Сидорович",
     amount: "100,000 ₽",
     traderReward: "300.00 USDT",
     createdAt: "01.09.2025 12:00:00",
@@ -37,7 +46,10 @@ const mockDeals = [
   },
   {
     id: "12348",
-    paymentMethod: "Тинькофф Банк",
+    paymentType: "C2C",
+    bank: "Тинькофф Банк",
+    requisite: "5213 2400 0000 0000",
+    ownerName: "Козлов Алексей Николаевич",
     amount: "75,000 ₽",
     traderReward: "225.75 USDT",
     createdAt: "01.09.2025 11:30:00",
@@ -162,7 +174,16 @@ export default function Deals() {
                       return (
                         <tr key={deal.id} className="border-b border-border last:border-0 hover:bg-muted/50">
                           <td className="py-3 px-4 font-mono text-sm">{deal.id}</td>
-                          <td className="py-3 px-4">{deal.paymentMethod}</td>
+                          <td className="py-3 px-4">
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-2">
+                                <Badge variant="outline" className="text-xs">{deal.paymentType}</Badge>
+                                <span className="font-medium">{deal.bank}</span>
+                              </div>
+                              <div className="text-sm text-muted-foreground">{deal.requisite}</div>
+                              <div className="text-sm text-muted-foreground">{deal.ownerName}</div>
+                            </div>
+                          </td>
                           <td className="py-3 px-4 font-semibold">{deal.amount}</td>
                           <td className="py-3 px-4 text-success font-semibold">{deal.traderReward}</td>
                           <td className="py-3 px-4 text-sm text-muted-foreground">{deal.createdAt}</td>
