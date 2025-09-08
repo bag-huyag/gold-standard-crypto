@@ -176,8 +176,10 @@ export default function Deals() {
                           <td className="py-3 px-4 font-mono text-sm">{deal.id}</td>
                           <td className="py-3 px-4">
                             <div className="space-y-1">
-                              <div className="flex items-center gap-2">
+                              <div>
                                 <span className="text-xs font-medium">{deal.paymentType}</span>
+                              </div>
+                              <div>
                                 <span className="font-medium">{deal.bank}</span>
                               </div>
                               <div className="text-sm text-muted-foreground">{deal.requisite}</div>
