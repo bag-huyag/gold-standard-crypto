@@ -68,6 +68,9 @@ const ProgressBar = ({ current, max, percentage, type }: {
 
 export default function PaymentDetails() {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<typeof mockPaymentDetails[0] | null>(null);
   const [formData, setFormData] = useState({
     currency: "",
     paymentMethod: "",
@@ -86,6 +89,42 @@ export default function PaymentDetails() {
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleEdit = (item: typeof mockPaymentDetails[0]) => {
+    setSelectedItem(item);
+    setFormData({
+      currency: item.currency,
+      paymentMethod: item.system,
+      bank: item.bank,
+      owner: item.owner,
+      minAmount: item.minAmount.toString(),
+      maxAmount: item.maxAmount.toString(),
+      dailyAmount: item.todayAmount.max.toString(),
+      monthlyAmount: item.monthAmount.max.toString(),
+      maxDailyDeals: item.todayDeals.max.toString(),
+      maxMonthlyDeals: item.monthDeals.max.toString(),
+      simultaneousDeals: item.simultaneously.toString(),
+      delayBetweenDeals: "5",
+      active: item.active
+    });
+    setEditDialogOpen(true);
+  };
+
+  const handleDelete = (item: typeof mockPaymentDetails[0]) => {
+    setSelectedItem(item);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    // Handle delete logic here
+    setDeleteDialogOpen(false);
+    setSelectedItem(null);
+  };
+
+  const handleStatusToggle = (itemId: string, newStatus: boolean) => {
+    // Handle status toggle logic here
+    console.log(`Toggling status for item ${itemId} to ${newStatus}`);
   };
 
   return (
@@ -252,6 +291,182 @@ export default function PaymentDetails() {
             </div>
           </DialogContent>
         </Dialog>
+
+        {/* Edit Dialog */}
+        <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Редактировать реквизит</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="currency">Валюта</Label>
+                  <Select value={formData.currency} onValueChange={(value) => handleInputChange("currency", value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Выберите валюту" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="RUB">RUB</SelectItem>
+                      <SelectItem value="USD">USD</SelectItem>
+                      <SelectItem value="EUR">EUR</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="paymentMethod">Способ оплаты</Label>
+                  <Select value={formData.paymentMethod} onValueChange={(value) => handleInputChange("paymentMethod", value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Выберите способ" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="СБП">СБП</SelectItem>
+                      <SelectItem value="CARD">Карта</SelectItem>
+                      <SelectItem value="CASH">Наличные</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="bank">Банк</Label>
+                  <Input 
+                    placeholder="Например: Т-Банк"
+                    value={formData.bank}
+                    onChange={(e) => handleInputChange("bank", e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="owner">Имя владельца</Label>
+                  <Input 
+                    placeholder="Например: Иван И."
+                    value={formData.owner}
+                    onChange={(e) => handleInputChange("owner", e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="border-t pt-4">
+                <h4 className="font-medium mb-4">Лимиты</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Мин сумма сделки</Label>
+                    <Input 
+                      type="number" 
+                      placeholder="0"
+                      value={formData.minAmount}
+                      onChange={(e) => handleInputChange("minAmount", e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Макс сумма сделки</Label>
+                    <Input 
+                      type="number" 
+                      placeholder="1000000"
+                      value={formData.maxAmount}
+                      onChange={(e) => handleInputChange("maxAmount", e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Сумма (день)</Label>
+                    <Input 
+                      type="number" 
+                      placeholder="1000000"
+                      value={formData.dailyAmount}
+                      onChange={(e) => handleInputChange("dailyAmount", e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Сумма (месяц)</Label>
+                    <Input 
+                      type="number" 
+                      placeholder="30000000"
+                      value={formData.monthlyAmount}
+                      onChange={(e) => handleInputChange("monthlyAmount", e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Макс кол-во сделок (день)</Label>
+                    <Input 
+                      type="number" 
+                      placeholder="10"
+                      value={formData.maxDailyDeals}
+                      onChange={(e) => handleInputChange("maxDailyDeals", e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Макс кол-во сделок (месяц)</Label>
+                    <Input 
+                      type="number" 
+                      placeholder="300"
+                      value={formData.maxMonthlyDeals}
+                      onChange={(e) => handleInputChange("maxMonthlyDeals", e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Сделок одновременно</Label>
+                    <Input 
+                      type="number" 
+                      placeholder="2"
+                      value={formData.simultaneousDeals}
+                      onChange={(e) => handleInputChange("simultaneousDeals", e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Задержка между сделками (мин)</Label>
+                    <Input 
+                      type="number" 
+                      placeholder="5"
+                      value={formData.delayBetweenDeals}
+                      onChange={(e) => handleInputChange("delayBetweenDeals", e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-2 pt-4 border-t">
+                <Switch 
+                  id="active"
+                  checked={formData.active}
+                  onCheckedChange={(value) => handleInputChange("active", value)}
+                />
+                <Label htmlFor="active">Активность</Label>
+              </div>
+
+              <div className="flex justify-end space-x-2 pt-4">
+                <Button variant="outline" onClick={() => setEditDialogOpen(false)}>
+                  Отмена
+                </Button>
+                <Button onClick={() => setEditDialogOpen(false)}>
+                  Сохранить
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Delete Confirmation Dialog */}
+        <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Подтверждение удаления</DialogTitle>
+            </DialogHeader>
+            <div className="py-4">
+              <p className="text-muted-foreground">
+                Вы уверены, что хотите удалить этот реквизит? Это действие нельзя отменить.
+              </p>
+            </div>
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
+                Нет
+              </Button>
+              <Button variant="destructive" onClick={confirmDelete}>
+                Да
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Payment Details Table */}
@@ -266,12 +481,31 @@ export default function PaymentDetails() {
                   <TableHead className="min-w-[120px]">Валюта</TableHead>
                   <TableHead className="min-w-[180px]">Лимиты сделки</TableHead>
                   <TableHead className="min-w-[120px]">Одновременно</TableHead>
-                  <TableHead className="min-w-[200px]">Сегодня (сделки)</TableHead>
-                  <TableHead className="min-w-[200px]">Месяц (сделки)</TableHead>
-                  <TableHead className="min-w-[200px]">Сегодня (сумма)</TableHead>
-                  <TableHead className="min-w-[200px]">Месяц (сумма)</TableHead>
+                  <TableHead className="min-w-[300px] text-center">Сделки</TableHead>
+                  <TableHead className="min-w-[300px] text-center">Сумма</TableHead>
                   <TableHead className="min-w-[100px]">Статус</TableHead>
                   <TableHead className="min-w-[150px]">Действия</TableHead>
+                </TableRow>
+                <TableRow className="border-b-0">
+                  <TableHead></TableHead>
+                  <TableHead></TableHead>
+                  <TableHead></TableHead>
+                  <TableHead></TableHead>
+                  <TableHead></TableHead>
+                  <TableHead className="text-xs text-muted-foreground text-center border-r">
+                    <div className="grid grid-cols-2 gap-2">
+                      <span>Сегодня</span>
+                      <span>Месяц</span>
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-xs text-muted-foreground text-center">
+                    <div className="grid grid-cols-2 gap-2">
+                      <span>Сегодня</span>
+                      <span>Месяц</span>
+                    </div>
+                  </TableHead>
+                  <TableHead></TableHead>
+                  <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -307,33 +541,40 @@ export default function PaymentDetails() {
                     <TableCell>
                       <span className="font-medium">{detail.simultaneously}</span>
                     </TableCell>
-                    <TableCell>
-                      <div className="space-y-1">
-                        <div className="text-sm font-medium">{detail.todayDeals.current} / {detail.todayDeals.max}</div>
-                        <ProgressBar {...detail.todayDeals} type="deals" />
+                    <TableCell className="border-r">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <div className="text-xs text-muted-foreground">Сегодня</div>
+                          <div className="text-sm font-medium">{detail.todayDeals.current} / {detail.todayDeals.max}</div>
+                          <ProgressBar {...detail.todayDeals} type="deals" />
+                        </div>
+                        <div className="space-y-1">
+                          <div className="text-xs text-muted-foreground">Месяц</div>
+                          <div className="text-sm font-medium">{detail.monthDeals.current} / {detail.monthDeals.max}</div>
+                          <ProgressBar {...detail.monthDeals} type="deals" />
+                        </div>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="space-y-1">
-                        <div className="text-sm font-medium">{detail.monthDeals.current} / {detail.monthDeals.max}</div>
-                        <ProgressBar {...detail.monthDeals} type="deals" />
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="space-y-1">
-                        <div className="text-sm font-medium">{detail.todayAmount.current} / {detail.todayAmount.max.toLocaleString()}</div>
-                        <ProgressBar {...detail.todayAmount} type="amount" />
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="space-y-1">
-                        <div className="text-sm font-medium">{detail.monthAmount.current.toLocaleString()} / {detail.monthAmount.max.toLocaleString()}</div>
-                        <ProgressBar {...detail.monthAmount} type="amount" />
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <div className="text-xs text-muted-foreground">Сегодня</div>
+                          <div className="text-sm font-medium">{detail.todayAmount.current} / {detail.todayAmount.max.toLocaleString()}</div>
+                          <ProgressBar {...detail.todayAmount} type="amount" />
+                        </div>
+                        <div className="space-y-1">
+                          <div className="text-xs text-muted-foreground">Месяц</div>
+                          <div className="text-sm font-medium">{detail.monthAmount.current.toLocaleString()} / {detail.monthAmount.max.toLocaleString()}</div>
+                          <ProgressBar {...detail.monthAmount} type="amount" />
+                        </div>
                       </div>
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <Switch checked={detail.active} />
+                        <Switch 
+                          checked={detail.active} 
+                          onCheckedChange={(checked) => handleStatusToggle(detail.id, checked)}
+                        />
                         <span className={`text-xs px-2 py-1 rounded-full ${
                           detail.active 
                             ? 'bg-success/10 text-success' 
@@ -345,11 +586,21 @@ export default function PaymentDetails() {
                     </TableCell>
                     <TableCell>
                       <div className="space-y-2">
-                        <Button variant="outline" size="sm" className="w-full">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="w-full"
+                          onClick={() => handleEdit(detail)}
+                        >
                           <Edit className="mr-2 h-4 w-4" />
                           Редактировать
                         </Button>
-                        <Button variant="destructive" size="sm" className="w-full">
+                        <Button 
+                          variant="destructive" 
+                          size="sm" 
+                          className="w-full"
+                          onClick={() => handleDelete(detail)}
+                        >
                           <Trash2 className="mr-2 h-4 w-4" />
                           Удалить
                         </Button>
