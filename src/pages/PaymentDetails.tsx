@@ -71,6 +71,7 @@ export default function PaymentDetails() {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<typeof mockPaymentDetails[0] | null>(null);
+  const [paymentDetails, setPaymentDetails] = useState(mockPaymentDetails);
   const [formData, setFormData] = useState({
     currency: "",
     paymentMethod: "",
@@ -123,8 +124,13 @@ export default function PaymentDetails() {
   };
 
   const handleStatusToggle = (itemId: string, newStatus: boolean) => {
-    // Handle status toggle logic here
-    console.log(`Toggling status for item ${itemId} to ${newStatus}`);
+    setPaymentDetails(prev => 
+      prev.map(item => 
+        item.id === itemId 
+          ? { ...item, active: newStatus }
+          : item
+      )
+    );
   };
 
   return (
@@ -481,8 +487,8 @@ export default function PaymentDetails() {
                   <TableHead className="min-w-[120px]">Валюта</TableHead>
                   <TableHead className="min-w-[180px]">Лимиты сделки</TableHead>
                   <TableHead className="min-w-[120px]">Одновременно</TableHead>
-                  <TableHead className="min-w-[300px] text-center">Сделки</TableHead>
-                  <TableHead className="min-w-[300px] text-center">Сумма</TableHead>
+                  <TableHead className="min-w-[200px] text-center">Сделки</TableHead>
+                  <TableHead className="min-w-[200px] text-center">Сумма</TableHead>
                   <TableHead className="min-w-[100px]">Статус</TableHead>
                   <TableHead className="min-w-[150px]">Действия</TableHead>
                 </TableRow>
@@ -493,15 +499,15 @@ export default function PaymentDetails() {
                   <TableHead></TableHead>
                   <TableHead></TableHead>
                   <TableHead className="text-xs text-muted-foreground text-center border-r">
-                    <div className="grid grid-cols-2 gap-2">
-                      <span>Сегодня</span>
-                      <span>Месяц</span>
+                    <div className="grid grid-cols-2 gap-1 text-center">
+                      <span className="px-1">Сегодня</span>
+                      <span className="px-1">Месяц</span>
                     </div>
                   </TableHead>
                   <TableHead className="text-xs text-muted-foreground text-center">
-                    <div className="grid grid-cols-2 gap-2">
-                      <span>Сегодня</span>
-                      <span>Месяц</span>
+                    <div className="grid grid-cols-2 gap-1 text-center">
+                      <span className="px-1">Сегодня</span>
+                      <span className="px-1">Месяц</span>
                     </div>
                   </TableHead>
                   <TableHead></TableHead>
@@ -509,7 +515,7 @@ export default function PaymentDetails() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {mockPaymentDetails.map((detail) => (
+                {paymentDetails.map((detail) => (
                   <TableRow key={detail.id}>
                     <TableCell>
                       <div className="space-y-1">
@@ -542,29 +548,25 @@ export default function PaymentDetails() {
                       <span className="font-medium">{detail.simultaneously}</span>
                     </TableCell>
                     <TableCell className="border-r">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-1">
-                          <div className="text-xs text-muted-foreground">Сегодня</div>
-                          <div className="text-sm font-medium">{detail.todayDeals.current} / {detail.todayDeals.max}</div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="space-y-1 min-w-0">
+                          <div className="text-xs font-medium text-center">{detail.todayDeals.current}/{detail.todayDeals.max}</div>
                           <ProgressBar {...detail.todayDeals} type="deals" />
                         </div>
-                        <div className="space-y-1">
-                          <div className="text-xs text-muted-foreground">Месяц</div>
-                          <div className="text-sm font-medium">{detail.monthDeals.current} / {detail.monthDeals.max}</div>
+                        <div className="space-y-1 min-w-0">
+                          <div className="text-xs font-medium text-center">{detail.monthDeals.current}/{detail.monthDeals.max}</div>
                           <ProgressBar {...detail.monthDeals} type="deals" />
                         </div>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-1">
-                          <div className="text-xs text-muted-foreground">Сегодня</div>
-                          <div className="text-sm font-medium">{detail.todayAmount.current} / {detail.todayAmount.max.toLocaleString()}</div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="space-y-1 min-w-0">
+                          <div className="text-xs font-medium text-center">{detail.todayAmount.current.toLocaleString()}</div>
                           <ProgressBar {...detail.todayAmount} type="amount" />
                         </div>
-                        <div className="space-y-1">
-                          <div className="text-xs text-muted-foreground">Месяц</div>
-                          <div className="text-sm font-medium">{detail.monthAmount.current.toLocaleString()} / {detail.monthAmount.max.toLocaleString()}</div>
+                        <div className="space-y-1 min-w-0">
+                          <div className="text-xs font-medium text-center">{detail.monthAmount.current.toLocaleString()}</div>
                           <ProgressBar {...detail.monthAmount} type="amount" />
                         </div>
                       </div>
@@ -614,7 +616,7 @@ export default function PaymentDetails() {
         </CardContent>
       </Card>
 
-      {mockPaymentDetails.length === 0 && (
+      {paymentDetails.length === 0 && (
         <Card>
           <CardContent className="py-12">
             <div className="text-center">
