@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { CalendarDays, TrendingUp, TrendingDown, DollarSign, Activity } from "lucide-react";
+import { RubleIcon } from "@/components/icons/RubleIcon";
 
 export default function Statistics() {
   const [dateFrom, setDateFrom] = useState("2025-01-01");
@@ -46,17 +47,17 @@ export default function Statistics() {
     variant?: "default" | "success" | "warning" | "destructive";
   }) => {
     const variantStyles = {
-      default: "bg-card",
-      success: "bg-gradient-to-br from-success/10 to-success/5 border-success/20",
-      warning: "bg-gradient-to-br from-warning/10 to-warning/5 border-warning/20",
-      destructive: "bg-gradient-to-br from-destructive/10 to-destructive/5 border-destructive/20"
+      default: "bg-gradient-to-br from-muted/50 to-background border-border/50 shadow-lg",
+      success: "bg-gradient-to-br from-emerald-50 to-green-50 border-emerald-200 shadow-lg dark:from-emerald-950/20 dark:to-green-950/10 dark:border-emerald-800/30",
+      warning: "bg-gradient-to-br from-amber-50 to-yellow-50 border-amber-200 shadow-lg dark:from-amber-950/20 dark:to-yellow-950/10 dark:border-amber-800/30",
+      destructive: "bg-gradient-to-br from-red-50 to-rose-50 border-red-200 shadow-lg dark:from-red-950/20 dark:to-rose-950/10 dark:border-red-800/30"
     };
 
     const iconStyles = {
-      default: "text-muted-foreground",
-      success: "text-success",
-      warning: "text-warning",
-      destructive: "text-destructive"
+      default: "text-primary/70",
+      success: "text-emerald-600 dark:text-emerald-400",
+      warning: "text-amber-600 dark:text-amber-400",
+      destructive: "text-red-600 dark:text-red-400"
     };
 
     return (
@@ -149,7 +150,7 @@ export default function Statistics() {
           title="Сумма в фиате (обработано)"
           value={`${stats.fiat.processed} ₽`}
           subtitle="Успешные заявки"
-          icon={DollarSign}
+          icon={RubleIcon}
           variant="success"
         />
       </div>
@@ -167,7 +168,7 @@ export default function Statistics() {
           title="Сумма в фиате (отмена)"
           value={`${stats.fiat.cancelled} ₽`}
           subtitle="Отклонённые заявки"
-          icon={DollarSign}
+          icon={RubleIcon}
           variant="destructive"
         />
         
@@ -186,49 +187,6 @@ export default function Statistics() {
           icon={Activity}
           variant="default"
         />
-      </div>
-
-      {/* Detailed Statistics */}
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-success">Обработанные операции</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">Успешные сделки</span>
-              <span className="font-semibold">{stats.successful.deals}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">Криптовалюта</span>
-              <span className="font-semibold">{stats.crypto.processed} USD</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">Фиатные средства</span>
-              <span className="font-semibold">{stats.fiat.processed} ₽</span>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-destructive">Отклоненные операции</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">Отменённые сделки</span>
-              <span className="font-semibold">{stats.cancelled.deals}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">Криптовалюта</span>
-              <span className="font-semibold">{stats.crypto.cancelled} USD</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">Фиатные средства</span>
-              <span className="font-semibold">{stats.fiat.cancelled} ₽</span>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );
