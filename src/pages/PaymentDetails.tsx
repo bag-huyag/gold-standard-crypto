@@ -541,14 +541,14 @@ export default function PaymentDetails() {
     if (formData.paymentMethod === "Карта") {
       if (!formData.cardNumber.trim()) {
         newErrors.cardNumber = "Укажите номер карты";
-      } else if (!/^\d{4}\s?\d{4}\s?\d{4}\s?\d{4}$/.test(formData.cardNumber.replace(/\s/g, ''))) {
-        newErrors.cardNumber = "Неверный формат номера карты";
+      } else if (!/^\d{4}\s\d{4}\s\d{4}\s\d{4}$/.test(formData.cardNumber)) {
+        newErrors.cardNumber = "Неверный формат номера карты (1234 5678 9012 3456)";
       }
     } else if (formData.paymentMethod !== "Наличные") {
       if (!formData.phone.trim()) {
         newErrors.phone = "Укажите номер телефона";
-      } else if (!/^\+7\s?\(?\d{3}\)?\s?\d{3}-?\d{2}-?\d{2}$/.test(formData.phone.replace(/\s/g, ''))) {
-        newErrors.phone = "Неверный формат телефона";
+      } else if (!/^\+7\s\(\d{3}\)\s\d{3}-\d{2}-\d{2}$/.test(formData.phone)) {
+        newErrors.phone = "Неверный формат телефона (+7 (123) 456-78-90)";
       }
     }
     
@@ -803,8 +803,48 @@ export default function PaymentDetails() {
                   <Input 
                     placeholder="+7 (123) 456-78-90" 
                     value={formData.phone} 
-                    onChange={e => handleInputChange("phone", e.target.value)}
+                    onChange={e => {
+                      // Format phone number automatically
+                      const value = e.target.value.replace(/\D/g, '');
+                      let formattedValue = '';
+                      
+                      if (value.length > 0) {
+                        if (value.startsWith('7') || value.startsWith('8')) {
+                          const cleanValue = value.startsWith('8') ? '7' + value.slice(1) : value;
+                          formattedValue = `+7${cleanValue.slice(1)}`;
+                          
+                          if (cleanValue.length > 1) {
+                            formattedValue = `+7 (${cleanValue.slice(1, 4)}`;
+                          }
+                          if (cleanValue.length > 4) {
+                            formattedValue += `) ${cleanValue.slice(4, 7)}`;
+                          }
+                          if (cleanValue.length > 7) {
+                            formattedValue += `-${cleanValue.slice(7, 9)}`;
+                          }
+                          if (cleanValue.length > 9) {
+                            formattedValue += `-${cleanValue.slice(9, 11)}`;
+                          }
+                        } else {
+                          formattedValue = '+7 (' + value.slice(0, 3);
+                          if (value.length > 3) {
+                            formattedValue += ') ' + value.slice(3, 6);
+                          }
+                          if (value.length > 6) {
+                            formattedValue += '-' + value.slice(6, 8);
+                          }
+                          if (value.length > 8) {
+                            formattedValue += '-' + value.slice(8, 10);
+                          }
+                        }
+                      } else if (e.target.value.startsWith('+7')) {
+                        formattedValue = '+7';
+                      }
+                      
+                      handleInputChange("phone", formattedValue);
+                    }}
                     className={errors.phone ? "border-red-500" : ""}
+                    maxLength={18}
                   />
                   {errors.phone && <span className="text-red-500 text-xs">{errors.phone}</span>}
                 </div>
