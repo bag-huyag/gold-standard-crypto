@@ -635,12 +635,16 @@ export default function PaymentDetails() {
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-foreground">Реквизиты</h1>
         
-        <Dialog open={dialogOpen} onOpenChange={handleDialogClose}>
+        <Dialog open={dialogOpen} onOpenChange={(open) => {
+          if (open) {
+            resetForm();
+            setDialogOpen(true);
+          } else {
+            handleDialogClose();
+          }
+        }}>
           <DialogTrigger asChild>
-            <Button 
-              className="bg-primary hover:bg-primary/90"
-              onClick={() => resetForm()}
-            >
+            <Button className="bg-primary hover:bg-primary/90">
               <Plus className="mr-2 h-4 w-4" />
               Добавить реквизит
             </Button>
