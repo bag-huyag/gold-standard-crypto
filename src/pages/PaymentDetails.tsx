@@ -10,43 +10,378 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Plus, Edit, Trash2, Phone, Building } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
-const mockPaymentDetails = [{
-  id: "1",
-  system: "СБП",
-  bank: "Т-Банк",
-  phone: "+7 (828) 880-88-80",
-  owner: "Иван И.",
-  currency: "RUB",
-  minAmount: 0,
-  maxAmount: 1000000,
-  simultaneously: 2,
-  dailyAmount: 1000000,
-  monthlyAmount: 30000000,
-  maxDailyDeals: 2,
-  maxMonthlyDeals: 4,
-  delayBetweenDeals: 5,
-  todayDeals: {
-    current: 0,
-    max: 2,
-    percentage: 0
+const mockPaymentDetails = [
+  {
+    id: "1",
+    system: "СБП",
+    bank: "Т-Банк",
+    phone: "+7 (828) 880-88-80",
+    owner: "Иван И.",
+    currency: "RUB",
+    minAmount: 0,
+    maxAmount: 1000000,
+    simultaneously: 2,
+    dailyAmount: 1000000,
+    monthlyAmount: 30000000,
+    maxDailyDeals: 2,
+    maxMonthlyDeals: 4,
+    delayBetweenDeals: 5,
+    todayDeals: {
+      current: 0,
+      max: 2,
+      percentage: 0
+    },
+    monthDeals: {
+      current: 1,
+      max: 4,
+      percentage: 25
+    },
+    todayAmount: {
+      current: 0,
+      max: 1000000,
+      percentage: 0
+    },
+    monthAmount: {
+      current: 5540,
+      max: 999998,
+      percentage: 0.6
+    },
+    active: true
   },
-  monthDeals: {
-    current: 1,
-    max: 4,
-    percentage: 25
+  {
+    id: "2",
+    system: "Карта",
+    bank: "Сбербанк",
+    phone: "+7 (903) 123-45-67",
+    owner: "Анна П.",
+    currency: "RUB",
+    minAmount: 500,
+    maxAmount: 500000,
+    simultaneously: 1,
+    dailyAmount: 2000000,
+    monthlyAmount: 50000000,
+    maxDailyDeals: 5,
+    maxMonthlyDeals: 150,
+    delayBetweenDeals: 3,
+    todayDeals: {
+      current: 3,
+      max: 5,
+      percentage: 60
+    },
+    monthDeals: {
+      current: 45,
+      max: 150,
+      percentage: 30
+    },
+    todayAmount: {
+      current: 750000,
+      max: 2000000,
+      percentage: 37.5
+    },
+    monthAmount: {
+      current: 12500000,
+      max: 50000000,
+      percentage: 25
+    },
+    active: true
   },
-  todayAmount: {
-    current: 0,
-    max: 1000000,
-    percentage: 0
+  {
+    id: "3",
+    system: "СБП",
+    bank: "ВТБ",
+    phone: "+7 (915) 987-65-43",
+    owner: "Михаил С.",
+    currency: "RUB",
+    minAmount: 100,
+    maxAmount: 800000,
+    simultaneously: 3,
+    dailyAmount: 1500000,
+    monthlyAmount: 40000000,
+    maxDailyDeals: 8,
+    maxMonthlyDeals: 200,
+    delayBetweenDeals: 2,
+    todayDeals: {
+      current: 2,
+      max: 8,
+      percentage: 25
+    },
+    monthDeals: {
+      current: 67,
+      max: 200,
+      percentage: 33.5
+    },
+    todayAmount: {
+      current: 320000,
+      max: 1500000,
+      percentage: 21.3
+    },
+    monthAmount: {
+      current: 18750000,
+      max: 40000000,
+      percentage: 46.9
+    },
+    active: false
   },
-  monthAmount: {
-    current: 5540,
-    max: 999998,
-    percentage: 0.6
+  {
+    id: "4",
+    system: "Наличные",
+    bank: "Альфа-Банк",
+    phone: "+7 (922) 456-78-90",
+    owner: "Елена К.",
+    currency: "USD",
+    minAmount: 10,
+    maxAmount: 50000,
+    simultaneously: 1,
+    dailyAmount: 100000,
+    monthlyAmount: 2000000,
+    maxDailyDeals: 3,
+    maxMonthlyDeals: 80,
+    delayBetweenDeals: 10,
+    todayDeals: {
+      current: 1,
+      max: 3,
+      percentage: 33.3
+    },
+    monthDeals: {
+      current: 23,
+      max: 80,
+      percentage: 28.8
+    },
+    todayAmount: {
+      current: 15000,
+      max: 100000,
+      percentage: 15
+    },
+    monthAmount: {
+      current: 450000,
+      max: 2000000,
+      percentage: 22.5
+    },
+    active: true
   },
-  active: true
-}];
+  {
+    id: "5",
+    system: "Карта",
+    bank: "Открытие",
+    phone: "+7 (933) 234-56-78",
+    owner: "Дмитрий В.",
+    currency: "RUB",
+    minAmount: 1000,
+    maxAmount: 300000,
+    simultaneously: 2,
+    dailyAmount: 800000,
+    monthlyAmount: 20000000,
+    maxDailyDeals: 4,
+    maxMonthlyDeals: 120,
+    delayBetweenDeals: 7,
+    todayDeals: {
+      current: 4,
+      max: 4,
+      percentage: 100
+    },
+    monthDeals: {
+      current: 89,
+      max: 120,
+      percentage: 74.2
+    },
+    todayAmount: {
+      current: 800000,
+      max: 800000,
+      percentage: 100
+    },
+    monthAmount: {
+      current: 15600000,
+      max: 20000000,
+      percentage: 78
+    },
+    active: true
+  },
+  {
+    id: "6",
+    system: "СБП",
+    bank: "Газпромбанк",
+    phone: "+7 (944) 345-67-89",
+    owner: "Ольга Р.",
+    currency: "EUR",
+    minAmount: 5,
+    maxAmount: 25000,
+    simultaneously: 1,
+    dailyAmount: 75000,
+    monthlyAmount: 1500000,
+    maxDailyDeals: 6,
+    maxMonthlyDeals: 180,
+    delayBetweenDeals: 4,
+    todayDeals: {
+      current: 0,
+      max: 6,
+      percentage: 0
+    },
+    monthDeals: {
+      current: 12,
+      max: 180,
+      percentage: 6.7
+    },
+    todayAmount: {
+      current: 0,
+      max: 75000,
+      percentage: 0
+    },
+    monthAmount: {
+      current: 156000,
+      max: 1500000,
+      percentage: 10.4
+    },
+    active: false
+  },
+  {
+    id: "7",
+    system: "Карта",
+    bank: "Россельхозбанк",
+    phone: "+7 (955) 456-78-91",
+    owner: "Павел Т.",
+    currency: "RUB",
+    minAmount: 200,
+    maxAmount: 400000,
+    simultaneously: 3,
+    dailyAmount: 1200000,
+    monthlyAmount: 35000000,
+    maxDailyDeals: 7,
+    maxMonthlyDeals: 210,
+    delayBetweenDeals: 6,
+    todayDeals: {
+      current: 5,
+      max: 7,
+      percentage: 71.4
+    },
+    monthDeals: {
+      current: 156,
+      max: 210,
+      percentage: 74.3
+    },
+    todayAmount: {
+      current: 890000,
+      max: 1200000,
+      percentage: 74.2
+    },
+    monthAmount: {
+      current: 28700000,
+      max: 35000000,
+      percentage: 82
+    },
+    active: true
+  },
+  {
+    id: "8",
+    system: "СБП",
+    bank: "Рокетбанк",
+    phone: "+7 (966) 567-89-01",
+    owner: "Светлана Н.",
+    currency: "RUB",
+    minAmount: 50,
+    maxAmount: 600000,
+    simultaneously: 4,
+    dailyAmount: 2500000,
+    monthlyAmount: 60000000,
+    maxDailyDeals: 10,
+    maxMonthlyDeals: 300,
+    delayBetweenDeals: 1,
+    todayDeals: {
+      current: 7,
+      max: 10,
+      percentage: 70
+    },
+    monthDeals: {
+      current: 234,
+      max: 300,
+      percentage: 78
+    },
+    todayAmount: {
+      current: 1800000,
+      max: 2500000,
+      percentage: 72
+    },
+    monthAmount: {
+      current: 45000000,
+      max: 60000000,
+      percentage: 75
+    },
+    active: true
+  },
+  {
+    id: "9",
+    system: "Наличные",
+    bank: "МКБ",
+    phone: "+7 (977) 678-90-12",
+    owner: "Александр М.",
+    currency: "USD",
+    minAmount: 20,
+    maxAmount: 30000,
+    simultaneously: 1,
+    dailyAmount: 80000,
+    monthlyAmount: 1800000,
+    maxDailyDeals: 4,
+    maxMonthlyDeals: 100,
+    delayBetweenDeals: 15,
+    todayDeals: {
+      current: 2,
+      max: 4,
+      percentage: 50
+    },
+    monthDeals: {
+      current: 67,
+      max: 100,
+      percentage: 67
+    },
+    todayAmount: {
+      current: 35000,
+      max: 80000,
+      percentage: 43.8
+    },
+    monthAmount: {
+      current: 1120000,
+      max: 1800000,
+      percentage: 62.2
+    },
+    active: false
+  },
+  {
+    id: "10",
+    system: "Карта",
+    bank: "Райффайзенбанк",
+    phone: "+7 (988) 789-01-23",
+    owner: "Татьяна Л.",
+    currency: "RUB",
+    minAmount: 300,
+    maxAmount: 700000,
+    simultaneously: 2,
+    dailyAmount: 1800000,
+    monthlyAmount: 45000000,
+    maxDailyDeals: 6,
+    maxMonthlyDeals: 180,
+    delayBetweenDeals: 8,
+    todayDeals: {
+      current: 3,
+      max: 6,
+      percentage: 50
+    },
+    monthDeals: {
+      current: 98,
+      max: 180,
+      percentage: 54.4
+    },
+    todayAmount: {
+      current: 1200000,
+      max: 1800000,
+      percentage: 66.7
+    },
+    monthAmount: {
+      current: 32500000,
+      max: 45000000,
+      percentage: 72.2
+    },
+    active: true
+  }
+];
 const ProgressBar = ({
   current,
   max,
@@ -84,6 +419,27 @@ export default function PaymentDetails() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [paymentDetails, setPaymentDetails] = useState(mockPaymentDetails);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  
+  // Calculate pagination
+  const totalItems = paymentDetails.length;
+  const totalPages = Math.ceil(totalItems / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const currentData = paymentDetails.slice(startIndex, endIndex);
+  
+  // Pagination handlers
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+  
+  const handlePageSizeChange = (newPageSize: number) => {
+    setPageSize(newPageSize);
+    setCurrentPage(1); // Reset to first page when changing page size
+  };
   const [formData, setFormData] = useState({
     currency: "",
     paymentMethod: "",
@@ -369,7 +725,14 @@ export default function PaymentDetails() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {paymentDetails.map(detail => (
+            {currentData.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                  Нет данных для отображения
+                </TableCell>
+              </TableRow>
+            ) : (
+              currentData.map(detail => (
               <TableRow key={detail.id}>
                 <TableCell>
                   <div className="space-y-1">
@@ -476,14 +839,105 @@ export default function PaymentDetails() {
                   </div>
                 </TableCell>
               </TableRow>
-            ))}
+              ))
+            )}
           </TableBody>
         </Table>
       </div>
 
+      {/* Pagination */}
+      {paymentDetails.length > 0 && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">Показать:</span>
+            <Select value={pageSize.toString()} onValueChange={(value) => handlePageSizeChange(Number(value))}>
+              <SelectTrigger className="w-20">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="10">10</SelectItem>
+                <SelectItem value="20">20</SelectItem>
+                <SelectItem value="50">50</SelectItem>
+              </SelectContent>
+            </Select>
+            <span className="text-sm text-muted-foreground">
+              записей на странице
+            </span>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">
+              {startIndex + 1}-{Math.min(endIndex, totalItems)} из {totalItems}
+            </span>
+            
+            <div className="flex items-center gap-1">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                Назад
+              </Button>
+              
+              {/* Page numbers */}
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNum = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  pageNum = currentPage - 2 + i;
+                }
+                
+                return (
+                  <Button
+                    key={pageNum}
+                    variant={currentPage === pageNum ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => handlePageChange(pageNum)}
+                    className="w-8 h-8 p-0"
+                  >
+                    {pageNum}
+                  </Button>
+                );
+              })}
+              
+              {totalPages > 5 && currentPage < totalPages - 2 && (
+                <>
+                  <span className="text-muted-foreground">...</span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handlePageChange(totalPages)}
+                    className="w-8 h-8 p-0"
+                  >
+                    {totalPages}
+                  </Button>
+                </>
+              )}
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Вперед
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {paymentDetails.length === 0 && (
-        <div className="text-center py-12 border rounded-lg">
-          <p className="text-muted-foreground mb-4">Реквизиты не добавлены</p>
+        <div className="text-center py-8">
+          <p className="text-muted-foreground mb-4">
+            У вас пока нет добавленных реквизитов
+          </p>
           <Dialog open={dialogOpen} onOpenChange={handleDialogClose}>
             <DialogTrigger asChild>
               <Button>
@@ -491,12 +945,6 @@ export default function PaymentDetails() {
                 Добавить первый реквизит
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>Добавить новый реквизит</DialogTitle>
-              </DialogHeader>
-              {/* Form content would be the same as above */}
-            </DialogContent>
           </Dialog>
         </div>
       )}
