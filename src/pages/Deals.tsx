@@ -195,84 +195,82 @@ export default function Deals() {
                           <td className="py-3 px-4 text-sm text-muted-foreground">
                             {deal.completedAt || "—"}
                           </td>
-                          <td className="py-3 px-4">
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <Button size="sm" variant="outline">
-                                  Подробнее
-                                </Button>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent className="max-w-2xl">
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>Детали сделки #{deal.id}</AlertDialogTitle>
-                                </AlertDialogHeader>
-                                <div className="space-y-4">
-                                  <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                      <label className="text-sm font-medium text-muted-foreground">Статус</label>
-                                      <div className="mt-1">
-                                        <Badge variant={statusConfig.variant}>
-                                          {statusConfig.label}
-                                        </Badge>
-                                      </div>
-                                    </div>
-                                    <div>
-                                      <label className="text-sm font-medium text-muted-foreground">Награда трейдера</label>
-                                      <p className="text-sm font-semibold text-success">{deal.traderReward}</p>
-                                    </div>
-                                  </div>
-                                  
-                                  <div>
-                                    <label className="text-sm font-medium text-muted-foreground">Реквизиты платежа</label>
-                                    <div className="mt-1 space-y-2 p-3 bg-muted rounded-lg">
-                                      <div className="flex justify-between">
-                                        <span className="text-sm text-muted-foreground">Метод:</span>
-                                        <span className="text-sm font-medium">{deal.paymentMethod}</span>
-                                      </div>
-                                      <div className="flex justify-between">
-                                        <span className="text-sm text-muted-foreground">Банк:</span>
-                                        <span className="text-sm">{deal.bank}</span>
-                                      </div>
-                                      <div className="flex justify-between">
-                                        <span className="text-sm text-muted-foreground">Реквизит:</span>
-                                        <span className="text-sm font-mono">{deal.paymentDetails}</span>
-                                      </div>
-                                      <div className="flex justify-between">
-                                        <span className="text-sm text-muted-foreground">ФИО:</span>
-                                        <span className="text-sm">{deal.ownerName}</span>
-                                      </div>
-                                    </div>
-                                  </div>
+                           <td className="py-3 px-4">
+                             <div className="flex items-center gap-2">
+                               {(deal.status === "active" || deal.status === "cancelled" || deal.status === "dispute") && (
+                                 <Button size="sm" variant="default">
+                                   Подтвердить
+                                 </Button>
+                               )}
+                               <AlertDialog>
+                                 <AlertDialogTrigger asChild>
+                                   <Button size="sm" variant="ghost">
+                                     Подробнее
+                                   </Button>
+                                 </AlertDialogTrigger>
+                                 <AlertDialogContent className="max-w-2xl">
+                                   <AlertDialogHeader>
+                                     <AlertDialogTitle>Детали сделки #{deal.id}</AlertDialogTitle>
+                                   </AlertDialogHeader>
+                                   <div className="space-y-4">
+                                     <div>
+                                       <label className="text-sm font-medium text-muted-foreground">Статус</label>
+                                       <div className="mt-1">
+                                         <Badge variant={statusConfig.variant}>
+                                           {statusConfig.label}
+                                         </Badge>
+                                       </div>
+                                     </div>
+                                     
+                                     <div>
+                                       <label className="text-sm font-medium text-muted-foreground">Реквизиты платежа</label>
+                                       <div className="mt-1 space-y-2 p-3 bg-muted rounded-lg">
+                                         <div className="flex justify-between">
+                                           <span className="text-sm text-muted-foreground">Метод:</span>
+                                           <span className="text-sm font-medium">{deal.paymentMethod}</span>
+                                         </div>
+                                         <div className="flex justify-between">
+                                           <span className="text-sm text-muted-foreground">Банк:</span>
+                                           <span className="text-sm">{deal.bank}</span>
+                                         </div>
+                                         <div className="flex justify-between">
+                                           <span className="text-sm text-muted-foreground">Реквизит:</span>
+                                           <span className="text-sm font-mono">{deal.paymentDetails}</span>
+                                         </div>
+                                         <div className="flex justify-between">
+                                           <span className="text-sm text-muted-foreground">ФИО:</span>
+                                           <span className="text-sm">{deal.ownerName}</span>
+                                         </div>
+                                       </div>
+                                     </div>
 
-                                  <div>
-                                    <label className="text-sm font-medium text-muted-foreground">Сумма сделки</label>
-                                    <div className="mt-1 space-y-1">
-                                      <div className="text-sm font-semibold">{deal.amount}</div>
-                                      <div className="text-sm text-success font-semibold">{deal.amountUSDT}</div>
-                                      <div className="text-xs text-muted-foreground">Курс: {deal.exchangeRate} ₽/USDT</div>
-                                    </div>
-                                  </div>
+                                     <div>
+                                       <label className="text-sm font-medium text-muted-foreground">Сумма сделки</label>
+                                       <div className="mt-1 space-y-1">
+                                         <div className="text-sm font-semibold">{deal.amount}</div>
+                                         <div className="text-sm text-success font-semibold">{deal.amountUSDT}</div>
+                                         <div className="text-xs text-muted-foreground">Курс: {deal.exchangeRate} ₽/USDT</div>
+                                       </div>
+                                     </div>
 
-                                  <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                      <label className="text-sm font-medium text-muted-foreground">Создана</label>
-                                      <p className="text-sm">{deal.createdAt}</p>
-                                    </div>
-                                    <div>
-                                      <label className="text-sm font-medium text-muted-foreground">Завершена</label>
-                                      <p className="text-sm">{deal.completedAt || "—"}</p>
-                                    </div>
-                                  </div>
-                                </div>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Закрыть</AlertDialogCancel>
-                                  {(deal.status === "active" || deal.status === "cancelled" || deal.status === "dispute") && (
-                                    <AlertDialogAction>Подтвердить сделку</AlertDialogAction>
-                                  )}
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
-                          </td>
+                                     <div className="grid grid-cols-2 gap-4">
+                                       <div>
+                                         <label className="text-sm font-medium text-muted-foreground">Создана</label>
+                                         <p className="text-sm">{deal.createdAt}</p>
+                                       </div>
+                                       <div>
+                                         <label className="text-sm font-medium text-muted-foreground">Завершена</label>
+                                         <p className="text-sm">{deal.completedAt || "—"}</p>
+                                       </div>
+                                     </div>
+                                   </div>
+                                   <AlertDialogFooter>
+                                     <AlertDialogCancel>Закрыть</AlertDialogCancel>
+                                   </AlertDialogFooter>
+                                 </AlertDialogContent>
+                               </AlertDialog>
+                             </div>
+                           </td>
                          </tr>;
                   })}
                   </tbody>
