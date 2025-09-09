@@ -234,7 +234,7 @@ export default function Deals() {
         <CardContent className="p-0">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <div className="border-b border-border">
-              <TabsList className="grid w-full grid-cols-4 bg-transparent h-12">
+              <TabsList className="flex flex-col w-full bg-transparent sm:grid sm:grid-cols-4 sm:h-12">
                 <TabsTrigger value="active" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   Активные
                 </TabsTrigger>
