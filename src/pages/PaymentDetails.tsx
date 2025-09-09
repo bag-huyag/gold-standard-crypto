@@ -637,7 +637,13 @@ export default function PaymentDetails() {
         
         <Dialog open={dialogOpen} onOpenChange={handleDialogClose}>
           <DialogTrigger asChild>
-            <Button className="bg-primary hover:bg-primary/90">
+            <Button 
+              className="bg-primary hover:bg-primary/90"
+              onClick={() => {
+                resetForm();
+                setDialogOpen(true);
+              }}
+            >
               <Plus className="mr-2 h-4 w-4" />
               Добавить реквизит
             </Button>
@@ -650,7 +656,7 @@ export default function PaymentDetails() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="currency">Валюта</Label>
-                  <Select onValueChange={value => handleInputChange("currency", value)}>
+                  <Select value={formData.currency} onValueChange={value => handleInputChange("currency", value)}>
                     <SelectTrigger>
                       <SelectValue placeholder="Выберите валюту" />
                     </SelectTrigger>
@@ -663,14 +669,14 @@ export default function PaymentDetails() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="paymentMethod">Способ оплаты</Label>
-                  <Select onValueChange={value => handleInputChange("paymentMethod", value)}>
+                  <Select value={formData.paymentMethod} onValueChange={value => handleInputChange("paymentMethod", value)}>
                     <SelectTrigger>
                       <SelectValue placeholder="Выберите способ" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="SBP">СБП</SelectItem>
-                      <SelectItem value="CARD">Карта</SelectItem>
-                      <SelectItem value="CASH">Наличные</SelectItem>
+                      <SelectItem value="СБП">СБП</SelectItem>
+                      <SelectItem value="Карта">Карта</SelectItem>
+                      <SelectItem value="Наличные">Наличные</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -742,6 +748,10 @@ export default function PaymentDetails() {
                 <Button onClick={handleSave}>
                   {editingId ? "Обновить" : "Сохранить"}
                 </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Filters */}
@@ -826,10 +836,6 @@ export default function PaymentDetails() {
             Сбросить фильтры
           </Button>
         </div>
-      </div>
-            </div>
-          </DialogContent>
-        </Dialog>
       </div>
 
       {/* Payment Details Table */}
