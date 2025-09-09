@@ -402,8 +402,8 @@ export default function Deals() {
                 </div>}
 
               {/* Pagination - Always visible */}
-              <div className="flex items-center justify-between pt-4 border-t border-border">
-                <div className="flex items-center gap-4">
+              <div className="flex flex-col gap-4 pt-4 border-t border-border lg:flex-row lg:items-center lg:justify-between">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
                   <div className="text-sm text-muted-foreground">
                     {filteredDeals.length > 0 ? (
                       `Показано ${startIndex + 1}-${Math.min(startIndex + itemsPerPage, filteredDeals.length)} из ${filteredDeals.length} сделок`
@@ -412,7 +412,7 @@ export default function Deals() {
                     )}
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground">Показывать по:</span>
+                    <span className="text-sm text-muted-foreground whitespace-nowrap">Показывать по:</span>
                     <Select value={itemsPerPage.toString()} onValueChange={(value) => setItemsPerPage(Number(value))}>
                       <SelectTrigger className="w-20">
                         <SelectValue />
@@ -425,7 +425,7 @@ export default function Deals() {
                     </Select>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center justify-center gap-2 overflow-x-auto">
                   <Button
                     variant="outline"
                     size="sm"
