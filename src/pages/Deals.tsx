@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -64,6 +64,43 @@ export default function Deals() {
   const [minAmount, setMinAmount] = useState("");
   const [maxAmount, setMaxAmount] = useState("");
   const [activeTab, setActiveTab] = useState("active");
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const getTimeSince = (createdAt: string) => {
+    const created = new Date(createdAt.replace(/(\d{2})\.(\d{2})\.(\d{4}) (\d{2}):(\d{2}):(\d{2})/, '$3-$2-$1T$4:$5:$6'));
+    const diffMs = currentTime.getTime() - created.getTime();
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMinutes / 60);
+    const remainingMinutes = diffMinutes % 60;
+    
+    if (diffHours > 0) {
+      return `${diffHours}ч ${remainingMinutes}м`;
+    }
+    return `${diffMinutes}м`;
+  };
+
+  const getColumnTitle = () => {
+    switch (activeTab) {
+      case "active":
+        return "Время активности";
+      case "completed":
+        return "Завершено в";
+      case "cancelled":
+        return "Отменено в";
+      case "dispute":
+        return "Отменено в";
+      default:
+        return "Завершено в";
+    }
+  };
   const getStatusBadge = (status: string) => {
     const statusConfig = {
       active: {
@@ -155,7 +192,7 @@ export default function Deals() {
                       <th className="text-left py-3 px-4 font-medium text-muted-foreground min-w-[320px]">Реквизиты</th>
                       <th className="text-left py-3 px-4 font-medium text-muted-foreground">Сумма сделки</th>
                       <th className="text-left py-3 px-4 font-medium text-muted-foreground">Создана в</th>
-                      <th className="text-left py-3 px-4 font-medium text-muted-foreground">Завершена в</th>
+                      <th className="text-left py-3 px-4 font-medium text-muted-foreground">{getColumnTitle()}</th>
                       <th className="text-left py-3 px-4 font-medium text-muted-foreground">Действия</th>
                     </tr>
                   </thead>
@@ -192,9 +229,9 @@ export default function Deals() {
                             </div>
                           </td>
                           <td className="py-3 px-4 text-sm text-muted-foreground">{deal.createdAt}</td>
-                          <td className="py-3 px-4 text-sm text-muted-foreground">
-                            {deal.completedAt || "—"}
-                          </td>
+                           <td className="py-3 px-4 text-sm text-muted-foreground">
+                             {deal.status === "active" ? getTimeSince(deal.createdAt) : (deal.completedAt || "—")}
+                           </td>
                            <td className="py-3 px-4">
                              <div className="flex items-center gap-2">
                                {(deal.status === "active" || deal.status === "dispute") && (
