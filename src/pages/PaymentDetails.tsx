@@ -10,6 +10,22 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Plus, Edit, Trash2, Phone, Building } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
+const banksList = [
+  "Т-Банк",
+  "Сбербанк", 
+  "ВТБ",
+  "Альфа-Банк",
+  "Открытие",
+  "Газпромбанк",
+  "Россельхозбанк",
+  "Рокетбанк",
+  "МКБ",
+  "Райффайзенбанк",
+  "ЮMoney",
+  "QIWI",
+  "WebMoney"
+];
+
 const mockPaymentDetails = [
   {
     id: "1",
@@ -438,6 +454,7 @@ export default function PaymentDetails() {
     paymentMethod: "",
     bank: "",
     phone: "",
+    cardNumber: "",
     owner: "",
     minAmount: "",
     maxAmount: "",
@@ -449,6 +466,8 @@ export default function PaymentDetails() {
     delayBetweenDeals: "",
     active: true
   });
+
+  const [errors, setErrors] = useState<{[key: string]: string}>({});
   // Filter state
   const [filters, setFilters] = useState({
     currency: "all",
@@ -510,6 +529,47 @@ export default function PaymentDetails() {
     });
   };
 
+  const validateForm = () => {
+    const newErrors: {[key: string]: string} = {};
+    
+    if (!formData.bank) newErrors.bank = "Выберите банк";
+    if (!formData.owner.trim()) newErrors.owner = "Укажите имя владельца";
+    if (!formData.currency) newErrors.currency = "Выберите валюту";
+    if (!formData.paymentMethod) newErrors.paymentMethod = "Выберите способ оплаты";
+    
+    // Validation for phone/card based on payment method
+    if (formData.paymentMethod === "Карта") {
+      if (!formData.cardNumber.trim()) {
+        newErrors.cardNumber = "Укажите номер карты";
+      } else if (!/^\d{4}\s?\d{4}\s?\d{4}\s?\d{4}$/.test(formData.cardNumber.replace(/\s/g, ''))) {
+        newErrors.cardNumber = "Неверный формат номера карты";
+      }
+    } else if (formData.paymentMethod !== "Наличные") {
+      if (!formData.phone.trim()) {
+        newErrors.phone = "Укажите номер телефона";
+      } else if (!/^\+7\s?\(?\d{3}\)?\s?\d{3}-?\d{2}-?\d{2}$/.test(formData.phone.replace(/\s/g, ''))) {
+        newErrors.phone = "Неверный формат телефона";
+      }
+    }
+    
+    // Validate positive numbers
+    const numericFields = ['minAmount', 'maxAmount', 'dailyAmount', 'monthlyAmount', 'maxDailyDeals', 'maxMonthlyDeals', 'simultaneousDeals', 'delayBetweenDeals'];
+    numericFields.forEach(field => {
+      const value = formData[field as keyof typeof formData] as string;
+      if (value && (isNaN(Number(value)) || Number(value) < 0)) {
+        newErrors[field] = "Введите положительное число";
+      }
+    });
+    
+    // Validate max > min amounts
+    if (formData.minAmount && formData.maxAmount && Number(formData.minAmount) >= Number(formData.maxAmount)) {
+      newErrors.maxAmount = "Максимальная сумма должна быть больше минимальной";
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleEdit = (detail: typeof mockPaymentDetails[0]) => {
     setEditingId(detail.id);
     setFormData({
@@ -517,6 +577,7 @@ export default function PaymentDetails() {
       paymentMethod: detail.system,
       bank: detail.bank,
       phone: detail.phone,
+      cardNumber: "",
       owner: detail.owner,
       minAmount: detail.minAmount.toString(),
       maxAmount: detail.maxAmount.toString(),
@@ -528,6 +589,7 @@ export default function PaymentDetails() {
       delayBetweenDeals: detail.delayBetweenDeals.toString(),
       active: detail.active
     });
+    setErrors({});
     setDialogOpen(true);
   };
 
@@ -545,6 +607,7 @@ export default function PaymentDetails() {
       paymentMethod: "",
       bank: "",
       phone: "",
+      cardNumber: "",
       owner: "",
       minAmount: "",
       maxAmount: "",
@@ -557,6 +620,7 @@ export default function PaymentDetails() {
       active: true
     });
     setEditingId(null);
+    setErrors({});
   };
 
   const handleDialogClose = () => {
@@ -565,10 +629,10 @@ export default function PaymentDetails() {
   };
 
   const handleSave = () => {
-    if (!formData.bank || !formData.owner || !formData.currency || !formData.paymentMethod) {
+    if (!validateForm()) {
       toast({
         title: "Ошибка",
-        description: "Заполните все обязательные поля",
+        description: "Исправьте ошибки в форме",
         variant: "destructive"
       });
       return;
@@ -656,9 +720,9 @@ export default function PaymentDetails() {
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="currency">Валюта</Label>
+                  <Label htmlFor="currency">Валюта*</Label>
                   <Select value={formData.currency} onValueChange={value => handleInputChange("currency", value)}>
-                    <SelectTrigger>
+                    <SelectTrigger className={errors.currency ? "border-red-500" : ""}>
                       <SelectValue placeholder="Выберите валюту" />
                     </SelectTrigger>
                     <SelectContent>
@@ -667,72 +731,223 @@ export default function PaymentDetails() {
                       <SelectItem value="EUR">EUR</SelectItem>
                     </SelectContent>
                   </Select>
+                  {errors.currency && <span className="text-red-500 text-xs">{errors.currency}</span>}
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="paymentMethod">Способ оплаты</Label>
-                  <Select value={formData.paymentMethod} onValueChange={value => handleInputChange("paymentMethod", value)}>
-                    <SelectTrigger>
+                  <Label htmlFor="paymentMethod">Способ оплаты*</Label>
+                  <Select value={formData.paymentMethod} onValueChange={value => {
+                    handleInputChange("paymentMethod", value);
+                    // Clear phone/card when changing payment method
+                    handleInputChange("phone", "");
+                    handleInputChange("cardNumber", "");
+                  }}>
+                    <SelectTrigger className={errors.paymentMethod ? "border-red-500" : ""}>
                       <SelectValue placeholder="Выберите способ" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="СБП">СБП</SelectItem>
-                      <SelectItem value="Карта">Карта</SelectItem>
+                      <SelectItem value="Карта">Карта (C2C)</SelectItem>
                       <SelectItem value="Наличные">Наличные</SelectItem>
                     </SelectContent>
                   </Select>
+                  {errors.paymentMethod && <span className="text-red-500 text-xs">{errors.paymentMethod}</span>}
                 </div>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="bank">Банк</Label>
-                  <Input placeholder="Например: Т-Банк" value={formData.bank} onChange={e => handleInputChange("bank", e.target.value)} />
+                  <Label htmlFor="bank">Банк*</Label>
+                  <Select value={formData.bank} onValueChange={value => handleInputChange("bank", value)}>
+                    <SelectTrigger className={errors.bank ? "border-red-500" : ""}>
+                      <SelectValue placeholder="Выберите банк" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {banksList.map(bank => (
+                        <SelectItem key={bank} value={bank}>{bank}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {errors.bank && <span className="text-red-500 text-xs">{errors.bank}</span>}
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="owner">Имя владельца</Label>
-                  <Input placeholder="Например: Иван И." value={formData.owner} onChange={e => handleInputChange("owner", e.target.value)} />
+                  <Label htmlFor="owner">Имя владельца*</Label>
+                  <Input 
+                    placeholder="Например: Иван И." 
+                    value={formData.owner} 
+                    onChange={e => handleInputChange("owner", e.target.value)}
+                    className={errors.owner ? "border-red-500" : ""}
+                  />
+                  {errors.owner && <span className="text-red-500 text-xs">{errors.owner}</span>}
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="phone">Телефон</Label>
-                <Input placeholder="+7 (123) 456-78-90" value={formData.phone} onChange={e => handleInputChange("phone", e.target.value)} />
-              </div>
+              {/* Conditional phone/card field */}
+              {formData.paymentMethod === "Карта" ? (
+                <div className="space-y-2">
+                  <Label htmlFor="cardNumber">Номер карты*</Label>
+                  <Input 
+                    placeholder="1234 5678 9012 3456" 
+                    value={formData.cardNumber} 
+                    onChange={e => {
+                      // Format card number with spaces
+                      const value = e.target.value.replace(/\D/g, '').replace(/(\d{4})(?=\d)/g, '$1 ').substr(0, 19);
+                      handleInputChange("cardNumber", value);
+                    }}
+                    className={errors.cardNumber ? "border-red-500" : ""}
+                  />
+                  {errors.cardNumber && <span className="text-red-500 text-xs">{errors.cardNumber}</span>}
+                </div>
+              ) : formData.paymentMethod !== "Наличные" ? (
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Телефон*</Label>
+                  <Input 
+                    placeholder="+7 (123) 456-78-90" 
+                    value={formData.phone} 
+                    onChange={e => handleInputChange("phone", e.target.value)}
+                    className={errors.phone ? "border-red-500" : ""}
+                  />
+                  {errors.phone && <span className="text-red-500 text-xs">{errors.phone}</span>}
+                </div>
+              ) : null}
 
               <div className="border-t pt-4">
                 <h4 className="font-medium mb-4">Лимиты</h4>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>Мин сумма сделки</Label>
-                    <Input type="number" placeholder="0" value={formData.minAmount} onChange={e => handleInputChange("minAmount", e.target.value)} />
+                    <Input 
+                      type="number" 
+                      placeholder="0" 
+                      min="0"
+                      value={formData.minAmount} 
+                      onChange={e => {
+                        const value = e.target.value;
+                        if (value === '' || (!isNaN(Number(value)) && Number(value) >= 0)) {
+                          handleInputChange("minAmount", value);
+                        }
+                      }}
+                      className={errors.minAmount ? "border-red-500" : ""}
+                    />
+                    {errors.minAmount && <span className="text-red-500 text-xs">{errors.minAmount}</span>}
                   </div>
                   <div className="space-y-2">
                     <Label>Макс сумма сделки</Label>
-                    <Input type="number" placeholder="1000000" value={formData.maxAmount} onChange={e => handleInputChange("maxAmount", e.target.value)} />
+                    <Input 
+                      type="number" 
+                      placeholder="1000000" 
+                      min="0"
+                      value={formData.maxAmount} 
+                      onChange={e => {
+                        const value = e.target.value;
+                        if (value === '' || (!isNaN(Number(value)) && Number(value) >= 0)) {
+                          handleInputChange("maxAmount", value);
+                        }
+                      }}
+                      className={errors.maxAmount ? "border-red-500" : ""}
+                    />
+                    {errors.maxAmount && <span className="text-red-500 text-xs">{errors.maxAmount}</span>}
                   </div>
                   <div className="space-y-2">
                     <Label>Сумма (день)</Label>
-                    <Input type="number" placeholder="1000000" value={formData.dailyAmount} onChange={e => handleInputChange("dailyAmount", e.target.value)} />
+                    <Input 
+                      type="number" 
+                      placeholder="1000000" 
+                      min="0"
+                      value={formData.dailyAmount} 
+                      onChange={e => {
+                        const value = e.target.value;
+                        if (value === '' || (!isNaN(Number(value)) && Number(value) >= 0)) {
+                          handleInputChange("dailyAmount", value);
+                        }
+                      }}
+                      className={errors.dailyAmount ? "border-red-500" : ""}
+                    />
+                    {errors.dailyAmount && <span className="text-red-500 text-xs">{errors.dailyAmount}</span>}
                   </div>
                   <div className="space-y-2">
                     <Label>Сумма (месяц)</Label>
-                    <Input type="number" placeholder="30000000" value={formData.monthlyAmount} onChange={e => handleInputChange("monthlyAmount", e.target.value)} />
+                    <Input 
+                      type="number" 
+                      placeholder="30000000" 
+                      min="0"
+                      value={formData.monthlyAmount} 
+                      onChange={e => {
+                        const value = e.target.value;
+                        if (value === '' || (!isNaN(Number(value)) && Number(value) >= 0)) {
+                          handleInputChange("monthlyAmount", value);
+                        }
+                      }}
+                      className={errors.monthlyAmount ? "border-red-500" : ""}
+                    />
+                    {errors.monthlyAmount && <span className="text-red-500 text-xs">{errors.monthlyAmount}</span>}
                   </div>
                   <div className="space-y-2">
                     <Label>Макс кол-во сделок (день)</Label>
-                    <Input type="number" placeholder="10" value={formData.maxDailyDeals} onChange={e => handleInputChange("maxDailyDeals", e.target.value)} />
+                    <Input 
+                      type="number" 
+                      placeholder="10" 
+                      min="1"
+                      value={formData.maxDailyDeals} 
+                      onChange={e => {
+                        const value = e.target.value;
+                        if (value === '' || (!isNaN(Number(value)) && Number(value) >= 0)) {
+                          handleInputChange("maxDailyDeals", value);
+                        }
+                      }}
+                      className={errors.maxDailyDeals ? "border-red-500" : ""}
+                    />
+                    {errors.maxDailyDeals && <span className="text-red-500 text-xs">{errors.maxDailyDeals}</span>}
                   </div>
                   <div className="space-y-2">
                     <Label>Макс кол-во сделок (месяц)</Label>
-                    <Input type="number" placeholder="300" value={formData.maxMonthlyDeals} onChange={e => handleInputChange("maxMonthlyDeals", e.target.value)} />
+                    <Input 
+                      type="number" 
+                      placeholder="300" 
+                      min="1"
+                      value={formData.maxMonthlyDeals} 
+                      onChange={e => {
+                        const value = e.target.value;
+                        if (value === '' || (!isNaN(Number(value)) && Number(value) >= 0)) {
+                          handleInputChange("maxMonthlyDeals", value);
+                        }
+                      }}
+                      className={errors.maxMonthlyDeals ? "border-red-500" : ""}
+                    />
+                    {errors.maxMonthlyDeals && <span className="text-red-500 text-xs">{errors.maxMonthlyDeals}</span>}
                   </div>
                   <div className="space-y-2">
                     <Label>Сделок одновременно</Label>
-                    <Input type="number" placeholder="2" value={formData.simultaneousDeals} onChange={e => handleInputChange("simultaneousDeals", e.target.value)} />
+                    <Input 
+                      type="number" 
+                      placeholder="2" 
+                      min="1"
+                      value={formData.simultaneousDeals} 
+                      onChange={e => {
+                        const value = e.target.value;
+                        if (value === '' || (!isNaN(Number(value)) && Number(value) >= 0)) {
+                          handleInputChange("simultaneousDeals", value);
+                        }
+                      }}
+                      className={errors.simultaneousDeals ? "border-red-500" : ""}
+                    />
+                    {errors.simultaneousDeals && <span className="text-red-500 text-xs">{errors.simultaneousDeals}</span>}
                   </div>
                   <div className="space-y-2">
                     <Label>Задержка между сделками (мин)</Label>
-                    <Input type="number" placeholder="5" value={formData.delayBetweenDeals} onChange={e => handleInputChange("delayBetweenDeals", e.target.value)} />
+                    <Input 
+                      type="number" 
+                      placeholder="5" 
+                      min="0"
+                      value={formData.delayBetweenDeals} 
+                      onChange={e => {
+                        const value = e.target.value;
+                        if (value === '' || (!isNaN(Number(value)) && Number(value) >= 0)) {
+                          handleInputChange("delayBetweenDeals", value);
+                        }
+                      }}
+                      className={errors.delayBetweenDeals ? "border-red-500" : ""}
+                    />
+                    {errors.delayBetweenDeals && <span className="text-red-500 text-xs">{errors.delayBetweenDeals}</span>}
                   </div>
                 </div>
               </div>
