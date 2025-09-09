@@ -5,7 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Search, Filter } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Search, Filter, CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 const mockDeals = [{
   id: "12345",
   paymentMethod: "СБП",
@@ -65,6 +69,8 @@ export default function Deals() {
   const [maxAmount, setMaxAmount] = useState("");
   const [activeTab, setActiveTab] = useState("active");
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [dateFrom, setDateFrom] = useState<Date>();
+  const [dateTo, setDateTo] = useState<Date>();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -142,7 +148,7 @@ export default function Deals() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-5">
             <div className="space-y-2">
               <label className="text-sm font-medium">Поиск по ID</label>
               <div className="relative">
@@ -157,6 +163,58 @@ export default function Deals() {
             <div className="space-y-2">
               <label className="text-sm font-medium">Макс. сумма (RUB)</label>
               <Input type="number" placeholder="1000000" value={maxAmount} onChange={e => setMaxAmount(e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Время от</label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !dateFrom && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {dateFrom ? format(dateFrom, "dd.MM.yyyy") : "Выберите дату"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={dateFrom}
+                    onSelect={setDateFrom}
+                    initialFocus
+                    className={cn("p-3 pointer-events-auto")}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Время до</label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !dateTo && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {dateTo ? format(dateTo, "dd.MM.yyyy") : "Выберите дату"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={dateTo}
+                    onSelect={setDateTo}
+                    initialFocus
+                    className={cn("p-3 pointer-events-auto")}
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
         </CardContent>
