@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, Filter, CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -68,7 +69,7 @@ export default function Deals() {
   const [dateFrom, setDateFrom] = useState<Date>();
   const [dateTo, setDateTo] = useState<Date>();
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -137,10 +138,10 @@ export default function Deals() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedDeals = filteredDeals.slice(startIndex, startIndex + itemsPerPage);
 
-  // Reset to first page when tab changes
+  // Reset to first page when tab changes or page size changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [activeTab]);
+  }, [activeTab, itemsPerPage]);
   return <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
@@ -403,8 +404,23 @@ export default function Deals() {
               {/* Pagination */}
               {totalPages > 1 && (
                 <div className="flex items-center justify-between pt-4 border-t border-border">
-                  <div className="text-sm text-muted-foreground">
-                    Показано {startIndex + 1}-{Math.min(startIndex + itemsPerPage, filteredDeals.length)} из {filteredDeals.length} сделок
+                  <div className="flex items-center gap-4">
+                    <div className="text-sm text-muted-foreground">
+                      Показано {startIndex + 1}-{Math.min(startIndex + itemsPerPage, filteredDeals.length)} из {filteredDeals.length} сделок
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground">Показывать по:</span>
+                      <Select value={itemsPerPage.toString()} onValueChange={(value) => setItemsPerPage(Number(value))}>
+                        <SelectTrigger className="w-20">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="10">10</SelectItem>
+                          <SelectItem value="20">20</SelectItem>
+                          <SelectItem value="50">50</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <Button
@@ -417,17 +433,68 @@ export default function Deals() {
                       Назад
                     </Button>
                     <div className="flex items-center gap-1">
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                        <Button
-                          key={page}
-                          variant={currentPage === page ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => setCurrentPage(page)}
-                          className="w-8 h-8 p-0"
-                        >
-                          {page}
-                        </Button>
-                      ))}
+                      {(() => {
+                        const maxVisiblePages = 5;
+                        const halfVisible = Math.floor(maxVisiblePages / 2);
+                        let startPage = Math.max(1, currentPage - halfVisible);
+                        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+                        
+                        if (endPage - startPage < maxVisiblePages - 1) {
+                          startPage = Math.max(1, endPage - maxVisiblePages + 1);
+                        }
+                        
+                        const pages = [];
+                        
+                        if (startPage > 1) {
+                          pages.push(
+                            <Button
+                              key={1}
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setCurrentPage(1)}
+                              className="w-8 h-8 p-0"
+                            >
+                              1
+                            </Button>
+                          );
+                          if (startPage > 2) {
+                            pages.push(<span key="ellipsis1" className="px-2 text-muted-foreground">...</span>);
+                          }
+                        }
+                        
+                        for (let i = startPage; i <= endPage; i++) {
+                          pages.push(
+                            <Button
+                              key={i}
+                              variant={currentPage === i ? "default" : "outline"}
+                              size="sm"
+                              onClick={() => setCurrentPage(i)}
+                              className="w-8 h-8 p-0"
+                            >
+                              {i}
+                            </Button>
+                          );
+                        }
+                        
+                        if (endPage < totalPages) {
+                          if (endPage < totalPages - 1) {
+                            pages.push(<span key="ellipsis2" className="px-2 text-muted-foreground">...</span>);
+                          }
+                          pages.push(
+                            <Button
+                              key={totalPages}
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setCurrentPage(totalPages)}
+                              className="w-8 h-8 p-0"
+                            >
+                              {totalPages}
+                            </Button>
+                          );
+                        }
+                        
+                        return pages;
+                      })()}
                     </div>
                     <Button
                       variant="outline"
