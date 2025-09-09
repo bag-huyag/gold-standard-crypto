@@ -197,10 +197,26 @@ export default function Deals() {
                           </td>
                            <td className="py-3 px-4">
                              <div className="flex items-center gap-2">
-                               {(deal.status === "active" || deal.status === "cancelled" || deal.status === "dispute") && (
-                                 <Button size="sm" variant="default">
-                                   Подтвердить
-                                 </Button>
+                               {(deal.status === "active" || deal.status === "dispute") && (
+                                 <AlertDialog>
+                                   <AlertDialogTrigger asChild>
+                                     <Button size="sm" variant="default">
+                                       Подтвердить
+                                     </Button>
+                                   </AlertDialogTrigger>
+                                   <AlertDialogContent>
+                                     <AlertDialogHeader>
+                                       <AlertDialogTitle>Подтверждение сделки</AlertDialogTitle>
+                                       <AlertDialogDescription>
+                                         Вы действительно хотите подтвердить сделку #{deal.id}?
+                                       </AlertDialogDescription>
+                                     </AlertDialogHeader>
+                                     <AlertDialogFooter>
+                                       <AlertDialogCancel>Нет</AlertDialogCancel>
+                                       <AlertDialogAction>Да</AlertDialogAction>
+                                     </AlertDialogFooter>
+                                   </AlertDialogContent>
+                                 </AlertDialog>
                                )}
                                <AlertDialog>
                                  <AlertDialogTrigger asChild>
