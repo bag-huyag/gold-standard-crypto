@@ -424,13 +424,6 @@ export default function PaymentDetails() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   
-  // Calculate pagination
-  const totalItems = paymentDetails.length;
-  const totalPages = Math.ceil(totalItems / pageSize);
-  const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = startIndex + pageSize;
-  const currentData = paymentDetails.slice(startIndex, endIndex);
-  
   // Pagination handlers
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -456,12 +449,56 @@ export default function PaymentDetails() {
     delayBetweenDeals: "",
     active: true
   });
+  // Filter state
+  const [filters, setFilters] = useState({
+    currency: "all",
+    paymentMethod: "all", 
+    paymentType: "all",
+    status: "all"
+  });
+
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
   };
+
+  const handleFilterChange = (filterType: string, value: string) => {
+    setFilters(prev => ({
+      ...prev,
+      [filterType]: value
+    }));
+    setCurrentPage(1); // Reset to first page when filter changes
+  };
+
+  // Apply filters to payment details
+  const filteredPaymentDetails = paymentDetails.filter(detail => {
+    if (filters.currency !== "all" && detail.currency !== filters.currency) return false;
+    if (filters.paymentMethod !== "all" && detail.system !== filters.paymentMethod) return false;
+    if (filters.paymentType !== "all") {
+      // Group payment types
+      const cardTypes = ["Карта"];
+      const cashTypes = ["Наличные"];
+      const digitalTypes = ["СБП"];
+      
+      if (filters.paymentType === "card" && !cardTypes.includes(detail.system)) return false;
+      if (filters.paymentType === "cash" && !cashTypes.includes(detail.system)) return false;
+      if (filters.paymentType === "digital" && !digitalTypes.includes(detail.system)) return false;
+    }
+    if (filters.status !== "all") {
+      if (filters.status === "active" && !detail.active) return false;
+      if (filters.status === "inactive" && detail.active) return false;
+    }
+    return true;
+  });
+
+  // Update pagination calculations to use filtered data
+  const totalItems = filteredPaymentDetails.length;
+  const totalPages = Math.ceil(totalItems / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const currentData = filteredPaymentDetails.slice(startIndex, endIndex);
 
   const handleToggleStatus = (id: string) => {
     setPaymentDetails(prev => prev.map(detail => 
@@ -705,7 +742,91 @@ export default function PaymentDetails() {
                 <Button onClick={handleSave}>
                   {editingId ? "Обновить" : "Сохранить"}
                 </Button>
-              </div>
+      </div>
+
+      {/* Filters */}
+      <div className="bg-card rounded-lg border p-4">
+        <h3 className="text-lg font-medium mb-4">Фильтры</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="space-y-2">
+            <Label>Валюта</Label>
+            <Select value={filters.currency} onValueChange={(value) => handleFilterChange("currency", value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Все валюты" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Все валюты</SelectItem>
+                <SelectItem value="RUB">RUB</SelectItem>
+                <SelectItem value="USD">USD</SelectItem>
+                <SelectItem value="EUR">EUR</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div className="space-y-2">
+            <Label>Способ оплаты</Label>
+            <Select value={filters.paymentMethod} onValueChange={(value) => handleFilterChange("paymentMethod", value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Все способы" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Все способы</SelectItem>
+                <SelectItem value="СБП">СБП</SelectItem>
+                <SelectItem value="Карта">Карта</SelectItem>
+                <SelectItem value="Наличные">Наличные</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div className="space-y-2">
+            <Label>Тип оплаты</Label>
+            <Select value={filters.paymentType} onValueChange={(value) => handleFilterChange("paymentType", value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Все типы" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Все типы</SelectItem>
+                <SelectItem value="digital">Цифровые</SelectItem>
+                <SelectItem value="card">Карточные</SelectItem>
+                <SelectItem value="cash">Наличные</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div className="space-y-2">
+            <Label>Статус</Label>
+            <Select value={filters.status} onValueChange={(value) => handleFilterChange("status", value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Все статусы" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Все статусы</SelectItem>
+                <SelectItem value="active">Активен</SelectItem>
+                <SelectItem value="inactive">Отключён</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        
+        {/* Reset filters button */}
+        <div className="mt-4">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => {
+              setFilters({
+                currency: "all",
+                paymentMethod: "all",
+                paymentType: "all", 
+                status: "all"
+              });
+              setCurrentPage(1);
+            }}
+          >
+            Сбросить фильтры
+          </Button>
+        </div>
+      </div>
             </div>
           </DialogContent>
         </Dialog>
@@ -845,8 +966,31 @@ export default function PaymentDetails() {
         </Table>
       </div>
 
+      {/* Show "no results" message when filters return empty results */}
+      {filteredPaymentDetails.length === 0 && paymentDetails.length > 0 && (
+        <div className="text-center py-8">
+          <p className="text-muted-foreground mb-4">
+            Нет реквизитов, соответствующих выбранным фильтрам
+          </p>
+          <Button 
+            variant="outline"
+            onClick={() => {
+              setFilters({
+                currency: "all",
+                paymentMethod: "all",
+                paymentType: "all",
+                status: "all"
+              });
+              setCurrentPage(1);
+            }}
+          >
+            Сбросить фильтры
+          </Button>
+        </div>
+      )}
+
       {/* Pagination */}
-      {paymentDetails.length > 0 && (
+      {filteredPaymentDetails.length > 0 && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">Показать:</span>
