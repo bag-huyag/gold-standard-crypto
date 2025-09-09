@@ -639,10 +639,7 @@ export default function PaymentDetails() {
           <DialogTrigger asChild>
             <Button 
               className="bg-primary hover:bg-primary/90"
-              onClick={() => {
-                resetForm();
-                setDialogOpen(true);
-              }}
+              onClick={() => resetForm()}
             >
               <Plus className="mr-2 h-4 w-4" />
               Добавить реквизит
