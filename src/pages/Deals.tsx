@@ -401,113 +401,125 @@ export default function Deals() {
                   <p className="text-muted-foreground rounded-none">Сделки не найдены</p>
                 </div>}
 
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="flex items-center justify-between pt-4 border-t border-border">
-                  <div className="flex items-center gap-4">
-                    <div className="text-sm text-muted-foreground">
-                      Показано {startIndex + 1}-{Math.min(startIndex + itemsPerPage, filteredDeals.length)} из {filteredDeals.length} сделок
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground">Показывать по:</span>
-                      <Select value={itemsPerPage.toString()} onValueChange={(value) => setItemsPerPage(Number(value))}>
-                        <SelectTrigger className="w-20">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="10">10</SelectItem>
-                          <SelectItem value="20">20</SelectItem>
-                          <SelectItem value="50">50</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+              {/* Pagination - Always visible */}
+              <div className="flex items-center justify-between pt-4 border-t border-border">
+                <div className="flex items-center gap-4">
+                  <div className="text-sm text-muted-foreground">
+                    {filteredDeals.length > 0 ? (
+                      `Показано ${startIndex + 1}-${Math.min(startIndex + itemsPerPage, filteredDeals.length)} из ${filteredDeals.length} сделок`
+                    ) : (
+                      "0 сделок"
+                    )}
                   </div>
                   <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                      disabled={currentPage === 1}
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                      Назад
-                    </Button>
-                    <div className="flex items-center gap-1">
-                      {(() => {
-                        const maxVisiblePages = 5;
-                        const halfVisible = Math.floor(maxVisiblePages / 2);
-                        let startPage = Math.max(1, currentPage - halfVisible);
-                        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-                        
-                        if (endPage - startPage < maxVisiblePages - 1) {
-                          startPage = Math.max(1, endPage - maxVisiblePages + 1);
-                        }
-                        
-                        const pages = [];
-                        
-                        if (startPage > 1) {
-                          pages.push(
-                            <Button
-                              key={1}
-                              variant="outline"
-                              size="sm"
-                              onClick={() => setCurrentPage(1)}
-                              className="w-8 h-8 p-0"
-                            >
-                              1
-                            </Button>
-                          );
-                          if (startPage > 2) {
-                            pages.push(<span key="ellipsis1" className="px-2 text-muted-foreground">...</span>);
-                          }
-                        }
-                        
-                        for (let i = startPage; i <= endPage; i++) {
-                          pages.push(
-                            <Button
-                              key={i}
-                              variant={currentPage === i ? "default" : "outline"}
-                              size="sm"
-                              onClick={() => setCurrentPage(i)}
-                              className="w-8 h-8 p-0"
-                            >
-                              {i}
-                            </Button>
-                          );
-                        }
-                        
-                        if (endPage < totalPages) {
-                          if (endPage < totalPages - 1) {
-                            pages.push(<span key="ellipsis2" className="px-2 text-muted-foreground">...</span>);
-                          }
-                          pages.push(
-                            <Button
-                              key={totalPages}
-                              variant="outline"
-                              size="sm"
-                              onClick={() => setCurrentPage(totalPages)}
-                              className="w-8 h-8 p-0"
-                            >
-                              {totalPages}
-                            </Button>
-                          );
-                        }
-                        
-                        return pages;
-                      })()}
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                      disabled={currentPage === totalPages}
-                    >
-                      Вперед
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
+                    <span className="text-sm text-muted-foreground">Показывать по:</span>
+                    <Select value={itemsPerPage.toString()} onValueChange={(value) => setItemsPerPage(Number(value))}>
+                      <SelectTrigger className="w-20">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="10">10</SelectItem>
+                        <SelectItem value="20">20</SelectItem>
+                        <SelectItem value="50">50</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
-              )}
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1 || filteredDeals.length === 0}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    Назад
+                  </Button>
+                  <div className="flex items-center gap-1">
+                    {totalPages > 0 && (() => {
+                      const maxVisiblePages = 5;
+                      const halfVisible = Math.floor(maxVisiblePages / 2);
+                      let startPage = Math.max(1, currentPage - halfVisible);
+                      let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+                      
+                      if (endPage - startPage < maxVisiblePages - 1) {
+                        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+                      }
+                      
+                      const pages = [];
+                      
+                      if (startPage > 1) {
+                        pages.push(
+                          <Button
+                            key={1}
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setCurrentPage(1)}
+                            className="w-8 h-8 p-0"
+                          >
+                            1
+                          </Button>
+                        );
+                        if (startPage > 2) {
+                          pages.push(<span key="ellipsis1" className="px-2 text-muted-foreground">...</span>);
+                        }
+                      }
+                      
+                      for (let i = startPage; i <= endPage; i++) {
+                        pages.push(
+                          <Button
+                            key={i}
+                            variant={currentPage === i ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => setCurrentPage(i)}
+                            className="w-8 h-8 p-0"
+                          >
+                            {i}
+                          </Button>
+                        );
+                      }
+                      
+                      if (endPage < totalPages) {
+                        if (endPage < totalPages - 1) {
+                          pages.push(<span key="ellipsis2" className="px-2 text-muted-foreground">...</span>);
+                        }
+                        pages.push(
+                          <Button
+                            key={totalPages}
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setCurrentPage(totalPages)}
+                            className="w-8 h-8 p-0"
+                          >
+                            {totalPages}
+                          </Button>
+                        );
+                      }
+                      
+                      return pages;
+                    })()}
+                    {totalPages === 0 && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled
+                        className="w-8 h-8 p-0"
+                      >
+                        1
+                      </Button>
+                    )}
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages || filteredDeals.length === 0}
+                  >
+                    Вперед
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
             </div>
           </Tabs>
         </CardContent>
