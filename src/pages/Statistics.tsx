@@ -120,16 +120,8 @@ export default function Statistics() {
         </CardContent>
       </Card>
 
-      {/* Main Statistics */}
+      {/* Success Statistics - Green Theme */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <StatCard
-          title="Отменённых сделок"
-          value={stats.cancelled.deals}
-          subtitle="Отклонено заявок"
-          icon={TrendingDown}
-          variant="destructive"
-        />
-        
         <StatCard
           title="Успешных сделок"
           value={stats.successful.deals}
@@ -153,9 +145,26 @@ export default function Statistics() {
           icon={RubleIcon}
           variant="success"
         />
+        
+        <StatCard
+          title="Прибыль в крипте"
+          value={`${stats.crypto.profit} USD`}
+          subtitle="Чистая прибыль"
+          icon={TrendingUp}
+          variant="warning"
+        />
       </div>
 
+      {/* Failed Statistics - Red Theme & Other */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          title="Отменённых сделок"
+          value={stats.cancelled.deals}
+          subtitle="Отклонено заявок"
+          icon={TrendingDown}
+          variant="destructive"
+        />
+        
         <StatCard
           title="Сумма в крипте (отмена)"
           value={`${stats.crypto.cancelled} USD`}
@@ -170,14 +179,6 @@ export default function Statistics() {
           subtitle="Отклонённые заявки"
           icon={RubleIcon}
           variant="destructive"
-        />
-        
-        <StatCard
-          title="Прибыль в крипте"
-          value={`${stats.crypto.profit} USD`}
-          subtitle="Чистая прибыль"
-          icon={TrendingUp}
-          variant="warning"
         />
         
         <StatCard

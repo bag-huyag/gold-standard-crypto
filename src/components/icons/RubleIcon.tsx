@@ -13,9 +13,16 @@ export const RubleIcon = (props: LucideProps) => (
     strokeLinecap="round"
     strokeLinejoin="round"
   >
-    <path d="M6 8h6a3 3 0 0 1 0 6H6" />
-    <path d="M6 11h8" />
-    <path d="M6 8V4" />
-    <path d="M6 14v6" />
+    {/* Main vertical line */}
+    <path d="M7 4v16" strokeWidth="2.5" />
+    {/* Top horizontal part forming the P */}
+    <path d="M7 4h6a4 4 0 0 1 0 8H7" strokeWidth="2.5" />
+    {/* First horizontal line */}
+    <path d="M5 11h8" strokeWidth="2" />
+    {/* Second horizontal line */}
+    <path d="M5 15h6" strokeWidth="2" />
+    {/* Decorative elements */}
+    <circle cx="15" cy="8" r="1" fill="currentColor" opacity="0.6" />
+    <circle cx="13" cy="6" r="0.5" fill="currentColor" opacity="0.4" />
   </svg>
 );
