@@ -950,8 +950,8 @@ export default function Deals() {
                         </td>
                         <td className="py-3 px-4">
                           <div className="flex gap-2 items-center">
-                            {/* Кнопка подтвердить - не показывать для отмененных */}
-                            {activeTab !== "cancelled" && (
+                            {/* Кнопка подтвердить - не показывать для отмененных и завершенных */}
+                            {activeTab !== "cancelled" && activeTab !== "completed" && (
                               <AlertDialog>
                                 <AlertDialogTrigger asChild>
                                   <Button size="sm" variant="outline">
