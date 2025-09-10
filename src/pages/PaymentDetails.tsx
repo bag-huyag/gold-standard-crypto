@@ -731,7 +731,16 @@ export default function PaymentDetails() {
     handleDialogClose();
   };
 
-  // Device management functions
+  const handleToggleDeviceStatus = (id: string) => {
+    setDevices(prev => prev.map(device => 
+      device.id === id ? { ...device, status: device.status === "active" ? "inactive" : "active" } : device
+    ));
+    toast({
+      title: "Статус устройства изменен",
+      description: "Статус устройства был успешно изменен",
+    });
+  };
+
   const handleDeviceInputChange = (field: string, value: string) => {
     setDeviceFormData(prev => ({
       ...prev,
@@ -860,13 +869,13 @@ export default function PaymentDetails() {
                   <div className="border rounded-lg overflow-hidden">
                     <Table>
                       <TableHeader>
-                        <TableRow>
-                          <TableHead>ID</TableHead>
-                          <TableHead>Имя</TableHead>
-                          <TableHead>Статус</TableHead>
-                          <TableHead>Последний вход</TableHead>
-                          <TableHead>Действия</TableHead>
-                        </TableRow>
+                          <TableRow>
+                            <TableHead>ID</TableHead>
+                            <TableHead>Имя</TableHead>
+                            <TableHead>Статус</TableHead>
+                            <TableHead>Последний вход</TableHead>
+                            <TableHead>Действия</TableHead>
+                          </TableRow>
                       </TableHeader>
                       <TableBody>
                         {devices.length === 0 ? (
@@ -889,9 +898,15 @@ export default function PaymentDetails() {
                                 </div>
                               </TableCell>
                               <TableCell>
-                                <Badge variant={device.status === "active" ? "default" : "secondary"}>
-                                  {device.status === "active" ? "Активно" : "Неактивно"}
-                                </Badge>
+                                <div className="flex items-center gap-2">
+                                  <Switch 
+                                    checked={device.status === "active"} 
+                                    onCheckedChange={() => handleToggleDeviceStatus(device.id)}
+                                  />
+                                  <Badge variant={device.status === "active" ? "default" : "secondary"}>
+                                    {device.status === "active" ? "Активно" : "Неактивно"}
+                                  </Badge>
+                                </div>
                               </TableCell>
                               <TableCell className="text-sm text-muted-foreground">
                                 {device.lastLogin}
