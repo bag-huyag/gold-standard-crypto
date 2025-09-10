@@ -971,18 +971,6 @@ export default function PaymentDetails() {
                         />
                         {deviceErrors.name && <span className="text-red-500 text-xs">{deviceErrors.name}</span>}
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="deviceStatus">Статус</Label>
-                        <Select value={deviceFormData.status} onValueChange={value => handleDeviceInputChange("status", value)}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Выберите статус" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="active">Активно</SelectItem>
-                            <SelectItem value="inactive">Неактивно</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
                     </div>
                     <div className="flex justify-end space-x-2 mt-4">
                       <Button variant="outline" onClick={resetDeviceForm}>
