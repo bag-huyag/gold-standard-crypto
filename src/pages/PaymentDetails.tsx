@@ -32,21 +32,24 @@ const mockDevices = [
     name: "Основной компьютер",
     status: "active",
     lastLogin: "2024-01-15 14:30:25",
-    qrCode: "device_1_qr_code_data"
+    qrCode: "device_1_qr_code_data",
+    paymentDetailId: "1"
   },
   {
     id: "2", 
     name: "Мобильное устройство",
     status: "active",
     lastLogin: "2024-01-14 09:15:42",
-    qrCode: "device_2_qr_code_data"
+    qrCode: "device_2_qr_code_data",
+    paymentDetailId: "2"
   },
   {
     id: "3",
     name: "Резервный ноутбук",
     status: "inactive",
     lastLogin: "2024-01-10 16:22:13",
-    qrCode: "device_3_qr_code_data"
+    qrCode: "device_3_qr_code_data",
+    paymentDetailId: "3"
   }
 ];
 
@@ -462,7 +465,8 @@ export default function PaymentDetails() {
   const [currentQrDevice, setCurrentQrDevice] = useState<string>("");
   const [deviceFormData, setDeviceFormData] = useState({
     name: "",
-    status: "active"
+    status: "active",
+    paymentDetailId: ""
   });
   const [deviceErrors, setDeviceErrors] = useState<{[key: string]: string}>({});
   
@@ -746,6 +750,7 @@ export default function PaymentDetails() {
     const newErrors: {[key: string]: string} = {};
     
     if (!deviceFormData.name.trim()) newErrors.name = "Укажите название устройства";
+    if (!deviceFormData.paymentDetailId) newErrors.paymentDetailId = "Выберите реквизит";
     
     setDeviceErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -755,7 +760,8 @@ export default function PaymentDetails() {
     setEditingDeviceId(device.id);
     setDeviceFormData({
       name: device.name,
-      status: device.status
+      status: device.status,
+      paymentDetailId: device.paymentDetailId
     });
     setDeviceErrors({});
   };
@@ -771,7 +777,8 @@ export default function PaymentDetails() {
   const resetDeviceForm = () => {
     setDeviceFormData({
       name: "",
-      status: "active"
+      status: "active",
+      paymentDetailId: ""
     });
     setEditingDeviceId(null);
     setDeviceErrors({});
@@ -792,7 +799,8 @@ export default function PaymentDetails() {
       name: deviceFormData.name,
       status: deviceFormData.status,
       lastLogin: new Date().toISOString().slice(0, 19).replace('T', ' '),
-      qrCode: `device_${Date.now()}_qr_code_data`
+      qrCode: `device_${Date.now()}_qr_code_data`,
+      paymentDetailId: deviceFormData.paymentDetailId
     };
 
     if (editingDeviceId) {
@@ -964,6 +972,22 @@ export default function PaymentDetails() {
                           className={deviceErrors.name ? "border-red-500" : ""}
                         />
                         {deviceErrors.name && <span className="text-red-500 text-xs">{deviceErrors.name}</span>}
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="devicePaymentDetail">Реквизит*</Label>
+                        <Select value={deviceFormData.paymentDetailId} onValueChange={value => handleDeviceInputChange("paymentDetailId", value)}>
+                          <SelectTrigger className={deviceErrors.paymentDetailId ? "border-red-500" : ""}>
+                            <SelectValue placeholder="Выберите реквизит" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {paymentDetails.map(detail => (
+                              <SelectItem key={detail.id} value={detail.id}>
+                                {detail.bank} - {detail.system} ({detail.currency})
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        {deviceErrors.paymentDetailId && <span className="text-red-500 text-xs">{deviceErrors.paymentDetailId}</span>}
                       </div>
                     </div>
                     <div className="flex justify-end space-x-2 mt-4">
@@ -1440,7 +1464,7 @@ export default function PaymentDetails() {
               <TableRow key={detail.id}>
                 <TableCell>
                   <div className="space-y-1 text-xs">
-                    <div className="font-medium">Основной компьютер</div>
+                    <div className="font-medium">{devices.find(d => d.paymentDetailId === detail.id)?.name || "Основной компьютер"}</div>
                     <div className="text-muted-foreground font-mono">#{detail.id}</div>
                   </div>
                 </TableCell>
