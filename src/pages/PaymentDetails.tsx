@@ -898,15 +898,9 @@ export default function PaymentDetails() {
                                 </div>
                               </TableCell>
                               <TableCell>
-                                <div className="flex items-center gap-2">
-                                  <Switch 
-                                    checked={device.status === "active"} 
-                                    onCheckedChange={() => handleToggleDeviceStatus(device.id)}
-                                  />
-                                  <Badge variant={device.status === "active" ? "default" : "secondary"}>
-                                    {device.status === "active" ? "Активно" : "Неактивно"}
-                                  </Badge>
-                                </div>
+                                <Badge variant={device.status === "active" ? "default" : "secondary"}>
+                                  {device.status === "active" ? "Активно" : "Неактивно"}
+                                </Badge>
                               </TableCell>
                               <TableCell className="text-sm text-muted-foreground">
                                 {device.lastLogin}
