@@ -28,28 +28,25 @@ const banksList = [
 
 const mockDevices = [
   {
-    id: "1",
+    id: "1", 
     name: "Основной компьютер",
     status: "active",
     lastLogin: "2024-01-15 14:30:25",
-    qrCode: "device_1_qr_code_data",
-    paymentDetailId: "1"
+    qrCode: "device_1_qr_code_data"
   },
   {
     id: "2", 
     name: "Мобильное устройство",
     status: "active",
     lastLogin: "2024-01-14 09:15:42",
-    qrCode: "device_2_qr_code_data",
-    paymentDetailId: "2"
+    qrCode: "device_2_qr_code_data"
   },
   {
     id: "3",
     name: "Резервный ноутбук",
     status: "inactive",
     lastLogin: "2024-01-10 16:22:13",
-    qrCode: "device_3_qr_code_data",
-    paymentDetailId: "3"
+    qrCode: "device_3_qr_code_data"
   }
 ];
 
@@ -89,7 +86,8 @@ const mockPaymentDetails = [
       max: 999998,
       percentage: 0.6
     },
-    active: true
+    active: true,
+    deviceId: "1"
   },
   {
     id: "2",
@@ -126,7 +124,8 @@ const mockPaymentDetails = [
       max: 50000000,
       percentage: 25
     },
-    active: true
+    active: true,
+    deviceId: "2"
   },
   {
     id: "3",
@@ -163,7 +162,8 @@ const mockPaymentDetails = [
       max: 40000000,
       percentage: 46.9
     },
-    active: false
+    active: false,
+    deviceId: ""
   },
   {
     id: "4",
@@ -200,7 +200,8 @@ const mockPaymentDetails = [
       max: 2000000,
       percentage: 22.5
     },
-    active: true
+    active: true,
+    deviceId: "3"
   },
   {
     id: "5",
@@ -237,7 +238,8 @@ const mockPaymentDetails = [
       max: 20000000,
       percentage: 78
     },
-    active: true
+    active: true,
+    deviceId: ""
   },
   {
     id: "6",
@@ -274,7 +276,8 @@ const mockPaymentDetails = [
       max: 1500000,
       percentage: 10.4
     },
-    active: false
+    active: false,
+    deviceId: ""
   },
   {
     id: "7",
@@ -311,7 +314,8 @@ const mockPaymentDetails = [
       max: 35000000,
       percentage: 82
     },
-    active: true
+    active: true,
+    deviceId: ""
   },
   {
     id: "8",
@@ -348,7 +352,8 @@ const mockPaymentDetails = [
       max: 60000000,
       percentage: 75
     },
-    active: true
+    active: true,
+    deviceId: ""
   },
   {
     id: "9",
@@ -385,7 +390,8 @@ const mockPaymentDetails = [
       max: 1800000,
       percentage: 62.2
     },
-    active: false
+    active: false,
+    deviceId: ""
   },
   {
     id: "10",
@@ -422,7 +428,8 @@ const mockPaymentDetails = [
       max: 45000000,
       percentage: 72.2
     },
-    active: true
+    active: true,
+    deviceId: ""
   }
 ];
 const ProgressBar = ({
@@ -465,8 +472,7 @@ export default function PaymentDetails() {
   const [currentQrDevice, setCurrentQrDevice] = useState<string>("");
   const [deviceFormData, setDeviceFormData] = useState({
     name: "",
-    status: "active",
-    paymentDetailId: ""
+    status: "active"
   });
   const [deviceErrors, setDeviceErrors] = useState<{[key: string]: string}>({});
   
@@ -498,7 +504,8 @@ export default function PaymentDetails() {
     maxMonthlyDeals: "",
     simultaneousDeals: "",
     delayBetweenDeals: "",
-    active: true
+    active: true,
+    deviceId: ""
   });
 
   const [errors, setErrors] = useState<{[key: string]: string}>({});
@@ -621,7 +628,8 @@ export default function PaymentDetails() {
       maxMonthlyDeals: detail.maxMonthlyDeals.toString(),
       simultaneousDeals: detail.simultaneously.toString(),
       delayBetweenDeals: detail.delayBetweenDeals.toString(),
-      active: detail.active
+      active: detail.active,
+      deviceId: detail.deviceId || ""
     });
     setErrors({});
     setDialogOpen(true);
@@ -651,7 +659,8 @@ export default function PaymentDetails() {
       maxMonthlyDeals: "",
       simultaneousDeals: "",
       delayBetweenDeals: "",
-      active: true
+      active: true,
+      deviceId: ""
     });
     setEditingId(null);
     setErrors({});
@@ -707,7 +716,8 @@ export default function PaymentDetails() {
         max: parseInt(formData.monthlyAmount) || 30000000,
         percentage: 0
       },
-      active: formData.active
+      active: formData.active,
+      deviceId: formData.deviceId
     };
 
     if (editingId) {
@@ -750,7 +760,6 @@ export default function PaymentDetails() {
     const newErrors: {[key: string]: string} = {};
     
     if (!deviceFormData.name.trim()) newErrors.name = "Укажите название устройства";
-    if (!deviceFormData.paymentDetailId) newErrors.paymentDetailId = "Выберите реквизит";
     
     setDeviceErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -760,8 +769,7 @@ export default function PaymentDetails() {
     setEditingDeviceId(device.id);
     setDeviceFormData({
       name: device.name,
-      status: device.status,
-      paymentDetailId: device.paymentDetailId
+      status: device.status
     });
     setDeviceErrors({});
   };
@@ -777,8 +785,7 @@ export default function PaymentDetails() {
   const resetDeviceForm = () => {
     setDeviceFormData({
       name: "",
-      status: "active",
-      paymentDetailId: ""
+      status: "active"
     });
     setEditingDeviceId(null);
     setDeviceErrors({});
@@ -799,8 +806,7 @@ export default function PaymentDetails() {
       name: deviceFormData.name,
       status: deviceFormData.status,
       lastLogin: new Date().toISOString().slice(0, 19).replace('T', ' '),
-      qrCode: `device_${Date.now()}_qr_code_data`,
-      paymentDetailId: deviceFormData.paymentDetailId
+      qrCode: `device_${Date.now()}_qr_code_data`
     };
 
     if (editingDeviceId) {
@@ -972,23 +978,7 @@ export default function PaymentDetails() {
                           className={deviceErrors.name ? "border-red-500" : ""}
                         />
                         {deviceErrors.name && <span className="text-red-500 text-xs">{deviceErrors.name}</span>}
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="devicePaymentDetail">Реквизит*</Label>
-                        <Select value={deviceFormData.paymentDetailId} onValueChange={value => handleDeviceInputChange("paymentDetailId", value)}>
-                          <SelectTrigger className={deviceErrors.paymentDetailId ? "border-red-500" : ""}>
-                            <SelectValue placeholder="Выберите реквизит" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {paymentDetails.map(detail => (
-                              <SelectItem key={detail.id} value={detail.id}>
-                                {detail.bank} - {detail.system} ({detail.currency})
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        {deviceErrors.paymentDetailId && <span className="text-red-500 text-xs">{deviceErrors.paymentDetailId}</span>}
-                      </div>
+                       </div>
                     </div>
                     <div className="flex justify-end space-x-2 mt-4">
                       <Button variant="outline" onClick={resetDeviceForm}>
@@ -1335,6 +1325,23 @@ export default function PaymentDetails() {
                 </div>
               </div>
 
+              <div className="space-y-2">
+                <Label htmlFor="device">Устройство</Label>
+                <Select value={formData.deviceId} onValueChange={value => handleInputChange("deviceId", value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Выберите устройство (необязательно)" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Без устройства</SelectItem>
+                    {devices.map(device => (
+                      <SelectItem key={device.id} value={device.id}>
+                        {device.name} ({device.status === "active" ? "Активно" : "Неактивно"})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               <div className="flex items-center space-x-2 pt-4 border-t">
                 <Switch id="active" checked={formData.active} onCheckedChange={value => handleInputChange("active", value)} />
                 <Label htmlFor="active">Активность</Label>
@@ -1464,7 +1471,7 @@ export default function PaymentDetails() {
               <TableRow key={detail.id}>
                 <TableCell>
                   <div className="space-y-1 text-xs">
-                    <div className="font-medium">{devices.find(d => d.paymentDetailId === detail.id)?.name || "Основной компьютер"}</div>
+                    <div className="font-medium">{devices.find(d => d.id === detail.deviceId)?.name || "Не назначено"}</div>
                     <div className="text-muted-foreground font-mono">#{detail.id}</div>
                   </div>
                 </TableCell>
