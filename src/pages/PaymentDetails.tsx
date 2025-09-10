@@ -1418,11 +1418,12 @@ export default function PaymentDetails() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[200px]">Реквизиты</TableHead>
               <TableHead className="w-[120px]">Устройства</TableHead>
+              <TableHead className="w-[200px]">Реквизиты</TableHead>
               <TableHead className="w-[150px]">Лимиты</TableHead>
               <TableHead className="w-[80px]">Одновременно</TableHead>
-              <TableHead className="w-[240px]">По объёму</TableHead>
+              <TableHead className="w-[200px]">По количеству</TableHead>
+              <TableHead className="w-[200px]">По объёму</TableHead>
               <TableHead className="w-[100px]">Статус</TableHead>
               <TableHead className="w-[120px]">Действия</TableHead>
             </TableRow>
@@ -1430,13 +1431,19 @@ export default function PaymentDetails() {
           <TableBody>
             {currentData.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                   Нет данных для отображения
                 </TableCell>
               </TableRow>
             ) : (
               currentData.map(detail => (
               <TableRow key={detail.id}>
+                <TableCell>
+                  <div className="space-y-1 text-xs">
+                    <div className="font-medium">Основной компьютер</div>
+                    <div className="text-muted-foreground font-mono">#{detail.id}</div>
+                  </div>
+                </TableCell>
                 <TableCell>
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
@@ -1454,12 +1461,6 @@ export default function PaymentDetails() {
                     <div className="text-xs text-muted-foreground">
                       {detail.owner}
                     </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="space-y-1 text-xs">
-                    <div className="font-medium">Основной компьютер</div>
-                    <div className="text-muted-foreground font-mono">#{detail.id}</div>
                   </div>
                 </TableCell>
                 <TableCell>
@@ -1485,6 +1486,10 @@ export default function PaymentDetails() {
                     <div className="space-y-1">
                       <ProgressBar {...detail.monthDeals} type="deals" label="Месяц (сделки)" />
                     </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="space-y-3">
                     <div className="space-y-1">
                       <ProgressBar {...detail.todayAmount} type="amount" label="День (сумма)" />
                     </div>
