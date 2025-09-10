@@ -877,20 +877,19 @@ export default function PaymentDetails() {
                   <div className="border rounded-lg overflow-hidden">
                     <Table>
                       <TableHeader>
-                          <TableRow>
-                            <TableHead>ID</TableHead>
-                            <TableHead>Имя</TableHead>
-                            <TableHead>Статус</TableHead>
-                            <TableHead>Последний вход</TableHead>
-                            <TableHead>Действия</TableHead>
-                          </TableRow>
+                           <TableRow>
+                             <TableHead>ID</TableHead>
+                             <TableHead>Имя</TableHead>
+                             <TableHead>Статус</TableHead>
+                             <TableHead>Действия</TableHead>
+                           </TableRow>
                       </TableHeader>
                       <TableBody>
                         {devices.length === 0 ? (
                           <TableRow>
-                            <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                              Нет добавленных устройств
-                            </TableCell>
+                             <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                               Нет добавленных устройств
+                             </TableCell>
                           </TableRow>
                         ) : (
                           devices.map(device => (
@@ -905,15 +904,12 @@ export default function PaymentDetails() {
                                   <span>{device.name}</span>
                                 </div>
                               </TableCell>
-                              <TableCell>
-                                <Badge variant={device.status === "active" ? "default" : "secondary"}>
-                                  {device.status === "active" ? "Активно" : "Неактивно"}
-                                </Badge>
-                              </TableCell>
-                              <TableCell className="text-sm text-muted-foreground">
-                                {device.lastLogin}
-                              </TableCell>
-                              <TableCell>
+                               <TableCell>
+                                 <Badge variant={device.status === "active" ? "default" : "secondary"}>
+                                   {device.status === "active" ? "Активно" : "Неактивно"}
+                                 </Badge>
+                               </TableCell>
+                               <TableCell>
                                 <div className="flex items-center gap-2">
                                   <Button 
                                     variant="outline" 
