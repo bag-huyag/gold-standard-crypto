@@ -993,11 +993,26 @@ export default function PaymentDetails() {
                 <DialogTitle>QR-код для привязки устройства</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
-                <div className="text-center">
-                  <div className="bg-muted rounded-lg p-8 mb-4">
-                    <QrCode className="h-32 w-32 mx-auto text-muted-foreground" />
-                    <p className="text-sm text-muted-foreground mt-2">QR-код для: {currentQrDevice}</p>
-                  </div>
+                 <div className="text-center">
+                   <div className="bg-muted rounded-lg p-8 mb-4">
+                     {/* Заглушка для генерации QR кода */}
+                     <img 
+                       src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`device:${currentQrDevice}:${Date.now()}`)}`}
+                       alt="QR код для привязки устройства"
+                       className="h-32 w-32 mx-auto border rounded"
+                     />
+                     <div className="mt-4 space-y-2">
+                       <p className="text-sm font-medium">QR-код для: {currentQrDevice}</p>
+                       <div className="bg-background border rounded p-2">
+                         <p className="text-xs font-mono break-all">
+                           device:{currentQrDevice}:{Date.now()}
+                         </p>
+                       </div>
+                       <p className="text-xs text-muted-foreground">
+                         Строка для кодирования в QR
+                       </p>
+                     </div>
+                   </div>
                   <p className="text-sm text-muted-foreground">
                     Отсканируйте этот QR-код с помощью приложения для привязки устройства к аккаунту.
                   </p>
