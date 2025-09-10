@@ -138,7 +138,6 @@ export default function History() {
                   <SelectValue placeholder="Все типы" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Все типы</SelectItem>
                   <SelectItem value="Разморозка">Разморозка</SelectItem>
                   <SelectItem value="Заморозка">Заморозка</SelectItem>
                   <SelectItem value="Награда">Награда</SelectItem>
