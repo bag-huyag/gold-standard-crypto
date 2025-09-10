@@ -1,9 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Eye } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Eye, CalendarIcon, Filter, X } from "lucide-react";
+import { format } from "date-fns";
+import { ru } from "date-fns/locale";
+import { cn } from "@/lib/utils";
 
 const mockHistory = [
   {
@@ -51,12 +56,42 @@ const mockHistory = [
 export default function History() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [typeFilter, setTypeFilter] = useState<string>("");
+  const [dateFrom, setDateFrom] = useState<Date | undefined>();
+  const [dateTo, setDateTo] = useState<Date | undefined>();
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [typeFilter, dateFrom, dateTo]);
+  // Filter history based on selected filters
+  const filteredHistory = mockHistory.filter((item) => {
+    // Filter by type
+    if (typeFilter && item.type !== typeFilter) {
+      return false;
+    }
+
+    // Filter by date range
+    if (dateFrom || dateTo) {
+      const itemDate = new Date(item.date.split(' ')[0].split('.').reverse().join('-'));
+      
+      if (dateFrom && itemDate < dateFrom) {
+        return false;
+      }
+      
+      if (dateTo && itemDate > dateTo) {
+        return false;
+      }
+    }
+
+    return true;
+  });
   
-  const totalItems = mockHistory.length;
+  const totalItems = filteredHistory.length;
   const totalPages = Math.ceil(totalItems / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
-  const currentItems = mockHistory.slice(startIndex, endIndex);
+  const currentItems = filteredHistory.slice(startIndex, endIndex);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -90,6 +125,106 @@ export default function History() {
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-foreground">История операций</h1>
       </div>
+
+      {/* Filters */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex flex-col sm:flex-row gap-4">
+            {/* Type Filter */}
+            <div className="flex flex-col space-y-2">
+              <label className="text-sm font-medium">Тип операции</label>
+              <Select value={typeFilter} onValueChange={setTypeFilter}>
+                <SelectTrigger className="w-[200px]">
+                  <SelectValue placeholder="Все типы" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Все типы</SelectItem>
+                  <SelectItem value="Разморозка">Разморозка</SelectItem>
+                  <SelectItem value="Заморозка">Заморозка</SelectItem>
+                  <SelectItem value="Награда">Награда</SelectItem>
+                  <SelectItem value="Комиссия">Комиссия</SelectItem>
+                  <SelectItem value="Пополнение">Пополнение</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Date From Filter */}
+            <div className="flex flex-col space-y-2">
+              <label className="text-sm font-medium">От даты</label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-[200px] justify-start text-left font-normal",
+                      !dateFrom && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {dateFrom ? format(dateFrom, "dd.MM.yyyy", { locale: ru }) : "Выберите дату"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={dateFrom}
+                    onSelect={setDateFrom}
+                    initialFocus
+                    className="p-3 pointer-events-auto"
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            {/* Date To Filter */}
+            <div className="flex flex-col space-y-2">
+              <label className="text-sm font-medium">До даты</label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-[200px] justify-start text-left font-normal",
+                      !dateTo && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {dateTo ? format(dateTo, "dd.MM.yyyy", { locale: ru }) : "Выберите дату"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={dateTo}
+                    onSelect={setDateTo}
+                    initialFocus
+                    className="p-3 pointer-events-auto"
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            {/* Clear Filters */}
+            {(typeFilter || dateFrom || dateTo) && (
+              <div className="flex flex-col justify-end">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setTypeFilter("");
+                    setDateFrom(undefined);
+                    setDateTo(undefined);
+                    setCurrentPage(1);
+                  }}
+                  className="h-10"
+                >
+                  <X className="mr-2 h-4 w-4" />
+                  Очистить
+                </Button>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* History Table */}
       <Card>
