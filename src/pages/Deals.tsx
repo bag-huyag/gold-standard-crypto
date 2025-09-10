@@ -19,6 +19,7 @@ const mockDeals = [
   // Active deals (10)
   {
     id: "12345",
+    device: "Устройство #1",
     paymentMethod: "СБП",
     bank: "Т-Банк",
     paymentDetails: "+7 (999) 123-45-67",
@@ -33,6 +34,7 @@ const mockDeals = [
   },
   {
     id: "12349",
+    device: "Устройство #2",
     paymentMethod: "C2C",
     bank: "Сбербанк",
     paymentDetails: "2202 2020 9876 5432",
@@ -47,6 +49,7 @@ const mockDeals = [
   },
   {
     id: "12350",
+    device: "Устройство #3",
     paymentMethod: "СБП", 
     bank: "ВТБ",
     paymentDetails: "+7 (999) 888-77-66",
@@ -61,6 +64,7 @@ const mockDeals = [
   },
   {
     id: "12351",
+    device: "Устройство #1",
     paymentMethod: "C2C",
     bank: "Альфа-Банк",
     paymentDetails: "4276 1600 1234 5678",
@@ -75,6 +79,7 @@ const mockDeals = [
   },
   {
     id: "12352",
+    device: "Устройство #4",
     paymentMethod: "СБП",
     bank: "Газпромбанк",
     paymentDetails: "+7 (999) 555-44-33",
@@ -89,6 +94,7 @@ const mockDeals = [
   },
   {
     id: "12353",
+    device: "Устройство #2",
     paymentMethod: "C2C",
     bank: "Тинькофф Банк",
     paymentDetails: "5536 9139 8765 4321",
@@ -103,6 +109,7 @@ const mockDeals = [
   },
   {
     id: "12354",
+    device: "Устройство #5",
     paymentMethod: "СБП",
     bank: "Райффайзенбанк",
     paymentDetails: "+7 (999) 222-11-00",
@@ -117,6 +124,7 @@ const mockDeals = [
   },
   {
     id: "12355",
+    device: "Устройство #3",
     paymentMethod: "C2C",
     bank: "ЮниКредит Банк",
     paymentDetails: "4274 3200 9999 8888",
@@ -131,6 +139,7 @@ const mockDeals = [
   },
   {
     id: "12356",
+    device: "Устройство #1",
     paymentMethod: "СБП",
     bank: "Почта Банк",
     paymentDetails: "+7 (999) 777-88-99",
@@ -145,6 +154,7 @@ const mockDeals = [
   },
   {
     id: "12357",
+    device: "Устройство #4",
     paymentMethod: "C2C",
     bank: "МТС Банк",
     paymentDetails: "5469 5500 1111 2222",
@@ -161,6 +171,7 @@ const mockDeals = [
   // Completed deals (10)
   {
     id: "12346",
+    device: "Устройство #2",
     paymentMethod: "C2C",
     bank: "Сбербанк",
     paymentDetails: "2202 2020 1234 5678",
@@ -175,6 +186,7 @@ const mockDeals = [
   },
   {
     id: "12358",
+    device: "Устройство #3",
     paymentMethod: "СБП",
     bank: "Т-Банк",
     paymentDetails: "+7 (999) 111-22-33",
@@ -189,6 +201,7 @@ const mockDeals = [
   },
   {
     id: "12359",
+    device: "Устройство #5",
     paymentMethod: "C2C",
     bank: "ВТБ",
     paymentDetails: "4272 2900 5555 6666",
@@ -203,6 +216,7 @@ const mockDeals = [
   },
   {
     id: "12360",
+    device: "Устройство #1",
     paymentMethod: "СБП",
     bank: "Альфа-Банк",
     paymentDetails: "+7 (999) 444-55-66",
@@ -217,6 +231,7 @@ const mockDeals = [
   },
   {
     id: "12361",
+    device: "Устройство #4",
     paymentMethod: "C2C",
     bank: "Газпромбанк",
     paymentDetails: "4276 5500 7777 8888",
@@ -231,6 +246,7 @@ const mockDeals = [
   },
   {
     id: "12362",
+    device: "Устройство #2",
     paymentMethod: "СБП",
     bank: "Тинькофф Банк",
     paymentDetails: "+7 (999) 333-44-55",
@@ -245,6 +261,7 @@ const mockDeals = [
   },
   {
     id: "12363",
+    device: "Устройство #3",
     paymentMethod: "C2C",
     bank: "Райффайзенбанк",
     paymentDetails: "5469 3800 9999 0000",
@@ -259,6 +276,7 @@ const mockDeals = [
   },
   {
     id: "12364",
+    device: "Устройство #5",
     paymentMethod: "СБП",
     bank: "ЮниКредит Банк",
     paymentDetails: "+7 (999) 666-77-88",
@@ -273,6 +291,7 @@ const mockDeals = [
   },
   {
     id: "12365",
+    device: "Устройство #1",
     paymentMethod: "C2C",
     bank: "Почта Банк",
     paymentDetails: "4276 7200 1111 3333",
@@ -287,6 +306,7 @@ const mockDeals = [
   },
   {
     id: "12366",
+    device: "Устройство #4",
     paymentMethod: "СБП",
     bank: "МТС Банк",
     paymentDetails: "+7 (999) 888-99-00",
@@ -303,6 +323,7 @@ const mockDeals = [
   // Cancelled deals (10)
   {
     id: "12347",
+    device: "Устройство #2",
     paymentMethod: "СБП",
     bank: "ВТБ",
     paymentDetails: "+7 (999) 987-65-43",
@@ -317,6 +338,7 @@ const mockDeals = [
   },
   {
     id: "12367",
+    device: "Устройство #3",
     paymentMethod: "C2C",
     bank: "Сбербанк",
     paymentDetails: "2202 2020 4444 5555",
@@ -331,6 +353,7 @@ const mockDeals = [
   },
   {
     id: "12368",
+    device: "Устройство #5",
     paymentMethod: "СБП",
     bank: "Т-Банк",
     paymentDetails: "+7 (999) 222-33-44",
@@ -345,6 +368,7 @@ const mockDeals = [
   },
   {
     id: "12369",
+    device: "Устройство #1",
     paymentMethod: "C2C",
     bank: "Альфа-Банк",
     paymentDetails: "4276 1600 6666 7777",
@@ -359,6 +383,7 @@ const mockDeals = [
   },
   {
     id: "12370",
+    device: "Устройство #4",
     paymentMethod: "СБП",
     bank: "Газпромбанк",
     paymentDetails: "+7 (999) 555-66-77",
@@ -373,6 +398,7 @@ const mockDeals = [
   },
   {
     id: "12371",
+    device: "Устройство #2",
     paymentMethod: "C2C",
     bank: "Тинькофф Банк",
     paymentDetails: "5536 9139 2222 3333",
@@ -387,6 +413,7 @@ const mockDeals = [
   },
   {
     id: "12372",
+    device: "Устройство #3",
     paymentMethod: "СБП",
     bank: "Райффайзенбанк",
     paymentDetails: "+7 (999) 777-88-99",
@@ -401,6 +428,7 @@ const mockDeals = [
   },
   {
     id: "12373",
+    device: "Устройство #5",
     paymentMethod: "C2C",
     bank: "ЮниКредит Банк",
     paymentDetails: "4274 3200 8888 9999",
@@ -415,6 +443,7 @@ const mockDeals = [
   },
   {
     id: "12374",
+    device: "Устройство #1",
     paymentMethod: "СБП",
     bank: "Почта Банк",
     paymentDetails: "+7 (999) 999-00-11",
@@ -429,6 +458,7 @@ const mockDeals = [
   },
   {
     id: "12375",
+    device: "Устройство #4",
     paymentMethod: "C2C",
     bank: "МТС Банк",
     paymentDetails: "5469 5500 4444 5555",
@@ -445,6 +475,7 @@ const mockDeals = [
   // Dispute deals (10)
   {
     id: "12348",
+    device: "Устройство #3",
     paymentMethod: "C2C",
     bank: "Тинькофф Банк",
     paymentDetails: "5536 9139 1234 5678",
@@ -459,6 +490,7 @@ const mockDeals = [
   },
   {
     id: "12376",
+    device: "Устройство #1",
     paymentMethod: "СБП",
     bank: "Сбербанк",
     paymentDetails: "+7 (999) 123-99-88",
@@ -473,6 +505,7 @@ const mockDeals = [
   },
   {
     id: "12377",
+    device: "Устройство #4",
     paymentMethod: "C2C",
     bank: "ВТБ",
     paymentDetails: "4272 2900 7777 8888",
@@ -487,6 +520,7 @@ const mockDeals = [
   },
   {
     id: "12378",
+    device: "Устройство #2",
     paymentMethod: "СБП",
     bank: "Альфа-Банк",
     paymentDetails: "+7 (999) 456-78-90",
@@ -501,6 +535,7 @@ const mockDeals = [
   },
   {
     id: "12379",
+    device: "Устройство #5",
     paymentMethod: "C2C",
     bank: "Газпромбанк",
     paymentDetails: "4276 5500 3333 4444",
@@ -515,6 +550,7 @@ const mockDeals = [
   },
   {
     id: "12380",
+    device: "Устройство #3",
     paymentMethod: "СБП",
     bank: "Тинькофф Банк",
     paymentDetails: "+7 (999) 789-01-23",
@@ -529,6 +565,7 @@ const mockDeals = [
   },
   {
     id: "12381",
+    device: "Устройство #1",
     paymentMethod: "C2C",
     bank: "Райффайзенбанк",
     paymentDetails: "5469 3800 5555 6666",
@@ -543,6 +580,7 @@ const mockDeals = [
   },
   {
     id: "12382",
+    device: "Устройство #4",
     paymentMethod: "СБП",
     bank: "ЮниКредит Банк",
     paymentDetails: "+7 (999) 012-34-56",
@@ -557,6 +595,7 @@ const mockDeals = [
   },
   {
     id: "12383",
+    device: "Устройство #2",
     paymentMethod: "C2C",
     bank: "Почта Банк",
     paymentDetails: "4276 7200 9999 0000",
@@ -571,6 +610,7 @@ const mockDeals = [
   },
   {
     id: "12384",
+    device: "Устройство #5",
     paymentMethod: "СБП",
     bank: "МТС Банк",
     paymentDetails: "+7 (999) 345-67-89",
@@ -904,6 +944,7 @@ export default function Deals() {
                   <thead>
                     <tr className="border-b border-border">
                       <th className="text-left py-3 px-4 font-medium text-muted-foreground">ID</th>
+                      <th className="text-left py-3 px-4 font-medium text-muted-foreground">Устройство</th>
                       <th className="text-left py-3 px-4 font-medium text-muted-foreground min-w-[320px]">Реквизиты</th>
                       <th className="text-left py-3 px-4 font-medium text-muted-foreground">Сумма сделки</th>
                       <th className="text-left py-3 px-4 font-medium text-muted-foreground">Создана в</th>
@@ -915,6 +956,7 @@ export default function Deals() {
                     {paginatedDeals.map((deal) => (
                       <tr key={deal.id} className="border-b border-border last:border-0 hover:bg-muted/50">
                         <td className="py-3 px-4 font-mono text-sm">{deal.id}</td>
+                        <td className="py-3 px-4 text-sm font-medium">{deal.device}</td>
                         <td className="py-3 px-4 min-w-[320px]">
                           <div className="space-y-1">
                             <div className="flex gap-3">
