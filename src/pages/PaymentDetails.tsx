@@ -1332,7 +1332,6 @@ export default function PaymentDetails() {
                     <SelectValue placeholder="Выберите устройство (необязательно)" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Без устройства</SelectItem>
                     {devices.map(device => (
                       <SelectItem key={device.id} value={device.id}>
                         {device.name} ({device.status === "active" ? "Активно" : "Неактивно"})
