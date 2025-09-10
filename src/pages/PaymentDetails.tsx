@@ -817,10 +817,10 @@ export default function PaymentDetails() {
   };
   return <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="space-y-4">
         <h1 className="text-3xl font-bold text-foreground">Реквизиты</h1>
         
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
           <Dialog open={dialogOpen} onOpenChange={(open) => {
             if (open) {
               resetForm();
@@ -1667,5 +1667,5 @@ export default function PaymentDetails() {
           </Dialog>
         </div>
       )}
-    </div>;
+    </div>
 }
