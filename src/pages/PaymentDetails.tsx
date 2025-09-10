@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Edit, Trash2, Phone, Building } from "lucide-react";
+import { Plus, Edit, Trash2, Phone, Building, Monitor, QrCode, Smartphone } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 const banksList = [
   "Т-Банк",
@@ -24,6 +24,30 @@ const banksList = [
   "ЮMoney",
   "QIWI",
   "WebMoney"
+];
+
+const mockDevices = [
+  {
+    id: "1",
+    name: "Основной компьютер",
+    status: "active",
+    lastLogin: "2024-01-15 14:30:25",
+    qrCode: "device_1_qr_code_data"
+  },
+  {
+    id: "2", 
+    name: "Мобильное устройство",
+    status: "active",
+    lastLogin: "2024-01-14 09:15:42",
+    qrCode: "device_2_qr_code_data"
+  },
+  {
+    id: "3",
+    name: "Резервный ноутбук",
+    status: "inactive",
+    lastLogin: "2024-01-10 16:22:13",
+    qrCode: "device_3_qr_code_data"
+  }
 ];
 
 const mockPaymentDetails = [
@@ -436,6 +460,18 @@ export default function PaymentDetails() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [paymentDetails, setPaymentDetails] = useState(mockPaymentDetails);
   
+  // Devices state
+  const [devicesDialogOpen, setDevicesDialogOpen] = useState(false);
+  const [qrDialogOpen, setQrDialogOpen] = useState(false);
+  const [devices, setDevices] = useState(mockDevices);
+  const [editingDeviceId, setEditingDeviceId] = useState<string | null>(null);
+  const [currentQrDevice, setCurrentQrDevice] = useState<string>("");
+  const [deviceFormData, setDeviceFormData] = useState({
+    name: "",
+    status: "active"
+  });
+  const [deviceErrors, setDeviceErrors] = useState<{[key: string]: string}>({});
+  
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -694,10 +730,290 @@ export default function PaymentDetails() {
 
     handleDialogClose();
   };
+
+  // Device management functions
+  const handleDeviceInputChange = (field: string, value: string) => {
+    setDeviceFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const validateDeviceForm = () => {
+    const newErrors: {[key: string]: string} = {};
+    
+    if (!deviceFormData.name.trim()) newErrors.name = "Укажите название устройства";
+    
+    setDeviceErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleDeviceEdit = (device: typeof mockDevices[0]) => {
+    setEditingDeviceId(device.id);
+    setDeviceFormData({
+      name: device.name,
+      status: device.status
+    });
+    setDeviceErrors({});
+  };
+
+  const handleDeviceDelete = (id: string) => {
+    setDevices(prev => prev.filter(device => device.id !== id));
+    toast({
+      title: "Устройство удалено",
+      description: "Устройство было успешно удалено из системы",
+    });
+  };
+
+  const resetDeviceForm = () => {
+    setDeviceFormData({
+      name: "",
+      status: "active"
+    });
+    setEditingDeviceId(null);
+    setDeviceErrors({});
+  };
+
+  const handleDeviceSave = () => {
+    if (!validateDeviceForm()) {
+      toast({
+        title: "Ошибка",
+        description: "Исправьте ошибки в форме",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const newDevice = {
+      id: editingDeviceId || Date.now().toString(),
+      name: deviceFormData.name,
+      status: deviceFormData.status,
+      lastLogin: new Date().toISOString().slice(0, 19).replace('T', ' '),
+      qrCode: `device_${Date.now()}_qr_code_data`
+    };
+
+    if (editingDeviceId) {
+      setDevices(prev => prev.map(device => 
+        device.id === editingDeviceId ? newDevice : device
+      ));
+      toast({
+        title: "Устройство обновлено",
+        description: "Устройство было успешно обновлено",
+      });
+    } else {
+      setDevices(prev => [...prev, newDevice]);
+      toast({
+        title: "Устройство добавлено",
+        description: "Новое устройство было успешно добавлено",
+      });
+    }
+
+    resetDeviceForm();
+  };
+
+  const handleShowQrCode = (device: typeof mockDevices[0]) => {
+    setCurrentQrDevice(device.name);
+    setQrDialogOpen(true);
+  };
   return <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-foreground">Реквизиты</h1>
+        
+        <div className="flex items-center gap-3">
+          <Dialog open={dialogOpen} onOpenChange={(open) => {
+            if (open) {
+              resetForm();
+              setDialogOpen(true);
+            } else {
+              handleDialogClose();
+            }
+          }}>
+            <DialogTrigger asChild>
+              <Button className="bg-primary hover:bg-primary/90">
+                <Plus className="mr-2 h-4 w-4" />
+                Добавить реквизит
+              </Button>
+            </DialogTrigger>
+            
+            {/* Devices Dialog */}
+            <Dialog open={devicesDialogOpen} onOpenChange={(open) => {
+              if (!open) {
+                resetDeviceForm();
+                setDevicesDialogOpen(false);
+              } else {
+                setDevicesDialogOpen(true);
+              }
+            }}>
+              <DialogTrigger asChild>
+                <Button variant="outline">
+                  <Monitor className="mr-2 h-4 w-4" />
+                  Устройства
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>Управление устройствами</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  {/* Devices Table */}
+                  <div className="border rounded-lg overflow-hidden">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>ID</TableHead>
+                          <TableHead>Имя</TableHead>
+                          <TableHead>Статус</TableHead>
+                          <TableHead>Последний вход</TableHead>
+                          <TableHead>Действия</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {devices.length === 0 ? (
+                          <TableRow>
+                            <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                              Нет добавленных устройств
+                            </TableCell>
+                          </TableRow>
+                        ) : (
+                          devices.map(device => (
+                            <TableRow key={device.id}>
+                              <TableCell className="font-mono text-sm">#{device.id}</TableCell>
+                              <TableCell>
+                                <div className="flex items-center gap-2">
+                                  {device.status === "active" ? 
+                                    <Smartphone className="h-4 w-4 text-green-500" /> : 
+                                    <Monitor className="h-4 w-4 text-gray-400" />
+                                  }
+                                  <span>{device.name}</span>
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                <Badge variant={device.status === "active" ? "default" : "secondary"}>
+                                  {device.status === "active" ? "Активно" : "Неактивно"}
+                                </Badge>
+                              </TableCell>
+                              <TableCell className="text-sm text-muted-foreground">
+                                {device.lastLogin}
+                              </TableCell>
+                              <TableCell>
+                                <div className="flex items-center gap-2">
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm"
+                                    onClick={() => handleShowQrCode(device)}
+                                  >
+                                    <QrCode className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm"
+                                    onClick={() => handleDeviceEdit(device)}
+                                  >
+                                    <Edit className="h-4 w-4" />
+                                  </Button>
+                                  <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                      <Button variant="destructive" size="sm">
+                                        <Trash2 className="h-4 w-4" />
+                                      </Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                      <AlertDialogHeader>
+                                        <AlertDialogTitle>Удалить устройство?</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                          Это действие нельзя отменить. Устройство будет удалено из системы.
+                                        </AlertDialogDescription>
+                                      </AlertDialogHeader>
+                                      <AlertDialogFooter>
+                                        <AlertDialogCancel>Отмена</AlertDialogCancel>
+                                        <AlertDialogAction 
+                                          onClick={() => handleDeviceDelete(device.id)}
+                                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                        >
+                                          Удалить
+                                        </AlertDialogAction>
+                                      </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                  </AlertDialog>
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          ))
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
+
+                  {/* Add Device Form */}
+                  <div className="border-t pt-4">
+                    <h4 className="font-medium mb-4">
+                      {editingDeviceId ? "Редактировать устройство" : "Добавить новое устройство"}
+                    </h4>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="deviceName">Название устройства*</Label>
+                        <Input 
+                          id="deviceName"
+                          placeholder="Например: Рабочий компьютер" 
+                          value={deviceFormData.name} 
+                          onChange={e => handleDeviceInputChange("name", e.target.value)}
+                          className={deviceErrors.name ? "border-red-500" : ""}
+                        />
+                        {deviceErrors.name && <span className="text-red-500 text-xs">{deviceErrors.name}</span>}
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="deviceStatus">Статус</Label>
+                        <Select value={deviceFormData.status} onValueChange={value => handleDeviceInputChange("status", value)}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Выберите статус" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="active">Активно</SelectItem>
+                            <SelectItem value="inactive">Неактивно</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    <div className="flex justify-end space-x-2 mt-4">
+                      <Button variant="outline" onClick={resetDeviceForm}>
+                        {editingDeviceId ? "Отмена" : "Очистить"}
+                      </Button>
+                      <Button onClick={handleDeviceSave}>
+                        {editingDeviceId ? "Обновить" : "Добавить устройство"}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </Dialog>
+          
+          {/* QR Code Dialog */}
+          <Dialog open={qrDialogOpen} onOpenChange={setQrDialogOpen}>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle>QR-код для привязки устройства</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="text-center">
+                  <div className="bg-muted rounded-lg p-8 mb-4">
+                    <QrCode className="h-32 w-32 mx-auto text-muted-foreground" />
+                    <p className="text-sm text-muted-foreground mt-2">QR-код для: {currentQrDevice}</p>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Отсканируйте этот QR-код с помощью приложения для привязки устройства к аккаунту.
+                  </p>
+                </div>
+                <div className="flex justify-end">
+                  <Button onClick={() => setQrDialogOpen(false)}>
+                    Закрыть
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
         
         <Dialog open={dialogOpen} onOpenChange={(open) => {
           if (open) {
@@ -708,10 +1024,7 @@ export default function PaymentDetails() {
           }
         }}>
           <DialogTrigger asChild>
-            <Button className="bg-primary hover:bg-primary/90">
-              <Plus className="mr-2 h-4 w-4" />
-              Добавить реквизит
-            </Button>
+            <div></div>
           </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
