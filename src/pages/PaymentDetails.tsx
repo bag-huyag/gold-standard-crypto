@@ -426,27 +426,21 @@ const ProgressBar = ({
   current,
   max,
   percentage,
-  type
+  type,
+  label
 }: {
   current: number;
   max: number;
   percentage: number;
   type: "deals" | "amount";
+  label?: string;
 }) => {
-  // Three colors for different states: empty, processing, completed
-  const getColor = () => {
-    if (percentage === 0) return "bg-muted";
-    if (percentage < 50) return "bg-warning";
-    if (percentage < 80) return "bg-secondary";
-    return "bg-success";
-  };
   return <div className="space-y-1">
       <div className="flex justify-between text-xs">
-        <span>{type === "deals" ? "штук" : "₽"}</span>
-        
+        <span className="text-muted-foreground">{label || (type === "deals" ? "штук" : "₽")}</span>
       </div>
       <div className="w-full bg-muted rounded-full h-2">
-        <div className={`h-2 rounded-full transition-all ${getColor()}`} style={{
+        <div className="h-2 rounded-full transition-all bg-primary" style={{
         width: `${Math.min(percentage, 100)}%`
       }} />
       </div>
@@ -1425,9 +1419,10 @@ export default function PaymentDetails() {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[200px]">Реквизиты</TableHead>
+              <TableHead className="w-[120px]">Устройства</TableHead>
               <TableHead className="w-[150px]">Лимиты</TableHead>
-              <TableHead className="w-[120px]">Сделки</TableHead>
-              <TableHead className="w-[120px]">Сумма</TableHead>
+              <TableHead className="w-[80px]">Одновременно</TableHead>
+              <TableHead className="w-[240px]">По объёму</TableHead>
               <TableHead className="w-[100px]">Статус</TableHead>
               <TableHead className="w-[120px]">Действия</TableHead>
             </TableRow>
@@ -1435,7 +1430,7 @@ export default function PaymentDetails() {
           <TableBody>
             {currentData.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                   Нет данных для отображения
                 </TableCell>
               </TableRow>
@@ -1463,37 +1458,38 @@ export default function PaymentDetails() {
                 </TableCell>
                 <TableCell>
                   <div className="space-y-1 text-xs">
-                    <div>
-                      <div className="text-muted-foreground">Сделка:</div>
-                      <div>{detail.minAmount.toLocaleString()} - {detail.maxAmount.toLocaleString()}</div>
+                    <div className="font-medium">Основной компьютер</div>
+                    <div className="text-muted-foreground font-mono">#{detail.id}</div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="space-y-1 text-xs">
+                    <div className="text-muted-foreground">
+                      от {detail.minAmount.toLocaleString()} {detail.currency}
                     </div>
-                    <div>
-                      <div className="text-muted-foreground">Одновременно:</div>
-                      <div className="font-medium">{detail.simultaneously}</div>
+                    <div className="text-muted-foreground">
+                      до {detail.maxAmount.toLocaleString()} {detail.currency}
                     </div>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className="space-y-2">
-                    <div>
-                      <div className="text-xs text-muted-foreground mb-1">Сегодня: {detail.todayDeals.current}/{detail.todayDeals.max}</div>
-                      <ProgressBar {...detail.todayDeals} type="deals" />
-                    </div>
-                    <div>
-                      <div className="text-xs text-muted-foreground mb-1">Месяц: {detail.monthDeals.current}/{detail.monthDeals.max}</div>
-                      <ProgressBar {...detail.monthDeals} type="deals" />
-                    </div>
+                  <div className="text-center">
+                    <div className="text-lg font-semibold">{detail.simultaneously}</div>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className="space-y-2">
-                    <div>
-                      <div className="text-xs text-muted-foreground mb-1">Сегодня</div>
-                      <ProgressBar {...detail.todayAmount} type="amount" />
+                  <div className="space-y-3">
+                    <div className="space-y-1">
+                      <ProgressBar {...detail.todayDeals} type="deals" label="День (сделки)" />
                     </div>
-                    <div>
-                      <div className="text-xs text-muted-foreground mb-1">Месяц</div>
-                      <ProgressBar {...detail.monthAmount} type="amount" />
+                    <div className="space-y-1">
+                      <ProgressBar {...detail.monthDeals} type="deals" label="Месяц (сделки)" />
+                    </div>
+                    <div className="space-y-1">
+                      <ProgressBar {...detail.todayAmount} type="amount" label="День (сумма)" />
+                    </div>
+                    <div className="space-y-1">
+                      <ProgressBar {...detail.monthAmount} type="amount" label="Месяц (сумма)" />
                     </div>
                   </div>
                 </TableCell>
