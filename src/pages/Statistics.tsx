@@ -10,6 +10,31 @@ export default function Statistics() {
   const [dateFrom, setDateFrom] = useState("2025-01-01");
   const [dateTo, setDateTo] = useState("2025-01-31");
 
+  const setQuickFilter = (type: "day" | "week" | "month") => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    
+    switch (type) {
+      case "day":
+        const todayStr = today.toISOString().split('T')[0];
+        setDateFrom(todayStr);
+        setDateTo(todayStr);
+        break;
+      case "week":
+        const weekAgo = new Date(today);
+        weekAgo.setDate(weekAgo.getDate() - 7);
+        setDateFrom(weekAgo.toISOString().split('T')[0]);
+        setDateTo(today.toISOString().split('T')[0]);
+        break;
+      case "month":
+        const monthAgo = new Date(today);
+        monthAgo.setMonth(monthAgo.getMonth() - 1);
+        setDateFrom(monthAgo.toISOString().split('T')[0]);
+        setDateTo(today.toISOString().split('T')[0]);
+        break;
+    }
+  };
+
   const stats = {
     successful: {
       deals: 0,
@@ -92,6 +117,34 @@ export default function Statistics() {
           </CardTitle>
         </CardHeader>
         <CardContent>
+          {/* Quick Filter Buttons */}
+          <div className="mb-6">
+            <div className="flex flex-wrap gap-2">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setQuickFilter("day")}
+              >
+                За день
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setQuickFilter("week")}
+              >
+                За неделю
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setQuickFilter("month")}
+              >
+                За месяц
+              </Button>
+            </div>
+          </div>
+
+          {/* Date Range Inputs */}
           <div className="grid gap-4 md:grid-cols-3">
             <div className="space-y-2">
               <Label htmlFor="dateFrom">С</Label>
