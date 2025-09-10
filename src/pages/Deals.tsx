@@ -955,8 +955,8 @@ export default function Deals() {
                   <tbody>
                     {paginatedDeals.map((deal) => (
                       <tr key={deal.id} className="border-b border-border last:border-0 hover:bg-muted/50">
-                        <td className="py-3 px-4 font-mono text-sm">{deal.id}</td>
-                        <td className="py-3 px-4 text-sm font-medium">{deal.device}</td>
+                        <td className="py-3 px-4 font-mono text-sm whitespace-nowrap">{deal.id}</td>
+                        <td className="py-3 px-4 text-sm font-medium whitespace-nowrap">{deal.device}</td>
                         <td className="py-3 px-4 min-w-[320px]">
                           <div className="space-y-1">
                             <div className="flex gap-3">
@@ -979,15 +979,15 @@ export default function Deals() {
                         </td>
                         <td className="py-3 px-4 font-semibold">
                           <div className="space-y-1">
-                            <div className="text-sm font-semibold">{deal.amount}</div>
-                            <div className="text-sm text-success font-semibold">{deal.amountUSDT}</div>
-                            <div className="text-xs text-muted-foreground">Курс: {deal.exchangeRate} ₽/USDT</div>
+                            <div className="text-sm font-semibold whitespace-nowrap">{deal.amount}</div>
+                            <div className="text-sm text-success font-semibold whitespace-nowrap">{deal.amountUSDT}</div>
+                            <div className="text-xs text-muted-foreground whitespace-nowrap">Курс: {deal.exchangeRate} ₽/USDT</div>
                           </div>
                         </td>
-                        <td className="py-3 px-4 text-sm text-muted-foreground">
+                        <td className="py-3 px-4 text-sm text-muted-foreground whitespace-nowrap">
                           {format(new Date(deal.createdAt), "dd.MM.yyyy HH:mm:ss")}
                         </td>
-                        <td className="py-3 px-4 text-sm text-muted-foreground font-mono">
+                        <td className="py-3 px-4 text-sm text-muted-foreground font-mono whitespace-nowrap">
                           {getTimeDisplay(deal, activeTab)}
                         </td>
                         <td className="py-3 px-4">
