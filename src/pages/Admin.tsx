@@ -620,10 +620,177 @@ export default function Admin() {
                 Управление диспутами
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-center py-12">
-                <Lock className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">Раздел в разработке</p>
+            <CardContent className="space-y-6">
+              {/* Filters */}
+              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 p-4 border rounded-lg">
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Статус</label>
+                  <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                    <option value="">Все статусы</option>
+                    <option value="open">Открыты</option>
+                    <option value="accepted">Принят</option>
+                    <option value="rejected">Отклонён</option>
+                    <option value="frozen">Заморожен</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Трейдер</label>
+                  <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                    <option value="">Все трейдеры</option>
+                    <option value="obsthandler">obsthandler</option>
+                    <option value="john_trader">john_trader</option>
+                    <option value="mike_trader">mike_trader</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Мерчант</label>
+                  <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                    <option value="">Все мерчанты</option>
+                    <option value="merchant1">biwire_finance</option>
+                    <option value="merchant2">crypto_exchange</option>
+                    <option value="merchant3">payment_gateway</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">ID диспута</label>
+                  <input
+                    type="text"
+                    placeholder="Фильтр по ID диспута"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">ID сделки</label>
+                  <input
+                    type="text"
+                    placeholder="Фильтр по ID сделки"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Записей</label>
+                  <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                  </select>
+                </div>
+              </div>
+              <div className="flex justify-start">
+                <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
+                  Сбросить фильтр
+                </button>
+              </div>
+
+              {/* Disputes List */}
+              <div className="space-y-4">
+                {/* Dispute Card 1 - Open */}
+                <div className="border rounded-lg p-6 space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* Bank Details */}
+                    <div className="space-y-2">
+                      <h4 className="font-semibold text-sm text-muted-foreground">Банковские реквизиты</h4>
+                      <div className="space-y-1 text-sm">
+                        <p><span className="font-medium">Банк:</span> Т-Банк (SBP)</p>
+                        <p><span className="font-medium">Телефон:</span> +79815574742</p>
+                        <p><span className="font-medium">Владелец:</span> Бодя</p>
+                        <p><span className="font-medium">Trader:</span> obsthandler</p>
+                      </div>
+                    </div>
+
+                    {/* Deal Details */}
+                    <div className="space-y-2">
+                      <h4 className="font-semibold text-sm text-muted-foreground">Детали сделки</h4>
+                      <div className="space-y-1 text-sm">
+                        <p><span className="font-medium">Order ID:</span> 685a5d8e-fc6d-4f32-9c3e-9d6ba64eaee5</p>
+                        <p><span className="font-medium">Merchant Order ID:</span> trip-prod-test-1</p>
+                        <p><span className="font-medium">Сумма (₽):</span> 2007</p>
+                        <p><span className="font-medium">Сумма (крипто):</span> 25.342829</p>
+                        <p><span className="font-medium">Курс:</span> 79.194</p>
+                      </div>
+                    </div>
+
+                    {/* Dispute Details */}
+                    <div className="space-y-2">
+                      <h4 className="font-semibold text-sm text-muted-foreground">Детали диспута</h4>
+                      <div className="space-y-1 text-sm">
+                        <p><span className="font-medium">ID диспута:</span> dfa176c4-29b6-4ffb-ad2a-035c00538892</p>
+                        <p><span className="font-medium">Причина:</span> WRONG_AMOUNT</p>
+                        <p><span className="font-medium">Статус:</span> <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">Открыт</span></p>
+                        <p><span className="font-medium">Сумма диспута (₽):</span> 2007</p>
+                        <p><span className="font-medium">Сумма диспута (крипто):</span> 25.342829</p>
+                        <p><span className="font-medium">Доказательство</span></p>
+                        <p><span className="font-medium">До автопринятия:</span> Истекло</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons for Open Dispute */}
+                  <div className="flex gap-2 pt-4 border-t">
+                    <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-green-600 text-white hover:bg-green-700 h-9 px-3">
+                      Закрыть
+                    </button>
+                    <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 h-9 px-3">
+                      Отменить
+                    </button>
+                    <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-blue-600 text-white hover:bg-blue-700 h-9 px-3">
+                      Заморозить
+                    </button>
+                  </div>
+                </div>
+
+                {/* Dispute Card 2 - Frozen */}
+                <div className="border rounded-lg p-6 space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* Bank Details */}
+                    <div className="space-y-2">
+                      <h4 className="font-semibold text-sm text-muted-foreground">Банковские реквизиты</h4>
+                      <div className="space-y-1 text-sm">
+                        <p><span className="font-medium">Банк:</span> Сбербанк</p>
+                        <p><span className="font-medium">Телефон:</span> +79123456789</p>
+                        <p><span className="font-medium">Владелец:</span> Иван Иванов</p>
+                        <p><span className="font-medium">Trader:</span> john_trader</p>
+                      </div>
+                    </div>
+
+                    {/* Deal Details */}
+                    <div className="space-y-2">
+                      <h4 className="font-semibold text-sm text-muted-foreground">Детали сделки</h4>
+                      <div className="space-y-1 text-sm">
+                        <p><span className="font-medium">Order ID:</span> abc123de-fc6d-4f32-9c3e-9d6ba64eef78</p>
+                        <p><span className="font-medium">Merchant Order ID:</span> crypto-test-2</p>
+                        <p><span className="font-medium">Сумма (₽):</span> 5000</p>
+                        <p><span className="font-medium">Сумма (крипто):</span> 62.5</p>
+                        <p><span className="font-medium">Курс:</span> 80.0</p>
+                      </div>
+                    </div>
+
+                    {/* Dispute Details */}
+                    <div className="space-y-2">
+                      <h4 className="font-semibold text-sm text-muted-foreground">Детали диспута</h4>
+                      <div className="space-y-1 text-sm">
+                        <p><span className="font-medium">ID диспута:</span> xyz789ab-29b6-4ffb-ad2a-035c00538123</p>
+                        <p><span className="font-medium">Причина:</span> PAYMENT_NOT_RECEIVED</p>
+                        <p><span className="font-medium">Статус:</span> <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">Заморожен</span></p>
+                        <p><span className="font-medium">Сумма диспута (₽):</span> 5000</p>
+                        <p><span className="font-medium">Сумма диспута (крипто):</span> 62.5</p>
+                        <p><span className="font-medium">Доказательство</span></p>
+                        <p><span className="font-medium">До автопринятия:</span> 2 дня</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons for Frozen Dispute */}
+                  <div className="flex gap-2 pt-4 border-t">
+                    <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-green-600 text-white hover:bg-green-700 h-9 px-3">
+                      Завершить
+                    </button>
+                    <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 h-9 px-3">
+                      Отклонить
+                    </button>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
