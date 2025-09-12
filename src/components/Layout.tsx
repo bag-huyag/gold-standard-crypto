@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { Outlet, NavLink, useLocation } from "react-router-dom";
+import { Outlet, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Home, 
   ArrowRightLeft, 
@@ -32,6 +34,18 @@ const adminNavigation = [
 export function Layout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+  const { toast } = useToast();
+
+  const handleLogout = () => {
+    logout();
+    toast({
+      title: "Выход выполнен",
+      description: "Вы успешно вышли из системы",
+    });
+    navigate("/login");
+  };
 
   const isActive = (path: string) => {
     if (path === "/") {
@@ -102,6 +116,7 @@ export function Layout() {
                 variant="ghost" 
                 size="sm"
                 className="hidden lg:flex text-destructive hover:text-destructive hover:bg-destructive/10"
+                onClick={handleLogout}
               >
                 <LogOut className="mr-2 h-4 w-4" />
                 Выход
@@ -172,7 +187,10 @@ export function Layout() {
                 <Button 
                   variant="ghost" 
                   className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10"
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    handleLogout();
+                  }}
                 >
                   <LogOut className="mr-3 h-5 w-5" />
                   Выход
