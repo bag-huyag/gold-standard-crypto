@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Shield, Lock, Users, Building2, TrendingUp, Wallet, MessageSquare, Handshake, Settings, Command, BarChart3, CreditCard } from "lucide-react";
 import { useState } from "react";
 
@@ -1260,11 +1261,51 @@ export default function Admin() {
                 Настройки Settle
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-center py-12">
-                <Lock className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">Раздел в разработке</p>
+            <CardContent className="space-y-6">
+              <div>
+                <Label htmlFor="user-select">Выберите пользователя</Label>
+                <Select>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Выберите пользователя" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="user1">Пользователь 1</SelectItem>
+                    <SelectItem value="user2">Пользователь 2</SelectItem>
+                    <SelectItem value="user3">Пользователь 3</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <Label htmlFor="fixed-fee">Fixed Fee:</Label>
+                  <Input
+                    id="fixed-fee"
+                    type="number"
+                    placeholder="0.00"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="min-amount">Min Amount:</Label>
+                  <Input
+                    id="min-amount"
+                    type="number"
+                    placeholder="0.00"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="cooldown-seconds">Cooldown Seconds:</Label>
+                  <Input
+                    id="cooldown-seconds"
+                    type="number"
+                    placeholder="0"
+                  />
+                </div>
+              </div>
+              
+              <Button type="submit" className="w-full md:w-auto">
+                Создать / Обновить правило
+              </Button>
             </CardContent>
           </Card>
         </TabsContent>
