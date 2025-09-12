@@ -199,7 +199,7 @@ export default function TeamLead() {
       </Card>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4">
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center space-x-2">
@@ -207,18 +207,6 @@ export default function TeamLead() {
               <div className="space-y-1">
                 <p className="text-sm font-medium text-muted-foreground">Общий баланс</p>
                 <p className="text-2xl font-bold">{totalBalance.toLocaleString()} ₽</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-2">
-              <TrendingUp className="h-5 w-5 text-primary" />
-              <div className="space-y-1">
-                <p className="text-sm font-medium text-muted-foreground">Обработано сделок</p>
-                <p className="text-2xl font-bold">{totalDeals}</p>
               </div>
             </div>
           </CardContent>
