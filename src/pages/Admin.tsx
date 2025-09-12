@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
@@ -1671,9 +1672,144 @@ export default function Admin() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-12">
-                <Lock className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">Раздел в разработке</p>
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div>
+                    <Label>Трейдер/Тимлид:</Label>
+                    <Select defaultValue="all">
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Все</SelectItem>
+                        <SelectItem value="shrayder">Shrayder</SelectItem>
+                        <SelectItem value="lightning">Lightning's23</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
+                    <Label>Банк:</Label>
+                    <Select defaultValue="all">
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Все</SelectItem>
+                        <SelectItem value="sberbank">Сбербанк</SelectItem>
+                        <SelectItem value="tbank">Т-Банк</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
+                    <Label>Платежная система:</Label>
+                    <Select defaultValue="all">
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Все</SelectItem>
+                        <SelectItem value="sberbank">Сбербанк</SelectItem>
+                        <SelectItem value="tbank">Т-Банк</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
+                    <Label>Статус:</Label>
+                    <Select defaultValue="all">
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Все</SelectItem>
+                        <SelectItem value="enabled">Включен</SelectItem>
+                        <SelectItem value="disabled">Выключен</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="border rounded-lg">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>ID</TableHead>
+                        <TableHead>Трейдер</TableHead>
+                        <TableHead>Банк</TableHead>
+                        <TableHead>Ограничения</TableHead>
+                        <TableHead>Статус</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell className="font-mono text-xs">ae871c06...f0f2</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                              <span className="text-xs font-medium">S</span>
+                            </div>
+                            Shrayder
+                            <span className="text-xs text-muted-foreground">9d61a677...4b84</span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div>
+                            <div className="font-medium">Сбербанк</div>
+                            <div className="text-sm text-muted-foreground">Пономарев Владислав Павлович</div>
+                            <div className="text-sm text-muted-foreground">Карта: 2202206901098942</div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm space-y-1">
+                            <div>Мин: 5000 Макс: 100000</div>
+                            <div>В день: 10000000 В месяц: 10000000</div>
+                            <div>Одновр. заказов: 50</div>
+                            <div>Кол-во в день: 10000000</div>
+                            <div>Кол-во в месяц: 1000000</div>
+                            <div>Интервал между сделками (мин): 0</div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="destructive">Выключен</Badge>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="font-mono text-xs">fffe8816...b3eb</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                              <span className="text-xs font-medium">L</span>
+                            </div>
+                            Lightning's23
+                            <span className="text-xs text-muted-foreground">f506a0e7...d788</span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div>
+                            <div className="font-medium">Т-Банк</div>
+                            <div className="text-sm text-muted-foreground">Магомед Темирбекович</div>
+                            <div className="text-sm text-muted-foreground">Телефон: +79696650172</div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="text-sm space-y-1">
+                            <div>Мин: 9000 Макс: 20000</div>
+                            <div>В день: 25000 В месяц: 1000000</div>
+                            <div>Одновр. заказов: 3</div>
+                            <div>Кол-во в день: 2</div>
+                            <div>Кол-во в месяц: 1000000</div>
+                            <div>Интервал между сделками (мин): 20</div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="default">Включен</Badge>
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </div>
               </div>
             </CardContent>
           </Card>
