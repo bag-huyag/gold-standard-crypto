@@ -804,10 +804,409 @@ export default function Admin() {
                 Управление сделками
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-center py-12">
-                <Lock className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">Раздел в разработке</p>
+            <CardContent className="space-y-6">
+              {/* Filters */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4 border rounded-lg">
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Трейдер</label>
+                  <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                    <option value="">Все трейдеры</option>
+                    <option value="lightning">Lightning's23</option>
+                    <option value="puldorovich">Puldorovich</option>
+                    <option value="john">john_trader</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Мерчант</label>
+                  <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                    <option value="">Все мерчанты</option>
+                    <option value="biwire">biwire_finance</option>
+                    <option value="crypto">crypto_exchange</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Статус</label>
+                  <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                    <option value="">Все статусы</option>
+                    <option value="PENDING">PENDING</option>
+                    <option value="COMPLETED">COMPLETED</option>
+                    <option value="CANCELLED">CANCELLED</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Тип сделки</label>
+                  <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                    <option value="">Все типы</option>
+                    <option value="BUY">Покупка</option>
+                    <option value="SELL">Продажа</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">ID сделки</label>
+                  <input
+                    type="text"
+                    placeholder="Поиск по ID"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">ID заказа мерчанта</label>
+                  <input
+                    type="text"
+                    placeholder="Merchant Order ID"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Банк</label>
+                  <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                    <option value="">Все банки</option>
+                    <option value="tbank">Т-Банк</option>
+                    <option value="sber">Сбербанк</option>
+                    <option value="alfa">Альфа-Банк</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">ID устройства</label>
+                  <input
+                    type="text"
+                    placeholder="Device ID"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Платежная система</label>
+                  <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                    <option value="">Все системы</option>
+                    <option value="SBP">SBP</option>
+                    <option value="CARD">Карта</option>
+                    <option value="QIWI">QIWI</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Сумма от</label>
+                  <input
+                    type="text"
+                    placeholder="Мин. сумма (₽)"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Сумма до</label>
+                  <input
+                    type="text"
+                    placeholder="Макс. сумма (₽)"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Дата от</label>
+                  <input
+                    type="text"
+                    placeholder="дд.мм.гггг"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Дата до</label>
+                  <input
+                    type="text"
+                    placeholder="дд.мм.гггг"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Записей на странице</label>
+                  <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">&nbsp;</label>
+                  <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full">
+                    Сбросить
+                  </button>
+                </div>
+              </div>
+
+              {/* Summary */}
+              <div className="flex items-center justify-between text-sm text-muted-foreground">
+                <span>Всего сделок: 3199</span>
+                <span>Страница: 1 из 320</span>
+              </div>
+
+              {/* Deals Table */}
+              <div className="relative w-full overflow-auto">
+                <table className="w-full caption-bottom text-sm">
+                  <thead className="[&_tr]:border-b">
+                    <tr className="border-b transition-colors hover:bg-muted/50">
+                      <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">ID сделки</th>
+                      <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Реквизиты</th>
+                      <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Сумма</th>
+                      <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Мерчант</th>
+                      <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Merchant Order ID</th>
+                      <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Трейдер</th>
+                      <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Создана</th>
+                      <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Обновлена</th>
+                      <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Таймер</th>
+                      <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Статус</th>
+                      <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Действия</th>
+                    </tr>
+                  </thead>
+                  <tbody className="[&_tr:last-child]:border-0">
+                    <tr className="border-b transition-colors hover:bg-muted/50">
+                      <td className="p-4 align-middle">
+                        <div className="text-xs">
+                          <div className="font-mono">0e33...2294⎘</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs space-y-1">
+                          <div><span className="font-medium">Банк:</span> Т-Банк</div>
+                          <div><span className="font-medium">Код:</span> -</div>
+                          <div><span className="font-medium">ПС:</span> SBP</div>
+                          <div><span className="font-medium">Владелец:</span> Магомед Темирбекович</div>
+                          <div><span className="font-medium">Реквизиты:</span> +79696650172</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs space-y-1">
+                          <div><span className="font-medium">Рубли:</span> 15042 ₽</div>
+                          <div><span className="font-medium">Крипто:</span> 178.075056 USD</div>
+                          <div><span className="font-medium">Курс:</span> 84.47</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs">
+                          <div>biwire_finance</div>
+                          <div className="font-mono">4558...8109⎘</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs font-mono">5f8c9774-7023-486b-ad34-2d56a4e10318</div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs">
+                          <div>Lightning's23</div>
+                          <div className="font-mono">f506...d788⎘</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs space-y-1">
+                          <div><span className="font-medium">UTC:</span> 12.09 16:47</div>
+                          <div><span className="font-medium">Лок:</span> 12.09 19:47</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs space-y-1">
+                          <div><span className="font-medium">UTC:</span> 12.09 16:47</div>
+                          <div><span className="font-medium">Лок:</span> 12.09 19:47</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs">6м 6с</div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">
+                          PENDING
+                        </span>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs font-mono">24fc...5e33⎘</div>
+                      </td>
+                    </tr>
+                    <tr className="border-b transition-colors hover:bg-muted/50">
+                      <td className="p-4 align-middle">
+                        <div className="text-xs">
+                          <div className="font-mono">24fc...5e33⎘</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs space-y-1">
+                          <div><span className="font-medium">Банк:</span> Т-Банк</div>
+                          <div><span className="font-medium">Код:</span> -</div>
+                          <div><span className="font-medium">ПС:</span> SBP</div>
+                          <div><span className="font-medium">Владелец:</span> Марьям Алиевна</div>
+                          <div><span className="font-medium">Реквизиты:</span> +79332111094</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs space-y-1">
+                          <div><span className="font-medium">Рубли:</span> 11556 ₽</div>
+                          <div><span className="font-medium">Крипто:</span> 136.841607 USD</div>
+                          <div><span className="font-medium">Курс:</span> 84.448</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs">
+                          <div>biwire_finance</div>
+                          <div className="font-mono">4558...8109⎘</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs font-mono">cb65e73b-3d19-4f17-9554-01c71ba9783f</div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs">
+                          <div>Lightning's23</div>
+                          <div className="font-mono">f506...d788⎘</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs space-y-1">
+                          <div><span className="font-medium">UTC:</span> 12.09 16:46</div>
+                          <div><span className="font-medium">Лок:</span> 12.09 19:46</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs space-y-1">
+                          <div><span className="font-medium">UTC:</span> 12.09 16:46</div>
+                          <div><span className="font-medium">Лок:</span> 12.09 19:46</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs">4м 55с</div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">
+                          PENDING
+                        </span>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs font-mono">0f53...1943⎘</div>
+                      </td>
+                    </tr>
+                    <tr className="border-b transition-colors hover:bg-muted/50">
+                      <td className="p-4 align-middle">
+                        <div className="text-xs">
+                          <div className="font-mono">0f53...1943⎘</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs space-y-1">
+                          <div><span className="font-medium">Банк:</span> Т-Банк</div>
+                          <div><span className="font-medium">Код:</span> -</div>
+                          <div><span className="font-medium">ПС:</span> SBP</div>
+                          <div><span className="font-medium">Владелец:</span> Бозоров Улугбек Жура У</div>
+                          <div><span className="font-medium">Реквизиты:</span> +79152711412</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs space-y-1">
+                          <div><span className="font-medium">Рубли:</span> 5480 ₽</div>
+                          <div><span className="font-medium">Крипто:</span> 64.892005 USD</div>
+                          <div><span className="font-medium">Курс:</span> 84.448</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs">
+                          <div>biwire_finance</div>
+                          <div className="font-mono">4558...8109⎘</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs font-mono">fdb38091-5c52-4fba-af69-91b80fea82c0</div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs">
+                          <div>Puldorovich</div>
+                          <div className="font-mono">ef1f...5dea⎘</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs space-y-1">
+                          <div><span className="font-medium">UTC:</span> 12.09 16:46</div>
+                          <div><span className="font-medium">Лок:</span> 12.09 19:46</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs space-y-1">
+                          <div><span className="font-medium">UTC:</span> 12.09 16:47</div>
+                          <div><span className="font-medium">Лок:</span> 12.09 19:47</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs">4м 39с</div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+                          COMPLETED
+                        </span>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-2 text-xs">
+                          Открыть диспут
+                        </button>
+                      </td>
+                    </tr>
+                    <tr className="border-b transition-colors hover:bg-muted/50">
+                      <td className="p-4 align-middle">
+                        <div className="text-xs">
+                          <div className="font-mono">ef6b...854f⎘</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs space-y-1">
+                          <div><span className="font-medium">Банк:</span> Т-Банк</div>
+                          <div><span className="font-medium">Код:</span> -</div>
+                          <div><span className="font-medium">ПС:</span> SBP</div>
+                          <div><span className="font-medium">Владелец:</span> Марьям Алиевна</div>
+                          <div><span className="font-medium">Реквизиты:</span> +79332111094</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs space-y-1">
+                          <div><span className="font-medium">Рубли:</span> 9721 ₽</div>
+                          <div><span className="font-medium">Крипто:</span> 115.112258 USD</div>
+                          <div><span className="font-medium">Курс:</span> 84.448</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs">
+                          <div>biwire_finance</div>
+                          <div className="font-mono">4558...8109⎘</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs font-mono">acb401bb-62ff-40ac-bf65-ea5ccc92f780</div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs">
+                          <div>Lightning's23</div>
+                          <div className="font-mono">f506...d788⎘</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs space-y-1">
+                          <div><span className="font-medium">UTC:</span> 12.09 16:42</div>
+                          <div><span className="font-medium">Лок:</span> 12.09 19:42</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs space-y-1">
+                          <div><span className="font-medium">UTC:</span> 12.09 16:58</div>
+                          <div><span className="font-medium">Лок:</span> 12.09 19:58</div>
+                        </div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <div className="text-xs">1м 7с</div>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+                          COMPLETED
+                        </span>
+                      </td>
+                      <td className="p-4 align-middle">
+                        <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-2 text-xs">
+                          Открыть диспут
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </CardContent>
           </Card>
