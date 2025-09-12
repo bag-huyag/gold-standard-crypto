@@ -1,8 +1,56 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Shield, Lock, Users, Building2, TrendingUp, Wallet, MessageSquare, Handshake, Settings, Command, BarChart3, CreditCard } from "lucide-react";
+import { useState } from "react";
 
 export default function Admin() {
+  const [editingTraffic, setEditingTraffic] = useState<any>(null);
+  const [formData, setFormData] = useState({
+    merchant: "",
+    trader: "",
+    commission: "",
+    reward: "",
+    priority: "",
+    active: false
+  });
+
+  const handleEditTraffic = (traffic: any) => {
+    setEditingTraffic(traffic);
+    setFormData({
+      merchant: traffic.merchant,
+      trader: traffic.trader,
+      commission: traffic.commission,
+      reward: traffic.reward,
+      priority: traffic.priority,
+      active: traffic.active
+    });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingTraffic(null);
+    setFormData({
+      merchant: "",
+      trader: "",
+      commission: "",
+      reward: "",
+      priority: "",
+      active: false
+    });
+  };
+
+  const handleUpdateTraffic = () => {
+    // Here you would update the traffic record
+    console.log("Updating traffic:", formData);
+    setEditingTraffic(null);
+    setFormData({
+      merchant: "",
+      trader: "",
+      commission: "",
+      reward: "",
+      priority: "",
+      active: false
+    });
+  };
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -281,7 +329,11 @@ export default function Admin() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 border rounded-lg">
                   <div>
                     <label className="text-sm font-medium mb-2 block">Мерчант</label>
-                    <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                    <select 
+                      value={formData.merchant}
+                      onChange={(e) => setFormData({...formData, merchant: e.target.value})}
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    >
                       <option value="">Выберите мерчанта</option>
                       <option value="merchant1">biwire_finance (account@bitwire.finance)</option>
                       <option value="merchant2">crypto_exchange (admin@cryptoex.com)</option>
@@ -290,7 +342,11 @@ export default function Admin() {
                   </div>
                   <div>
                     <label className="text-sm font-medium mb-2 block">Трейдер</label>
-                    <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                    <select 
+                      value={formData.trader}
+                      onChange={(e) => setFormData({...formData, trader: e.target.value})}
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    >
                       <option value="">Выберите трейдера</option>
                       <option value="trader1">Puldorovich (Puldorovich)</option>
                       <option value="trader2">john_trader (john.doe)</option>
@@ -301,6 +357,8 @@ export default function Admin() {
                     <label className="text-sm font-medium mb-2 block">Комиссия платформы</label>
                     <input
                       type="text"
+                      value={formData.commission}
+                      onChange={(e) => setFormData({...formData, commission: e.target.value})}
                       placeholder="9.500%"
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     />
@@ -309,6 +367,8 @@ export default function Admin() {
                     <label className="text-sm font-medium mb-2 block">Награда трейдера (%)</label>
                     <input
                       type="text"
+                      value={formData.reward}
+                      onChange={(e) => setFormData({...formData, reward: e.target.value})}
                       placeholder="8.000%"
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     />
@@ -317,6 +377,8 @@ export default function Admin() {
                     <label className="text-sm font-medium mb-2 block">Приоритет трейдера</label>
                     <input
                       type="text"
+                      value={formData.priority}
+                      onChange={(e) => setFormData({...formData, priority: e.target.value})}
                       placeholder="100"
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     />
@@ -325,16 +387,38 @@ export default function Admin() {
                     <label className="text-sm font-medium mb-2 block">Активный трафик</label>
                     <div className="flex items-center space-x-2 mt-2">
                       <label className="inline-flex items-center cursor-pointer">
-                        <input type="checkbox" className="sr-only peer" />
+                        <input 
+                          type="checkbox" 
+                          checked={formData.active}
+                          onChange={(e) => setFormData({...formData, active: e.target.checked})}
+                          className="sr-only peer" 
+                        />
                         <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                       </label>
                     </div>
                   </div>
                 </div>
-                <div className="flex justify-start">
-                  <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
-                    Создать
-                  </button>
+                <div className="flex justify-start gap-2">
+                  {editingTraffic ? (
+                    <>
+                      <button 
+                        onClick={handleUpdateTraffic}
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+                      >
+                        Обновить
+                      </button>
+                      <button 
+                        onClick={handleCancelEdit}
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+                      >
+                        Отменить
+                      </button>
+                    </>
+                  ) : (
+                    <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+                      Создать
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -379,7 +463,17 @@ export default function Admin() {
                         <td className="p-4 align-middle">100</td>
                         <td className="p-4 align-middle">9.500%</td>
                         <td className="p-4 align-middle">
-                          <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
+                          <button 
+                            onClick={() => handleEditTraffic({
+                              merchant: "merchant1",
+                              trader: "trader1", 
+                              commission: "9.500%",
+                              reward: "8.000%",
+                              priority: "100",
+                              active: true
+                            })}
+                            className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3"
+                          >
                             Редактировать
                           </button>
                         </td>
@@ -408,7 +502,17 @@ export default function Admin() {
                         <td className="p-4 align-middle">85</td>
                         <td className="p-4 align-middle">8.750%</td>
                         <td className="p-4 align-middle">
-                          <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
+                          <button 
+                            onClick={() => handleEditTraffic({
+                              merchant: "merchant2",
+                              trader: "trader2", 
+                              commission: "8.750%",
+                              reward: "7.500%",
+                              priority: "85",
+                              active: false
+                            })}
+                            className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3"
+                          >
                             Редактировать
                           </button>
                         </td>
