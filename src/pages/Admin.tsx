@@ -248,50 +248,50 @@ export default function Admin() {
 
       {/* Admin Tabs */}
       <Tabs defaultValue="traders" className="w-full">
-        <TabsList className="grid w-full grid-cols-6 lg:grid-cols-11 gap-1">
-          <TabsTrigger value="traders" className="flex items-center gap-1 text-xs">
-            <Users className="h-3 w-3" />
-            <span className="hidden sm:inline">Трейдеры</span>
+        <TabsList className="grid w-full grid-cols-3 sm:grid-cols-6 lg:grid-cols-11 gap-0.5 sm:gap-1 h-auto p-1">
+          <TabsTrigger value="traders" className="flex flex-col sm:flex-row items-center gap-1 text-xs px-1 sm:px-3 py-2 min-h-[60px] sm:min-h-[40px]">
+            <Users className="h-4 w-4 sm:h-3 sm:w-3" />
+            <span className="text-[10px] sm:text-xs sm:hidden lg:inline">Трейдеры</span>
           </TabsTrigger>
-          <TabsTrigger value="merchants" className="flex items-center gap-1 text-xs">
-            <Building2 className="h-3 w-3" />
-            <span className="hidden sm:inline">Мерчанты</span>
+          <TabsTrigger value="merchants" className="flex flex-col sm:flex-row items-center gap-1 text-xs px-1 sm:px-3 py-2 min-h-[60px] sm:min-h-[40px]">
+            <Building2 className="h-4 w-4 sm:h-3 sm:w-3" />
+            <span className="text-[10px] sm:text-xs sm:hidden lg:inline">Мерчанты</span>
           </TabsTrigger>
-          <TabsTrigger value="traffic" className="flex items-center gap-1 text-xs">
-            <TrendingUp className="h-3 w-3" />
-            <span className="hidden sm:inline">Трафик</span>
+          <TabsTrigger value="traffic" className="flex flex-col sm:flex-row items-center gap-1 text-xs px-1 sm:px-3 py-2 min-h-[60px] sm:min-h-[40px]">
+            <TrendingUp className="h-4 w-4 sm:h-3 sm:w-3" />
+            <span className="text-[10px] sm:text-xs sm:hidden lg:inline">Трафик</span>
           </TabsTrigger>
-          <TabsTrigger value="wallets" className="flex items-center gap-1 text-xs">
-            <Wallet className="h-3 w-3" />
-            <span className="hidden sm:inline">Кошельки</span>
+          <TabsTrigger value="wallets" className="flex flex-col sm:flex-row items-center gap-1 text-xs px-1 sm:px-3 py-2 min-h-[60px] sm:min-h-[40px]">
+            <Wallet className="h-4 w-4 sm:h-3 sm:w-3" />
+            <span className="text-[10px] sm:text-xs sm:hidden lg:inline">Кошельки</span>
           </TabsTrigger>
-          <TabsTrigger value="disputes" className="flex items-center gap-1 text-xs">
-            <MessageSquare className="h-3 w-3" />
-            <span className="hidden sm:inline">Диспуты</span>
+          <TabsTrigger value="disputes" className="flex flex-col sm:flex-row items-center gap-1 text-xs px-1 sm:px-3 py-2 min-h-[60px] sm:min-h-[40px]">
+            <MessageSquare className="h-4 w-4 sm:h-3 sm:w-3" />
+            <span className="text-[10px] sm:text-xs sm:hidden lg:inline">Диспуты</span>
           </TabsTrigger>
-          <TabsTrigger value="deals" className="flex items-center gap-1 text-xs">
-            <Handshake className="h-3 w-3" />
-            <span className="hidden sm:inline">Сделки</span>
+          <TabsTrigger value="deals" className="flex flex-col sm:flex-row items-center gap-1 text-xs px-1 sm:px-3 py-2 min-h-[60px] sm:min-h-[40px]">
+            <Handshake className="h-4 w-4 sm:h-3 sm:w-3" />
+            <span className="text-[10px] sm:text-xs sm:hidden lg:inline">Сделки</span>
           </TabsTrigger>
-          <TabsTrigger value="telegram" className="flex items-center gap-1 text-xs">
-            <MessageSquare className="h-3 w-3" />
-            <span className="hidden sm:inline">Телеграм</span>
+          <TabsTrigger value="telegram" className="flex flex-col sm:flex-row items-center gap-1 text-xs px-1 sm:px-3 py-2 min-h-[60px] sm:min-h-[40px]">
+            <MessageSquare className="h-4 w-4 sm:h-3 sm:w-3" />
+            <span className="text-[10px] sm:text-xs sm:hidden lg:inline">Телеграм</span>
           </TabsTrigger>
-          <TabsTrigger value="settle-settings" className="flex items-center gap-1 text-xs">
-            <Settings className="h-3 w-3" />
-            <span className="hidden sm:inline">Settle</span>
+          <TabsTrigger value="settle-settings" className="flex flex-col sm:flex-row items-center gap-1 text-xs px-1 sm:px-3 py-2 min-h-[60px] sm:min-h-[40px]">
+            <Settings className="h-4 w-4 sm:h-3 sm:w-3" />
+            <span className="text-[10px] sm:text-xs sm:hidden lg:inline">Settle</span>
           </TabsTrigger>
-          <TabsTrigger value="teams" className="flex items-center gap-1 text-xs">
-            <Command className="h-3 w-3" />
-            <span className="hidden sm:inline">Команды</span>
+          <TabsTrigger value="teams" className="flex flex-col sm:flex-row items-center gap-1 text-xs px-1 sm:px-3 py-2 min-h-[60px] sm:min-h-[40px]">
+            <Command className="h-4 w-4 sm:h-3 sm:w-3" />
+            <span className="text-[10px] sm:text-xs sm:hidden lg:inline">Команды</span>
           </TabsTrigger>
-          <TabsTrigger value="trader-stats" className="flex items-center gap-1 text-xs">
-            <BarChart3 className="h-3 w-3" />
-            <span className="hidden sm:inline">Статистика</span>
+          <TabsTrigger value="trader-stats" className="flex flex-col sm:flex-row items-center gap-1 text-xs px-1 sm:px-3 py-2 min-h-[60px] sm:min-h-[40px]">
+            <BarChart3 className="h-4 w-4 sm:h-3 sm:w-3" />
+            <span className="text-[10px] sm:text-xs sm:hidden lg:inline">Статистика</span>
           </TabsTrigger>
-          <TabsTrigger value="payment-details" className="flex items-center gap-1 text-xs">
-            <CreditCard className="h-3 w-3" />
-            <span className="hidden sm:inline">Реквизиты</span>
+          <TabsTrigger value="payment-details" className="flex flex-col sm:flex-row items-center gap-1 text-xs px-1 sm:px-3 py-2 min-h-[60px] sm:min-h-[40px]">
+            <CreditCard className="h-4 w-4 sm:h-3 sm:w-3" />
+            <span className="text-[10px] sm:text-xs sm:hidden lg:inline">Реквизиты</span>
           </TabsTrigger>
         </TabsList>
 
