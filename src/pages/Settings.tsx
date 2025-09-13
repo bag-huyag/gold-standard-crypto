@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,17 +7,45 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Shield, Smartphone, QrCode, Copy, RotateCcw, AlertTriangle, CheckCircle, Download } from "lucide-react";
+import QRCode from "qrcode";
 
 export default function Settings() {
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
   const [setupStep, setSetupStep] = useState<'disabled' | 'setup' | 'verify' | 'complete'>('disabled');
   const [secretKey, setSecretKey] = useState("JBSWY3DPEHPK3PXP");
   const [verificationCode, setVerificationCode] = useState("");
+  const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [backupCodes, setBackupCodes] = useState([
     "a1b2c3d4", "e5f6g7h8", "i9j0k1l2", 
     "m3n4o5p6", "q7r8s9t0", "u1v2w3x4",
     "y5z6a7b8", "c9d0e1f2"
   ]);
+
+  // Generate QR code when secret key changes
+  useEffect(() => {
+    const generateQRCode = async () => {
+      try {
+        const appName = "CryptoPlatform";
+        const userEmail = "user@example.com";
+        const otpauth = `otpauth://totp/${appName}:${userEmail}?secret=${secretKey}&issuer=${appName}`;
+        const qrCodeDataUrl = await QRCode.toDataURL(otpauth, {
+          width: 256,
+          margin: 2,
+          color: {
+            dark: '#000000',
+            light: '#FFFFFF'
+          }
+        });
+        setQrCodeUrl(qrCodeDataUrl);
+      } catch (error) {
+        console.error('Error generating QR code:', error);
+      }
+    };
+
+    if (secretKey) {
+      generateQRCode();
+    }
+  }, [secretKey]);
 
   const handleEnable2FA = () => {
     if (!twoFactorEnabled) {
@@ -108,8 +136,16 @@ export default function Settings() {
 
               {/* QR Code Placeholder */}
               <div className="flex justify-center">
-                <div className="p-8 bg-white rounded-lg border-2 border-dashed border-primary/30">
-                  <QrCode className="h-32 w-32 text-muted-foreground" />
+                <div className="p-4 bg-white rounded-lg border-2 border-primary/20 shadow-sm">
+                  {qrCodeUrl ? (
+                    <img 
+                      src={qrCodeUrl} 
+                      alt="2FA QR Code" 
+                      className="w-48 h-48 mx-auto"
+                    />
+                  ) : (
+                    <QrCode className="h-48 w-48 text-muted-foreground animate-pulse" />
+                  )}
                 </div>
               </div>
 
