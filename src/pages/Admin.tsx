@@ -31,6 +31,10 @@ export default function Admin() {
   // Pagination state for deals
   const [dealsCurrentPage, setDealsCurrentPage] = useState(1);
   const dealsPerPage = 10;
+  
+  // Pagination state for banking details
+  const [bankingCurrentPage, setBankingCurrentPage] = useState(1);
+  const bankingPerPage = 10;
 
   // Mock data for disputes (in real app, this would come from API)
   const allDisputes = [
@@ -1764,72 +1768,108 @@ export default function Admin() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      <TableRow>
-                        <TableCell className="font-mono text-xs">ae871c06...f0f2</TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                              <span className="text-xs font-medium">S</span>
-                            </div>
-                            Shrayder
-                            <span className="text-xs text-muted-foreground">9d61a677...4b84</span>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div>
-                            <div className="font-medium">Сбербанк</div>
-                            <div className="text-sm text-muted-foreground">Пономарев Владислав Павлович</div>
-                            <div className="text-sm text-muted-foreground">Карта: 2202206901098942</div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="text-sm space-y-1">
-                            <div>Мин: 5000 Макс: 100000</div>
-                            <div>В день: 10000000 В месяц: 10000000</div>
-                            <div>Одновр. заказов: 50</div>
-                            <div>Кол-во в день: 10000000</div>
-                            <div>Кол-во в месяц: 1000000</div>
-                            <div>Интервал между сделками (мин): 0</div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="destructive">Выключен</Badge>
-                        </TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="font-mono text-xs">fffe8816...b3eb</TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                              <span className="text-xs font-medium">L</span>
-                            </div>
-                            Lightning's23
-                            <span className="text-xs text-muted-foreground">f506a0e7...d788</span>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div>
-                            <div className="font-medium">Т-Банк</div>
-                            <div className="text-sm text-muted-foreground">Магомед Темирбекович</div>
-                            <div className="text-sm text-muted-foreground">Телефон: +79696650172</div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="text-sm space-y-1">
-                            <div>Мин: 9000 Макс: 20000</div>
-                            <div>В день: 25000 В месяц: 1000000</div>
-                            <div>Одновр. заказов: 3</div>
-                            <div>Кол-во в день: 2</div>
-                            <div>Кол-во в месяц: 1000000</div>
-                            <div>Интервал между сделками (мин): 20</div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="default">Включен</Badge>
-                        </TableCell>
-                      </TableRow>
+                      {(() => {
+                        // Mock banking data for pagination
+                        const allBankingData = [
+                          {
+                            id: "ae871c06...f0f2",
+                            trader: { name: "Shrayder", id: "9d61a677...4b84", initial: "S" },
+                            bank: { name: "Сбербанк", owner: "Пономарев Владислав Павлович", card: "2202206901098942" },
+                            limits: { min: 5000, max: 100000, dayLimit: 10000000, monthLimit: 10000000, concurrent: 50, dayCount: 10000000, monthCount: 1000000, interval: 0 },
+                            status: "disabled"
+                          },
+                          {
+                            id: "fffe8816...b3eb",
+                            trader: { name: "Lightning's23", id: "f506a0e7...d788", initial: "L" },
+                            bank: { name: "Т-Банк", owner: "Магомед Темирбекович", phone: "+79696650172" },
+                            limits: { min: 9000, max: 20000, dayLimit: 25000, monthLimit: 1000000, concurrent: 3, dayCount: 2, monthCount: 1000000, interval: 20 },
+                            status: "enabled"
+                          },
+                          // Add more mock data to demonstrate pagination
+                          ...Array.from({length: 15}, (_, i) => ({
+                            id: `mock-${i+3}...${String(i).padStart(4, '0')}`,
+                            trader: { name: `Trader${i+3}`, id: `${i+3}...id`, initial: String.fromCharCode(65 + (i % 26)) },
+                            bank: { name: i % 2 === 0 ? "Сбербанк" : "Т-Банк", owner: `Owner ${i+3}`, card: i % 2 === 0 ? `220220690${String(i).padStart(7, '0')}` : undefined, phone: i % 2 === 1 ? `+7969665${String(i).padStart(4, '0')}` : undefined },
+                            limits: { min: 1000 + i * 500, max: 50000 + i * 1000, dayLimit: 100000, monthLimit: 1000000, concurrent: 5 + i, dayCount: 100, monthCount: 1000, interval: i },
+                            status: i % 3 === 0 ? "disabled" : "enabled"
+                          }))
+                        ];
+
+                        const startIndex = (bankingCurrentPage - 1) * bankingPerPage;
+                        const endIndex = startIndex + bankingPerPage;
+                        const currentBankingData = allBankingData.slice(startIndex, endIndex);
+
+                        return currentBankingData.map((item) => (
+                          <TableRow key={item.id}>
+                            <TableCell className="font-mono text-xs">{item.id}</TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                  <span className="text-xs font-medium">{item.trader.initial}</span>
+                                </div>
+                                {item.trader.name}
+                                <span className="text-xs text-muted-foreground">{item.trader.id}</span>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <div>
+                                <div className="font-medium">{item.bank.name}</div>
+                                <div className="text-sm text-muted-foreground">{item.bank.owner}</div>
+                                {item.bank.card && (
+                                  <div className="text-sm text-muted-foreground">Карта: {item.bank.card}</div>
+                                )}
+                                {item.bank.phone && (
+                                  <div className="text-sm text-muted-foreground">Телефон: {item.bank.phone}</div>
+                                )}
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <div className="text-sm space-y-1">
+                                <div>Мин: {item.limits.min} Макс: {item.limits.max}</div>
+                                <div>В день: {item.limits.dayLimit} В месяц: {item.limits.monthLimit}</div>
+                                <div>Одновр. заказов: {item.limits.concurrent}</div>
+                                <div>Кол-во в день: {item.limits.dayCount}</div>
+                                <div>Кол-во в месяц: {item.limits.monthCount}</div>
+                                <div>Интервал между сделками (мин): {item.limits.interval}</div>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant={item.status === "enabled" ? "default" : "destructive"}>
+                                {item.status === "enabled" ? "Включен" : "Выключен"}
+                              </Badge>
+                            </TableCell>
+                          </TableRow>
+                        ));
+                      })()}
                     </TableBody>
                   </Table>
+                </div>
+
+                {/* Banking Details Pagination */}
+                <div className="flex items-center justify-between px-2 py-4">
+                  <div className="text-sm text-muted-foreground">
+                    Страница {bankingCurrentPage} из {Math.ceil(17 / bankingPerPage)}
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setBankingCurrentPage(prev => Math.max(prev - 1, 1))}
+                      disabled={bankingCurrentPage === 1}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                      Назад
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setBankingCurrentPage(prev => Math.min(prev + 1, Math.ceil(17 / bankingPerPage)))}
+                      disabled={bankingCurrentPage === Math.ceil(17 / bankingPerPage)}
+                    >
+                      Вперёд
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             </CardContent>
