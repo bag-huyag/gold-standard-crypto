@@ -10,7 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { Shield, Lock, Users, Building2, TrendingUp, Wallet, MessageSquare, Handshake, Settings, Command, BarChart3, CreditCard } from "lucide-react";
+import { Shield, Lock, Users, Building2, TrendingUp, Wallet, MessageSquare, Handshake, Settings, Command, BarChart3, CreditCard, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
 export default function Admin() {
@@ -23,6 +23,177 @@ export default function Admin() {
     priority: "",
     active: false
   });
+
+  // Pagination state for disputes
+  const [disputesCurrentPage, setDisputesCurrentPage] = useState(1);
+  const disputesPerPage = 10;
+  
+  // Pagination state for deals
+  const [dealsCurrentPage, setDealsCurrentPage] = useState(1);
+  const dealsPerPage = 10;
+
+  // Mock data for disputes (in real app, this would come from API)
+  const allDisputes = [
+    {
+      id: "dfa176c4-29b6-4ffb-ad2a-035c00538892",
+      bankDetails: {
+        bank: "Т-Банк (SBP)",
+        phone: "+79815574742",
+        owner: "Бодя",
+        trader: "obsthandler"
+      },
+      dealDetails: {
+        orderId: "685a5d8e-fc6d-4f32-9c3e-9d6ba64eaee5",
+        merchantOrderId: "trip-prod-test-1",
+        amountRub: 2007,
+        amountCrypto: 25.342829,
+        rate: 79.194
+      },
+      disputeDetails: {
+        reason: "WRONG_AMOUNT",
+        status: "Открыт",
+        amountRubDispute: 2007,
+        amountCryptoDispute: 25.342829,
+        autoAccept: "Истекло"
+      }
+    },
+    {
+      id: "xyz789ab-29b6-4ffb-ad2a-035c00538123",
+      bankDetails: {
+        bank: "Сбербанк",
+        phone: "+79123456789",
+        owner: "Иван Иванов",
+        trader: "john_trader"
+      },
+      dealDetails: {
+        orderId: "abc123de-fc6d-4f32-9c3e-9d6ba64eef78",
+        merchantOrderId: "crypto-test-2",
+        amountRub: 5000,
+        amountCrypto: 62.5,
+        rate: 80.0
+      },
+      disputeDetails: {
+        reason: "PAYMENT_NOT_RECEIVED",
+        status: "Заморожен",
+        amountRubDispute: 5000,
+        amountCryptoDispute: 62.5,
+        autoAccept: "2 дня"
+      }
+    },
+    // Add more mock disputes to demonstrate pagination
+    ...Array.from({ length: 25 }, (_, i) => ({
+      id: `dispute-${i + 3}`,
+      bankDetails: {
+        bank: i % 2 === 0 ? "Сбербанк" : "Т-Банк",
+        phone: `+7912345${String(i).padStart(4, '0')}`,
+        owner: `Владелец ${i + 3}`,
+        trader: i % 3 === 0 ? "obsthandler" : i % 3 === 1 ? "john_trader" : "mike_trader"
+      },
+      dealDetails: {
+        orderId: `order-${i + 3}`,
+        merchantOrderId: `merchant-${i + 3}`,
+        amountRub: 1000 + i * 100,
+        amountCrypto: 10 + i,
+        rate: 80 + i * 0.1
+      },
+      disputeDetails: {
+        reason: i % 2 === 0 ? "WRONG_AMOUNT" : "PAYMENT_NOT_RECEIVED",
+        status: i % 3 === 0 ? "Открыт" : i % 3 === 1 ? "Заморожен" : "Закрыт",
+        amountRubDispute: 1000 + i * 100,
+        amountCryptoDispute: 10 + i,
+        autoAccept: i % 2 === 0 ? "Истекло" : `${i} дней`
+      }
+    }))
+  ];
+
+  // Mock data for deals
+  const allDeals = [
+    {
+      id: "0e33...2294",
+      bankDetails: {
+        bank: "Т-Банк",
+        code: "-",
+        paymentSystem: "SBP",
+        owner: "Магомед Темирбекович",
+        requisites: "+79696650172"
+      },
+      amount: {
+        rub: 15042,
+        crypto: 178.075056,
+        rate: 84.47
+      },
+      merchant: {
+        name: "biwire_finance",
+        id: "4558...8109"
+      },
+      merchantOrderId: "5f8c9774-7023-486b-ad34-2d56a4e10318",
+      trader: {
+        name: "Lightning's23",
+        id: "f506...d788"
+      },
+      created: {
+        utc: "12.09 16:47",
+        local: "12.09 19:47"
+      },
+      updated: {
+        utc: "12.09 16:47",
+        local: "12.09 19:47"
+      },
+      timer: "6м 6с",
+      status: "PENDING",
+      action: "24fc...5e33"
+    },
+    // Add more mock deals to demonstrate pagination
+    ...Array.from({ length: 30 }, (_, i) => ({
+      id: `deal-${i + 2}`,
+      bankDetails: {
+        bank: i % 3 === 0 ? "Т-Банк" : i % 3 === 1 ? "Сбербанк" : "Альфа-Банк",
+        code: "-",
+        paymentSystem: i % 2 === 0 ? "SBP" : "CARD",
+        owner: `Владелец ${i + 2}`,
+        requisites: `+7912345${String(i).padStart(4, '0')}`
+      },
+      amount: {
+        rub: 10000 + i * 500,
+        crypto: 100 + i * 5,
+        rate: 84 + i * 0.1
+      },
+      merchant: {
+        name: i % 2 === 0 ? "biwire_finance" : "crypto_exchange",
+        id: `merchant-${i + 2}`
+      },
+      merchantOrderId: `order-${i + 2}`,
+      trader: {
+        name: i % 3 === 0 ? "Lightning's23" : i % 3 === 1 ? "Puldorovich" : "john_trader",
+        id: `trader-${i + 2}`
+      },
+      created: {
+        utc: "12.09 16:47",
+        local: "12.09 19:47"
+      },
+      updated: {
+        utc: "12.09 16:47",
+        local: "12.09 19:47"
+      },
+      timer: `${i + 1}м ${(i * 10) % 60}с`,
+      status: i % 3 === 0 ? "PENDING" : i % 3 === 1 ? "COMPLETED" : "CANCELLED",
+      action: `action-${i + 2}`
+    }))
+  ];
+
+  // Calculate disputes pagination
+  const totalDisputes = allDisputes.length;
+  const totalDisputesPages = Math.ceil(totalDisputes / disputesPerPage);
+  const disputesStartIndex = (disputesCurrentPage - 1) * disputesPerPage;
+  const disputesEndIndex = disputesStartIndex + disputesPerPage;
+  const currentDisputes = allDisputes.slice(disputesStartIndex, disputesEndIndex);
+
+  // Calculate deals pagination
+  const totalDeals = allDeals.length;
+  const totalDealsPages = Math.ceil(totalDeals / dealsPerPage);
+  const dealsStartIndex = (dealsCurrentPage - 1) * dealsPerPage;
+  const dealsEndIndex = dealsStartIndex + dealsPerPage;
+  const currentDeals = allDeals.slice(dealsStartIndex, dealsEndIndex);
 
   const handleEditTraffic = (traffic: any) => {
     setEditingTraffic(traffic);
@@ -695,111 +866,137 @@ export default function Admin() {
 
               {/* Disputes List */}
               <div className="space-y-4">
-                {/* Dispute Card 1 - Open */}
-                <div className="border rounded-lg p-6 space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Bank Details */}
-                    <div className="space-y-2">
-                      <h4 className="font-semibold text-sm text-muted-foreground">Банковские реквизиты</h4>
-                      <div className="space-y-1 text-sm">
-                        <p><span className="font-medium">Банк:</span> Т-Банк (SBP)</p>
-                        <p><span className="font-medium">Телефон:</span> +79815574742</p>
-                        <p><span className="font-medium">Владелец:</span> Бодя</p>
-                        <p><span className="font-medium">Trader:</span> obsthandler</p>
+                {currentDisputes.map((dispute) => (
+                  <div key={dispute.id} className="border rounded-lg p-6 space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      {/* Bank Details */}
+                      <div className="space-y-2">
+                        <h4 className="font-semibold text-sm text-muted-foreground">Банковские реквизиты</h4>
+                        <div className="space-y-1 text-sm">
+                          <p><span className="font-medium">Банк:</span> {dispute.bankDetails.bank}</p>
+                          <p><span className="font-medium">Телефон:</span> {dispute.bankDetails.phone}</p>
+                          <p><span className="font-medium">Владелец:</span> {dispute.bankDetails.owner}</p>
+                          <p><span className="font-medium">Trader:</span> {dispute.bankDetails.trader}</p>
+                        </div>
+                      </div>
+
+                      {/* Deal Details */}
+                      <div className="space-y-2">
+                        <h4 className="font-semibold text-sm text-muted-foreground">Детали сделки</h4>
+                        <div className="space-y-1 text-sm">
+                          <p><span className="font-medium">Order ID:</span> {dispute.dealDetails.orderId}</p>
+                          <p><span className="font-medium">Merchant Order ID:</span> {dispute.dealDetails.merchantOrderId}</p>
+                          <p><span className="font-medium">Сумма (₽):</span> {dispute.dealDetails.amountRub}</p>
+                          <p><span className="font-medium">Сумма (крипто):</span> {dispute.dealDetails.amountCrypto}</p>
+                          <p><span className="font-medium">Курс:</span> {dispute.dealDetails.rate}</p>
+                        </div>
+                      </div>
+
+                      {/* Dispute Details */}
+                      <div className="space-y-2">
+                        <h4 className="font-semibold text-sm text-muted-foreground">Детали диспута</h4>
+                        <div className="space-y-1 text-sm">
+                          <p><span className="font-medium">ID диспута:</span> {dispute.id}</p>
+                          <p><span className="font-medium">Причина:</span> {dispute.disputeDetails.reason}</p>
+                          <p><span className="font-medium">Статус:</span> 
+                            <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ml-2 ${
+                              dispute.disputeDetails.status === "Открыт" 
+                                ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
+                                : dispute.disputeDetails.status === "Заморожен"
+                                ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
+                                : "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                            }`}>
+                              {dispute.disputeDetails.status}
+                            </span>
+                          </p>
+                          <p><span className="font-medium">Сумма диспута (₽):</span> {dispute.disputeDetails.amountRubDispute}</p>
+                          <p><span className="font-medium">Сумма диспута (крипто):</span> {dispute.disputeDetails.amountCryptoDispute}</p>
+                          <p><span className="font-medium">Доказательство</span></p>
+                          <p><span className="font-medium">До автопринятия:</span> {dispute.disputeDetails.autoAccept}</p>
+                        </div>
                       </div>
                     </div>
 
-                    {/* Deal Details */}
-                    <div className="space-y-2">
-                      <h4 className="font-semibold text-sm text-muted-foreground">Детали сделки</h4>
-                      <div className="space-y-1 text-sm">
-                        <p><span className="font-medium">Order ID:</span> 685a5d8e-fc6d-4f32-9c3e-9d6ba64eaee5</p>
-                        <p><span className="font-medium">Merchant Order ID:</span> trip-prod-test-1</p>
-                        <p><span className="font-medium">Сумма (₽):</span> 2007</p>
-                        <p><span className="font-medium">Сумма (крипто):</span> 25.342829</p>
-                        <p><span className="font-medium">Курс:</span> 79.194</p>
-                      </div>
-                    </div>
-
-                    {/* Dispute Details */}
-                    <div className="space-y-2">
-                      <h4 className="font-semibold text-sm text-muted-foreground">Детали диспута</h4>
-                      <div className="space-y-1 text-sm">
-                        <p><span className="font-medium">ID диспута:</span> dfa176c4-29b6-4ffb-ad2a-035c00538892</p>
-                        <p><span className="font-medium">Причина:</span> WRONG_AMOUNT</p>
-                        <p><span className="font-medium">Статус:</span> <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">Открыт</span></p>
-                        <p><span className="font-medium">Сумма диспута (₽):</span> 2007</p>
-                        <p><span className="font-medium">Сумма диспута (крипто):</span> 25.342829</p>
-                        <p><span className="font-medium">Доказательство</span></p>
-                        <p><span className="font-medium">До автопринятия:</span> Истекло</p>
-                      </div>
+                    {/* Action Buttons */}
+                    <div className="flex gap-2 pt-4 border-t">
+                      {dispute.disputeDetails.status === "Открыт" && (
+                        <>
+                          <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-green-600 text-white hover:bg-green-700 h-9 px-3">
+                            Закрыть
+                          </button>
+                          <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 h-9 px-3">
+                            Отменить
+                          </button>
+                          <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-blue-600 text-white hover:bg-blue-700 h-9 px-3">
+                            Заморозить
+                          </button>
+                        </>
+                      )}
+                      {dispute.disputeDetails.status === "Заморожен" && (
+                        <>
+                          <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-green-600 text-white hover:bg-green-700 h-9 px-3">
+                            Завершить
+                          </button>
+                          <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 h-9 px-3">
+                            Отклонить
+                          </button>
+                        </>
+                      )}
                     </div>
                   </div>
+                ))}
+              </div>
 
-                  {/* Action Buttons for Open Dispute */}
-                  <div className="flex gap-2 pt-4 border-t">
-                    <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-green-600 text-white hover:bg-green-700 h-9 px-3">
-                      Закрыть
-                    </button>
-                    <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 h-9 px-3">
-                      Отменить
-                    </button>
-                    <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-blue-600 text-white hover:bg-blue-700 h-9 px-3">
-                      Заморозить
-                    </button>
-                  </div>
+              {/* Disputes Pagination */}
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-muted-foreground">
+                  Показано {disputesStartIndex + 1}-{Math.min(disputesEndIndex, totalDisputes)} из {totalDisputes} диспутов
                 </div>
-
-                {/* Dispute Card 2 - Frozen */}
-                <div className="border rounded-lg p-6 space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Bank Details */}
-                    <div className="space-y-2">
-                      <h4 className="font-semibold text-sm text-muted-foreground">Банковские реквизиты</h4>
-                      <div className="space-y-1 text-sm">
-                        <p><span className="font-medium">Банк:</span> Сбербанк</p>
-                        <p><span className="font-medium">Телефон:</span> +79123456789</p>
-                        <p><span className="font-medium">Владелец:</span> Иван Иванов</p>
-                        <p><span className="font-medium">Trader:</span> john_trader</p>
-                      </div>
-                    </div>
-
-                    {/* Deal Details */}
-                    <div className="space-y-2">
-                      <h4 className="font-semibold text-sm text-muted-foreground">Детали сделки</h4>
-                      <div className="space-y-1 text-sm">
-                        <p><span className="font-medium">Order ID:</span> abc123de-fc6d-4f32-9c3e-9d6ba64eef78</p>
-                        <p><span className="font-medium">Merchant Order ID:</span> crypto-test-2</p>
-                        <p><span className="font-medium">Сумма (₽):</span> 5000</p>
-                        <p><span className="font-medium">Сумма (крипто):</span> 62.5</p>
-                        <p><span className="font-medium">Курс:</span> 80.0</p>
-                      </div>
-                    </div>
-
-                    {/* Dispute Details */}
-                    <div className="space-y-2">
-                      <h4 className="font-semibold text-sm text-muted-foreground">Детали диспута</h4>
-                      <div className="space-y-1 text-sm">
-                        <p><span className="font-medium">ID диспута:</span> xyz789ab-29b6-4ffb-ad2a-035c00538123</p>
-                        <p><span className="font-medium">Причина:</span> PAYMENT_NOT_RECEIVED</p>
-                        <p><span className="font-medium">Статус:</span> <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">Заморожен</span></p>
-                        <p><span className="font-medium">Сумма диспута (₽):</span> 5000</p>
-                        <p><span className="font-medium">Сумма диспута (крипто):</span> 62.5</p>
-                        <p><span className="font-medium">Доказательство</span></p>
-                        <p><span className="font-medium">До автопринятия:</span> 2 дня</p>
-                      </div>
-                    </div>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setDisputesCurrentPage(prev => Math.max(prev - 1, 1))}
+                    disabled={disputesCurrentPage === 1}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    Назад
+                  </Button>
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: Math.min(5, totalDisputesPages) }, (_, i) => {
+                      let pageNum;
+                      if (totalDisputesPages <= 5) {
+                        pageNum = i + 1;
+                      } else if (disputesCurrentPage <= 3) {
+                        pageNum = i + 1;
+                      } else if (disputesCurrentPage >= totalDisputesPages - 2) {
+                        pageNum = totalDisputesPages - 4 + i;
+                      } else {
+                        pageNum = disputesCurrentPage - 2 + i;
+                      }
+                      
+                      return (
+                        <Button
+                          key={pageNum}
+                          variant={disputesCurrentPage === pageNum ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setDisputesCurrentPage(pageNum)}
+                          className="w-8 h-8 p-0"
+                        >
+                          {pageNum}
+                        </Button>
+                      );
+                    })}
                   </div>
-
-                  {/* Action Buttons for Frozen Dispute */}
-                  <div className="flex gap-2 pt-4 border-t">
-                    <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-green-600 text-white hover:bg-green-700 h-9 px-3">
-                      Завершить
-                    </button>
-                    <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 h-9 px-3">
-                      Отклонить
-                    </button>
-                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setDisputesCurrentPage(prev => Math.min(prev + 1, totalDisputesPages))}
+                    disabled={disputesCurrentPage === totalDisputesPages}
+                  >
+                    Вперёд
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
             </CardContent>
@@ -944,8 +1141,8 @@ export default function Admin() {
 
               {/* Summary */}
               <div className="flex items-center justify-between text-sm text-muted-foreground">
-                <span>Всего сделок: 3199</span>
-                <span>Страница: 1 из 320</span>
+                <span>Всего сделок: {totalDeals}</span>
+                <span>Страница: {dealsCurrentPage} из {totalDealsPages}</span>
               </div>
 
               {/* Deals Table */}
@@ -967,256 +1164,136 @@ export default function Admin() {
                     </tr>
                   </thead>
                   <tbody className="[&_tr:last-child]:border-0">
-                    <tr className="border-b transition-colors hover:bg-muted/50">
-                      <td className="p-4 align-middle">
-                        <div className="text-xs">
-                          <div className="font-mono">0e33...2294⎘</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs space-y-1">
-                          <div><span className="font-medium">Банк:</span> Т-Банк</div>
-                          <div><span className="font-medium">Код:</span> -</div>
-                          <div><span className="font-medium">ПС:</span> SBP</div>
-                          <div><span className="font-medium">Владелец:</span> Магомед Темирбекович</div>
-                          <div><span className="font-medium">Реквизиты:</span> +79696650172</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs space-y-1">
-                          <div><span className="font-medium">Рубли:</span> 15042 ₽</div>
-                          <div><span className="font-medium">Крипто:</span> 178.075056 USD</div>
-                          <div><span className="font-medium">Курс:</span> 84.47</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs">
-                          <div>biwire_finance</div>
-                          <div className="font-mono">4558...8109⎘</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs font-mono">5f8c9774-7023-486b-ad34-2d56a4e10318</div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs">
-                          <div>Lightning's23</div>
-                          <div className="font-mono">f506...d788⎘</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs space-y-1">
-                          <div><span className="font-medium">UTC:</span> 12.09 16:47</div>
-                          <div><span className="font-medium">Лок:</span> 12.09 19:47</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs space-y-1">
-                          <div><span className="font-medium">UTC:</span> 12.09 16:47</div>
-                          <div><span className="font-medium">Лок:</span> 12.09 19:47</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs">6м 6с</div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">
-                          PENDING
-                        </span>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs font-mono">24fc...5e33⎘</div>
-                      </td>
-                    </tr>
-                    <tr className="border-b transition-colors hover:bg-muted/50">
-                      <td className="p-4 align-middle">
-                        <div className="text-xs">
-                          <div className="font-mono">24fc...5e33⎘</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs space-y-1">
-                          <div><span className="font-medium">Банк:</span> Т-Банк</div>
-                          <div><span className="font-medium">Код:</span> -</div>
-                          <div><span className="font-medium">ПС:</span> SBP</div>
-                          <div><span className="font-medium">Владелец:</span> Марьям Алиевна</div>
-                          <div><span className="font-medium">Реквизиты:</span> +79332111094</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs space-y-1">
-                          <div><span className="font-medium">Рубли:</span> 11556 ₽</div>
-                          <div><span className="font-medium">Крипто:</span> 136.841607 USD</div>
-                          <div><span className="font-medium">Курс:</span> 84.448</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs">
-                          <div>biwire_finance</div>
-                          <div className="font-mono">4558...8109⎘</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs font-mono">cb65e73b-3d19-4f17-9554-01c71ba9783f</div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs">
-                          <div>Lightning's23</div>
-                          <div className="font-mono">f506...d788⎘</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs space-y-1">
-                          <div><span className="font-medium">UTC:</span> 12.09 16:46</div>
-                          <div><span className="font-medium">Лок:</span> 12.09 19:46</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs space-y-1">
-                          <div><span className="font-medium">UTC:</span> 12.09 16:46</div>
-                          <div><span className="font-medium">Лок:</span> 12.09 19:46</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs">4м 55с</div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300">
-                          PENDING
-                        </span>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs font-mono">0f53...1943⎘</div>
-                      </td>
-                    </tr>
-                    <tr className="border-b transition-colors hover:bg-muted/50">
-                      <td className="p-4 align-middle">
-                        <div className="text-xs">
-                          <div className="font-mono">0f53...1943⎘</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs space-y-1">
-                          <div><span className="font-medium">Банк:</span> Т-Банк</div>
-                          <div><span className="font-medium">Код:</span> -</div>
-                          <div><span className="font-medium">ПС:</span> SBP</div>
-                          <div><span className="font-medium">Владелец:</span> Бозоров Улугбек Жура У</div>
-                          <div><span className="font-medium">Реквизиты:</span> +79152711412</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs space-y-1">
-                          <div><span className="font-medium">Рубли:</span> 5480 ₽</div>
-                          <div><span className="font-medium">Крипто:</span> 64.892005 USD</div>
-                          <div><span className="font-medium">Курс:</span> 84.448</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs">
-                          <div>biwire_finance</div>
-                          <div className="font-mono">4558...8109⎘</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs font-mono">fdb38091-5c52-4fba-af69-91b80fea82c0</div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs">
-                          <div>Puldorovich</div>
-                          <div className="font-mono">ef1f...5dea⎘</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs space-y-1">
-                          <div><span className="font-medium">UTC:</span> 12.09 16:46</div>
-                          <div><span className="font-medium">Лок:</span> 12.09 19:46</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs space-y-1">
-                          <div><span className="font-medium">UTC:</span> 12.09 16:47</div>
-                          <div><span className="font-medium">Лок:</span> 12.09 19:47</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs">4м 39с</div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-                          COMPLETED
-                        </span>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-2 text-xs">
-                          Открыть диспут
-                        </button>
-                      </td>
-                    </tr>
-                    <tr className="border-b transition-colors hover:bg-muted/50">
-                      <td className="p-4 align-middle">
-                        <div className="text-xs">
-                          <div className="font-mono">ef6b...854f⎘</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs space-y-1">
-                          <div><span className="font-medium">Банк:</span> Т-Банк</div>
-                          <div><span className="font-medium">Код:</span> -</div>
-                          <div><span className="font-medium">ПС:</span> SBP</div>
-                          <div><span className="font-medium">Владелец:</span> Марьям Алиевна</div>
-                          <div><span className="font-medium">Реквизиты:</span> +79332111094</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs space-y-1">
-                          <div><span className="font-medium">Рубли:</span> 9721 ₽</div>
-                          <div><span className="font-medium">Крипто:</span> 115.112258 USD</div>
-                          <div><span className="font-medium">Курс:</span> 84.448</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs">
-                          <div>biwire_finance</div>
-                          <div className="font-mono">4558...8109⎘</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs font-mono">acb401bb-62ff-40ac-bf65-ea5ccc92f780</div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs">
-                          <div>Lightning's23</div>
-                          <div className="font-mono">f506...d788⎘</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs space-y-1">
-                          <div><span className="font-medium">UTC:</span> 12.09 16:42</div>
-                          <div><span className="font-medium">Лок:</span> 12.09 19:42</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs space-y-1">
-                          <div><span className="font-medium">UTC:</span> 12.09 16:58</div>
-                          <div><span className="font-medium">Лок:</span> 12.09 19:58</div>
-                        </div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <div className="text-xs">1м 7с</div>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
-                          COMPLETED
-                        </span>
-                      </td>
-                      <td className="p-4 align-middle">
-                        <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-2 text-xs">
-                          Открыть диспут
-                        </button>
-                      </td>
-                    </tr>
+                    {currentDeals.map((deal) => (
+                      <tr key={deal.id} className="border-b transition-colors hover:bg-muted/50">
+                        <td className="p-4 align-middle">
+                          <div className="text-xs">
+                            <div className="font-mono">{deal.id}⎘</div>
+                          </div>
+                        </td>
+                        <td className="p-4 align-middle">
+                          <div className="text-xs space-y-1">
+                            <div><span className="font-medium">Банк:</span> {deal.bankDetails.bank}</div>
+                            <div><span className="font-medium">Код:</span> {deal.bankDetails.code}</div>
+                            <div><span className="font-medium">ПС:</span> {deal.bankDetails.paymentSystem}</div>
+                            <div><span className="font-medium">Владелец:</span> {deal.bankDetails.owner}</div>
+                            <div><span className="font-medium">Реквизиты:</span> {deal.bankDetails.requisites}</div>
+                          </div>
+                        </td>
+                        <td className="p-4 align-middle">
+                          <div className="text-xs space-y-1">
+                            <div><span className="font-medium">Рубли:</span> {deal.amount.rub} ₽</div>
+                            <div><span className="font-medium">Крипто:</span> {deal.amount.crypto} USD</div>
+                            <div><span className="font-medium">Курс:</span> {deal.amount.rate}</div>
+                          </div>
+                        </td>
+                        <td className="p-4 align-middle">
+                          <div className="text-xs">
+                            <div>{deal.merchant.name}</div>
+                            <div className="font-mono">{deal.merchant.id}⎘</div>
+                          </div>
+                        </td>
+                        <td className="p-4 align-middle">
+                          <div className="text-xs font-mono">{deal.merchantOrderId}</div>
+                        </td>
+                        <td className="p-4 align-middle">
+                          <div className="text-xs">
+                            <div>{deal.trader.name}</div>
+                            <div className="font-mono">{deal.trader.id}⎘</div>
+                          </div>
+                        </td>
+                        <td className="p-4 align-middle">
+                          <div className="text-xs space-y-1">
+                            <div><span className="font-medium">UTC:</span> {deal.created.utc}</div>
+                            <div><span className="font-medium">Лок:</span> {deal.created.local}</div>
+                          </div>
+                        </td>
+                        <td className="p-4 align-middle">
+                          <div className="text-xs space-y-1">
+                            <div><span className="font-medium">UTC:</span> {deal.updated.utc}</div>
+                            <div><span className="font-medium">Лок:</span> {deal.updated.local}</div>
+                          </div>
+                        </td>
+                        <td className="p-4 align-middle">
+                          <div className="text-xs">{deal.timer}</div>
+                        </td>
+                        <td className="p-4 align-middle">
+                          <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                            deal.status === "PENDING" 
+                              ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
+                              : deal.status === "COMPLETED"
+                              ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                              : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
+                          }`}>
+                            {deal.status}
+                          </span>
+                        </td>
+                        <td className="p-4 align-middle">
+                          {deal.status === "COMPLETED" ? (
+                            <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-2 text-xs">
+                              Открыть диспут
+                            </button>
+                          ) : (
+                            <div className="text-xs font-mono">{deal.action}⎘</div>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
+              </div>
+
+              {/* Deals Pagination */}
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-muted-foreground">
+                  Показано {dealsStartIndex + 1}-{Math.min(dealsEndIndex, totalDeals)} из {totalDeals} сделок
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setDealsCurrentPage(prev => Math.max(prev - 1, 1))}
+                    disabled={dealsCurrentPage === 1}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    Назад
+                  </Button>
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: Math.min(5, totalDealsPages) }, (_, i) => {
+                      let pageNum;
+                      if (totalDealsPages <= 5) {
+                        pageNum = i + 1;
+                      } else if (dealsCurrentPage <= 3) {
+                        pageNum = i + 1;
+                      } else if (dealsCurrentPage >= totalDealsPages - 2) {
+                        pageNum = totalDealsPages - 4 + i;
+                      } else {
+                        pageNum = dealsCurrentPage - 2 + i;
+                      }
+                      
+                      return (
+                        <Button
+                          key={pageNum}
+                          variant={dealsCurrentPage === pageNum ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setDealsCurrentPage(pageNum)}
+                          className="w-8 h-8 p-0"
+                        >
+                          {pageNum}
+                        </Button>
+                      );
+                    })}
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setDealsCurrentPage(prev => Math.min(prev + 1, totalDealsPages))}
+                    disabled={dealsCurrentPage === totalDealsPages}
+                  >
+                    Вперёд
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
