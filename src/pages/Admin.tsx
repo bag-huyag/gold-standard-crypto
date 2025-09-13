@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Shield, Lock, Users, Building2, TrendingUp, Wallet, MessageSquare, Handshake, Settings, Command, BarChart3, CreditCard, ChevronLeft, ChevronRight } from "lucide-react";
@@ -36,6 +37,14 @@ export default function Admin() {
   // Pagination state for banking details
   const [bankingCurrentPage, setBankingCurrentPage] = useState(1);
   const bankingPerPage = 10;
+  
+  // Dispute dialog state
+  const [openDisputeDialog, setOpenDisputeDialog] = useState(false);
+  const [disputeForm, setDisputeForm] = useState({
+    amount: "",
+    reason: "неизвестная причина",
+    timeInMinutes: ""
+  });
 
   // Mock data for disputes (in real app, this would come from API)
   const allDisputes = [
@@ -1291,9 +1300,73 @@ export default function Admin() {
                         </td>
                         <td className="p-4 align-middle">
                           {deal.status === "COMPLETED" ? (
-                            <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-2 text-xs">
-                              Открыть диспут
-                            </button>
+                            <Dialog open={openDisputeDialog} onOpenChange={setOpenDisputeDialog}>
+                              <DialogTrigger asChild>
+                                <button 
+                                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-8 px-2 text-xs"
+                                  onClick={() => {
+                                    setDisputeForm({
+                                      amount: deal.amount.rub.toString(),
+                                      reason: "неизвестная причина",
+                                      timeInMinutes: ""
+                                    });
+                                  }}
+                                >
+                                  Открыть диспут
+                                </button>
+                              </DialogTrigger>
+                              <DialogContent className="sm:max-w-[425px]">
+                                <DialogHeader>
+                                  <DialogTitle>Открыть диспут</DialogTitle>
+                                </DialogHeader>
+                                <div className="grid gap-4 py-4">
+                                  <div className="space-y-2">
+                                    <Label htmlFor="dispute-amount">Сумма диспута</Label>
+                                    <Input
+                                      id="dispute-amount"
+                                      type="number"
+                                      value={disputeForm.amount}
+                                      onChange={(e) => setDisputeForm({...disputeForm, amount: e.target.value})}
+                                      placeholder="Введите сумму"
+                                    />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label htmlFor="dispute-reason">Причина диспута</Label>
+                                    <Select value={disputeForm.reason} onValueChange={(value) => setDisputeForm({...disputeForm, reason: value})}>
+                                      <SelectTrigger>
+                                        <SelectValue />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="неверная сумма">неверная сумма</SelectItem>
+                                        <SelectItem value="нет оплаты">нет оплаты</SelectItem>
+                                        <SelectItem value="неизвестная причина">неизвестная причина</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label htmlFor="dispute-time">Время диспута (в минутах)</Label>
+                                    <Input
+                                      id="dispute-time"
+                                      type="number"
+                                      value={disputeForm.timeInMinutes}
+                                      onChange={(e) => setDisputeForm({...disputeForm, timeInMinutes: e.target.value})}
+                                      placeholder="Введите время в минутах"
+                                    />
+                                  </div>
+                                </div>
+                                <div className="flex justify-end gap-2">
+                                  <Button variant="outline" onClick={() => setOpenDisputeDialog(false)}>
+                                    Отмена
+                                  </Button>
+                                  <Button onClick={() => {
+                                    console.log("Открытие диспута:", disputeForm);
+                                    setOpenDisputeDialog(false);
+                                  }}>
+                                    Открыть диспут
+                                  </Button>
+                                </div>
+                              </DialogContent>
+                            </Dialog>
                           ) : (
                             <div className="text-xs font-mono">{deal.action}⎘</div>
                           )}
