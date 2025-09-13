@@ -1594,17 +1594,10 @@ export default function Admin() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <Card>
                   <CardContent className="pt-6">
-                    <div className="text-center">
+                    <div className="text-center space-y-2">
                       <div className="text-2xl font-bold">0</div>
                       <div className="text-xs text-muted-foreground">Успешных сделок</div>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardContent className="pt-6">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-muted-foreground">—</div>
+                      <div className="text-lg font-semibold text-muted-foreground">—</div>
                       <div className="text-xs text-muted-foreground">Обработано заявок</div>
                     </div>
                   </CardContent>
@@ -1612,17 +1605,10 @@ export default function Admin() {
                 
                 <Card>
                   <CardContent className="pt-6">
-                    <div className="text-center">
+                    <div className="text-center space-y-2">
                       <div className="text-2xl font-bold">0</div>
                       <div className="text-xs text-muted-foreground">Отменённых сделок</div>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardContent className="pt-6">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-muted-foreground">—</div>
+                      <div className="text-lg font-semibold text-muted-foreground">—</div>
                       <div className="text-xs text-muted-foreground">Отклонено заявок</div>
                     </div>
                   </CardContent>
@@ -1630,17 +1616,10 @@ export default function Admin() {
                 
                 <Card>
                   <CardContent className="pt-6">
-                    <div className="text-center">
+                    <div className="text-center space-y-2">
                       <div className="text-2xl font-bold">0 USD</div>
                       <div className="text-xs text-muted-foreground">Сумма в крипте (обработано)</div>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardContent className="pt-6">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-muted-foreground">—</div>
+                      <div className="text-lg font-semibold text-muted-foreground">—</div>
                       <div className="text-xs text-muted-foreground">Успешные заявки</div>
                     </div>
                   </CardContent>
@@ -1648,17 +1627,10 @@ export default function Admin() {
                 
                 <Card>
                   <CardContent className="pt-6">
-                    <div className="text-center">
+                    <div className="text-center space-y-2">
                       <div className="text-2xl font-bold">0 ₽</div>
                       <div className="text-xs text-muted-foreground">Сумма в фиате (обработано)</div>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardContent className="pt-6">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-muted-foreground">—</div>
+                      <div className="text-lg font-semibold text-muted-foreground">—</div>
                       <div className="text-xs text-muted-foreground">Успешные заявки</div>
                     </div>
                   </CardContent>
@@ -1666,17 +1638,10 @@ export default function Admin() {
                 
                 <Card>
                   <CardContent className="pt-6">
-                    <div className="text-center">
+                    <div className="text-center space-y-2">
                       <div className="text-2xl font-bold">0 USD</div>
                       <div className="text-xs text-muted-foreground">Сумма в крипте (отмена)</div>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardContent className="pt-6">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-muted-foreground">—</div>
+                      <div className="text-lg font-semibold text-muted-foreground">—</div>
                       <div className="text-xs text-muted-foreground">Отклонённые заявки</div>
                     </div>
                   </CardContent>
@@ -1684,17 +1649,10 @@ export default function Admin() {
                 
                 <Card>
                   <CardContent className="pt-6">
-                    <div className="text-center">
+                    <div className="text-center space-y-2">
                       <div className="text-2xl font-bold">0 ₽</div>
                       <div className="text-xs text-muted-foreground">Сумма в фиате (отмена)</div>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardContent className="pt-6">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-muted-foreground">—</div>
+                      <div className="text-lg font-semibold text-muted-foreground">—</div>
                       <div className="text-xs text-muted-foreground">Отклонённые заявки</div>
                     </div>
                   </CardContent>
@@ -1702,17 +1660,10 @@ export default function Admin() {
                 
                 <Card>
                   <CardContent className="pt-6">
-                    <div className="text-center">
+                    <div className="text-center space-y-2">
                       <div className="text-2xl font-bold text-green-600">+0 USD</div>
                       <div className="text-xs text-muted-foreground">Прибыль в крипте</div>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardContent className="pt-6">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-muted-foreground">—</div>
+                      <div className="text-lg font-semibold text-muted-foreground">—</div>
                       <div className="text-xs text-muted-foreground">Чистая прибыль</div>
                     </div>
                   </CardContent>
@@ -1720,17 +1671,10 @@ export default function Admin() {
                 
                 <Card>
                   <CardContent className="pt-6">
-                    <div className="text-center">
+                    <div className="text-center space-y-2">
                       <div className="text-2xl font-bold">0</div>
                       <div className="text-xs text-muted-foreground">Всего сделок</div>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardContent className="pt-6">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-muted-foreground">—</div>
+                      <div className="text-lg font-semibold text-muted-foreground">—</div>
                       <div className="text-xs text-muted-foreground">За период</div>
                     </div>
                   </CardContent>
