@@ -1,251 +1,21 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import { Shield, Lock, Users, Building2, TrendingUp, Wallet, MessageSquare, Handshake, Settings, Command, BarChart3, CreditCard, ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { Shield } from "lucide-react";
+import { Users, Building2, TrendingUp, Wallet, MessageSquare, Handshake, Settings, Command, BarChart3, CreditCard } from "lucide-react";
+
+// Import all tab components
+import { TradersTab } from "@/components/admin/TradersTab";
+import { MerchantsTab } from "@/components/admin/MerchantsTab";
+import { TrafficTab } from "@/components/admin/TrafficTab";
+import { WalletsTab } from "@/components/admin/WalletsTab";
+import { DisputesTab } from "@/components/admin/DisputesTab";
+import { DealsTab } from "@/components/admin/DealsTab";
+import { TelegramTab } from "@/components/admin/TelegramTab";
+import { SettleSettingsTab } from "@/components/admin/SettleSettingsTab";
+import { TeamsTab } from "@/components/admin/TeamsTab";
+import { TraderStatsTab } from "@/components/admin/TraderStatsTab";
+import { PaymentDetailsTab } from "@/components/admin/PaymentDetailsTab";
 
 export default function Admin() {
-  const [editingTraffic, setEditingTraffic] = useState<any>(null);
-  const [formData, setFormData] = useState({
-    merchant: "",
-    trader: "",
-    commission: "",
-    reward: "",
-    priority: "",
-    active: false
-  });
-
-  // Pagination state for disputes
-  const [disputesCurrentPage, setDisputesCurrentPage] = useState(1);
-  const disputesPerPage = 10;
-  
-  // Pagination state for deals
-  const [dealsCurrentPage, setDealsCurrentPage] = useState(1);
-  const dealsPerPage = 10;
-  
-  // Pagination state for banking details
-  const [bankingCurrentPage, setBankingCurrentPage] = useState(1);
-  const bankingPerPage = 10;
-  
-  // Dispute dialog state
-  const [openDisputeDialog, setOpenDisputeDialog] = useState(false);
-  const [disputeForm, setDisputeForm] = useState({
-    amount: "",
-    reason: "неизвестная причина",
-    timeInMinutes: ""
-  });
-
-  // Mock data for disputes (in real app, this would come from API)
-  const allDisputes = [
-    {
-      id: "dfa176c4-29b6-4ffb-ad2a-035c00538892",
-      bankDetails: {
-        bank: "Т-Банк (SBP)",
-        phone: "+79815574742",
-        owner: "Бодя",
-        trader: "obsthandler"
-      },
-      dealDetails: {
-        orderId: "685a5d8e-fc6d-4f32-9c3e-9d6ba64eaee5",
-        merchantOrderId: "trip-prod-test-1",
-        amountRub: 2007,
-        amountCrypto: 25.342829,
-        rate: 79.194
-      },
-      disputeDetails: {
-        reason: "WRONG_AMOUNT",
-        status: "Открыт",
-        amountRubDispute: 2007,
-        amountCryptoDispute: 25.342829,
-        autoAccept: "Истекло"
-      }
-    },
-    {
-      id: "xyz789ab-29b6-4ffb-ad2a-035c00538123",
-      bankDetails: {
-        bank: "Сбербанк",
-        phone: "+79123456789",
-        owner: "Иван Иванов",
-        trader: "john_trader"
-      },
-      dealDetails: {
-        orderId: "abc123de-fc6d-4f32-9c3e-9d6ba64eef78",
-        merchantOrderId: "crypto-test-2",
-        amountRub: 5000,
-        amountCrypto: 62.5,
-        rate: 80.0
-      },
-      disputeDetails: {
-        reason: "PAYMENT_NOT_RECEIVED",
-        status: "Заморожен",
-        amountRubDispute: 5000,
-        amountCryptoDispute: 62.5,
-        autoAccept: "2 дня"
-      }
-    },
-    // Add more mock disputes to demonstrate pagination
-    ...Array.from({ length: 25 }, (_, i) => ({
-      id: `dispute-${i + 3}`,
-      bankDetails: {
-        bank: i % 2 === 0 ? "Сбербанк" : "Т-Банк",
-        phone: `+7912345${String(i).padStart(4, '0')}`,
-        owner: `Владелец ${i + 3}`,
-        trader: i % 3 === 0 ? "obsthandler" : i % 3 === 1 ? "john_trader" : "mike_trader"
-      },
-      dealDetails: {
-        orderId: `order-${i + 3}`,
-        merchantOrderId: `merchant-${i + 3}`,
-        amountRub: 1000 + i * 100,
-        amountCrypto: 10 + i,
-        rate: 80 + i * 0.1
-      },
-      disputeDetails: {
-        reason: i % 2 === 0 ? "WRONG_AMOUNT" : "PAYMENT_NOT_RECEIVED",
-        status: i % 3 === 0 ? "Открыт" : i % 3 === 1 ? "Заморожен" : "Закрыт",
-        amountRubDispute: 1000 + i * 100,
-        amountCryptoDispute: 10 + i,
-        autoAccept: i % 2 === 0 ? "Истекло" : `${i} дней`
-      }
-    }))
-  ];
-
-  // Mock data for deals
-  const allDeals = [
-    {
-      id: "0e33...2294",
-      bankDetails: {
-        bank: "Т-Банк",
-        code: "-",
-        paymentSystem: "SBP",
-        owner: "Магомед Темирбекович",
-        requisites: "+79696650172"
-      },
-      amount: {
-        rub: 15042,
-        crypto: 178.075056,
-        rate: 84.47
-      },
-      merchant: {
-        name: "biwire_finance",
-        id: "4558...8109"
-      },
-      merchantOrderId: "5f8c9774-7023-486b-ad34-2d56a4e10318",
-      trader: {
-        name: "Lightning's23",
-        id: "f506...d788"
-      },
-      created: {
-        utc: "12.09 16:47",
-        local: "12.09 19:47"
-      },
-      updated: {
-        utc: "12.09 16:47",
-        local: "12.09 19:47"
-      },
-      timer: "6м 6с",
-      status: "PENDING",
-      action: "24fc...5e33"
-    },
-    // Add more mock deals to demonstrate pagination
-    ...Array.from({ length: 30 }, (_, i) => ({
-      id: `deal-${i + 2}`,
-      bankDetails: {
-        bank: i % 3 === 0 ? "Т-Банк" : i % 3 === 1 ? "Сбербанк" : "Альфа-Банк",
-        code: "-",
-        paymentSystem: i % 2 === 0 ? "SBP" : "CARD",
-        owner: `Владелец ${i + 2}`,
-        requisites: `+7912345${String(i).padStart(4, '0')}`
-      },
-      amount: {
-        rub: 10000 + i * 500,
-        crypto: 100 + i * 5,
-        rate: 84 + i * 0.1
-      },
-      merchant: {
-        name: i % 2 === 0 ? "biwire_finance" : "crypto_exchange",
-        id: `merchant-${i + 2}`
-      },
-      merchantOrderId: `order-${i + 2}`,
-      trader: {
-        name: i % 3 === 0 ? "Lightning's23" : i % 3 === 1 ? "Puldorovich" : "john_trader",
-        id: `trader-${i + 2}`
-      },
-      created: {
-        utc: "12.09 16:47",
-        local: "12.09 19:47"
-      },
-      updated: {
-        utc: "12.09 16:47",
-        local: "12.09 19:47"
-      },
-      timer: `${i + 1}м ${(i * 10) % 60}с`,
-      status: i % 3 === 0 ? "PENDING" : i % 3 === 1 ? "COMPLETED" : "CANCELLED",
-      action: `action-${i + 2}`
-    }))
-  ];
-
-  // Calculate disputes pagination
-  const totalDisputes = allDisputes.length;
-  const totalDisputesPages = Math.ceil(totalDisputes / disputesPerPage);
-  const disputesStartIndex = (disputesCurrentPage - 1) * disputesPerPage;
-  const disputesEndIndex = disputesStartIndex + disputesPerPage;
-  const currentDisputes = allDisputes.slice(disputesStartIndex, disputesEndIndex);
-
-  // Calculate deals pagination
-  const totalDeals = allDeals.length;
-  const totalDealsPages = Math.ceil(totalDeals / dealsPerPage);
-  const dealsStartIndex = (dealsCurrentPage - 1) * dealsPerPage;
-  const dealsEndIndex = dealsStartIndex + dealsPerPage;
-  const currentDeals = allDeals.slice(dealsStartIndex, dealsEndIndex);
-
-  const handleEditTraffic = (traffic: any) => {
-    setEditingTraffic(traffic);
-    setFormData({
-      merchant: traffic.merchant,
-      trader: traffic.trader,
-      commission: traffic.commission,
-      reward: traffic.reward,
-      priority: traffic.priority,
-      active: traffic.active
-    });
-  };
-
-  const handleCancelEdit = () => {
-    setEditingTraffic(null);
-    setFormData({
-      merchant: "",
-      trader: "",
-      commission: "",
-      reward: "",
-      priority: "",
-      active: false
-    });
-  };
-
-  const handleUpdateTraffic = () => {
-    // Here you would update the traffic record
-    console.log("Updating traffic:", formData);
-    setEditingTraffic(null);
-    setFormData({
-      merchant: "",
-      trader: "",
-      commission: "",
-      reward: "",
-      priority: "",
-      active: false
-    });
-  };
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -306,93 +76,52 @@ export default function Admin() {
         </TabsList>
 
         <TabsContent value="traders" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5" />
-                Управление трейдерами
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Form for creating new trader */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border rounded-lg">
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Username</label>
-                  <input
-                    type="text"
-                    placeholder="Введите username"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Login</label>
-                  <input
-                    type="text"
-                    placeholder="Введите login"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Password</label>
-                  <input
-                    type="password"
-                    placeholder="Введите пароль"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  />
-                </div>
-                <div className="flex items-end">
-                  <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full">
-                    Создать трейдера
-                  </button>
-                </div>
-              </div>
+          <TradersTab />
+        </TabsContent>
 
-              {/* Traders table */}
-              <div>
-                <h3 className="text-lg font-semibold mb-4">Список трейдеров и тим-лидов</h3>
-                <div className="relative w-full overflow-auto">
-                  <table className="w-full caption-bottom text-sm">
-                    <thead className="[&_tr]:border-b">
-                      <tr className="border-b transition-colors hover:bg-muted/50">
-                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">ID</th>
-                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Username</th>
-                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Login</th>
-                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Role</th>
-                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground">Действия</th>
-                      </tr>
-                    </thead>
-                    <tbody className="[&_tr:last-child]:border-0">
-                      <tr className="border-b transition-colors hover:bg-muted/50">
-                        <td className="p-4 align-middle">1</td>
-                        <td className="p-4 align-middle">john_trader</td>
-                        <td className="p-4 align-middle">john.doe</td>
-                        <td className="p-4 align-middle">
-                          <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground">
-                            Трейдер
-                          </span>
-                        </td>
-                        <td className="p-4 align-middle">
-                          <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
-                            Повысить до тим-лида
-                          </button>
-                        </td>
-                      </tr>
-                      <tr className="border-b transition-colors hover:bg-muted/50">
-                        <td className="p-4 align-middle">2</td>
-                        <td className="p-4 align-middle">sarah_lead</td>
-                        <td className="p-4 align-middle">sarah.smith</td>
-                        <td className="p-4 align-middle">
-                          <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-primary text-primary-foreground">
-                            Тим-лид
-                          </span>
-                        </td>
-                        <td className="p-4 align-middle">
-                          <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
-                            Понизить до трейдера
-                          </button>
-                        </td>
-                      </tr>
-                      <tr className="border-b transition-colors hover:bg-muted/50">
+        <TabsContent value="merchants" className="mt-6">
+          <MerchantsTab />
+        </TabsContent>
+
+        <TabsContent value="traffic" className="mt-6">
+          <TrafficTab />
+        </TabsContent>
+
+        <TabsContent value="wallets" className="mt-6">
+          <WalletsTab />
+        </TabsContent>
+
+        <TabsContent value="disputes" className="mt-6">
+          <DisputesTab />
+        </TabsContent>
+
+        <TabsContent value="deals" className="mt-6">
+          <DealsTab />
+        </TabsContent>
+
+        <TabsContent value="telegram" className="mt-6">
+          <TelegramTab />
+        </TabsContent>
+
+        <TabsContent value="settle-settings" className="mt-6">
+          <SettleSettingsTab />
+        </TabsContent>
+
+        <TabsContent value="teams" className="mt-6">
+          <TeamsTab />
+        </TabsContent>
+
+        <TabsContent value="trader-stats" className="mt-6">
+          <TraderStatsTab />
+        </TabsContent>
+
+        <TabsContent value="payment-details" className="mt-6">
+          <PaymentDetailsTab />
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
                         <td className="p-4 align-middle">3</td>
                         <td className="p-4 align-middle">mike_trader</td>
                         <td className="p-4 align-middle">mike.johnson</td>
