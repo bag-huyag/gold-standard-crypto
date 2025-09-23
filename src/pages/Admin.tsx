@@ -1,19 +1,33 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield } from "lucide-react";
-import { Users, Building2, TrendingUp, Wallet, MessageSquare, Handshake, Settings, Command, BarChart3, CreditCard } from "lucide-react";
+import { 
+  Shield, 
+  Lock, 
+  Users, 
+  Building2, 
+  TrendingUp, 
+  Wallet, 
+  MessageSquare, 
+  Handshake, 
+  Settings, 
+  Command, 
+  BarChart3, 
+  CreditCard, 
+  ChevronLeft, 
+  ChevronRight 
+} from "lucide-react";
 
-// Import all tab components
-import { TradersTab } from "@/components/admin/TradersTab";
-import { MerchantsTab } from "@/components/admin/MerchantsTab";
-import { TrafficTab } from "@/components/admin/TrafficTab";
-import { WalletsTab } from "@/components/admin/WalletsTab";
-import { DisputesTab } from "@/components/admin/DisputesTab";
-import { DealsTab } from "@/components/admin/DealsTab";
-import { TelegramTab } from "@/components/admin/TelegramTab";
-import { SettleSettingsTab } from "@/components/admin/SettleSettingsTab";
-import { TeamsTab } from "@/components/admin/TeamsTab";
-import { TraderStatsTab } from "@/components/admin/TraderStatsTab";
-import { PaymentDetailsTab } from "@/components/admin/PaymentDetailsTab";
+import TradersTab from "@/components/admin/Traders";
+import MerchantsTab from "@/components/admin/Merchants";
+import TrafficTab from "@/components/admin/Traffic";
+import WalletsTab from "@/components/admin/Wallets";
+import DisputesTab from "@/components/admin/Disputes";
+import DealsTab from "@/components/admin/Deals";
+import TelegramTab from "@/components/admin/Telegram";
+import SettleSettingsTab from "@/components/admin/SettleSettings";
+import TeamsTab from "@/components/admin/Teams";
+import TraderStatsTab from "@/components/admin/TraderStats";
+import PaymentDetailsTab from "@/components/admin/PaymentDetails";
+
 
 export default function Admin() {
   return (
